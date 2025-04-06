@@ -3,39 +3,48 @@ import { BaseFilter, PaginationResult } from '../../models/base.model';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GlobalService } from '../../service/global.service';
-import { WcService } from '../../service/master-data/wc.service';
+import { FlocService } from '../../service/master-data/floc.service';
 import { ShareModule } from '../../shared/share-module';
+import { PlantService } from '../../service/master-data/plant.service';
 
 @Component({
-  selector: 'app-plan',
+  selector: 'app-floc',
   imports: [ShareModule],
-  templateUrl: './wc.component.html',
-  styleUrl: './wc.component.scss'
+  templateUrl: './floc.component.html',
+  styleUrl: './floc.component.scss'
 })
-export class WcComponent {
+export class FlocComponent {
   validateForm: FormGroup;
   isSubmit: boolean = false;
   visible: boolean = false;
   edit: boolean = false;
   filter = new BaseFilter();
   paginationResult = new PaginationResult();
+  lstPlant : any = []
   loading: boolean = false;
 
   constructor(
-    private _service: WcService,
+    private _service: FlocService,
+    private _servicePlant: PlantService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({
-      arbpl: ['', [Validators.required]],
-      arbplTxt: ['', [Validators.required]],
+      tplnr: ['', [Validators.required]],
+      iwerk: [''],
+      ingrp: [''],
+      descript: [''],
+      supfloc: [''],
+      arbpl: [''],
+      startUpdate: [''],
+      txt30: [''],
       isActive: [true, [Validators.required]],
     });
     this.globalService.setBreadcrumb([
       {
-        name: 'Bộ phận sửa chữa',
-        path: 'master-data/wc',
+        name: 'Khu vực chức năng',
+        path: 'master-data/floc',
       },
     ]);
     this.globalService.getLoading().subscribe((value) => {
@@ -48,12 +57,13 @@ export class WcComponent {
 
   ngOnInit(): void {
     this.search();
+    this.searchFlant()
   }
 
-  onSortChange(iwerkTxt: string, value: any) {
+  onSortChange(tplnrTxt: string, value: any) {
     this.filter = {
       ...this.filter,
-      //SortColumn: iwerkTxt,
+      //SortColumn: tplnrTxt,
       //IsDescending: value === 'descend',
     };
     this.search();
@@ -71,9 +81,22 @@ export class WcComponent {
     });
   }
 
-  isCodeExist(iwerk: string): boolean {
+  searchFlant() {
+    this.isSubmit = false;
+    this._servicePlant.search(this.filter).subscribe({
+      next: (data) => {
+        this.lstPlant = data;
+        console.log(this.lstPlant);
+
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+  isCodeExist(tplnr: string): boolean {
     return this.paginationResult.data?.some(
-      (accType: any) => accType.iwerk === iwerk
+      (accType: any) => accType.tplnr === tplnr
     );
   }
   submitForm(): void {
@@ -90,9 +113,9 @@ export class WcComponent {
         });
       } else {
         const formData = this.validateForm.getRawValue();
-        if (this.isCodeExist(formData.iwerk)) {
+        if (this.isCodeExist(formData.tplnr)) {
           this.message.error(
-            `Mã ${formData.iwerk} đã tồn tại, vui lòng nhập lại`
+            `Mã ${formData.tplnr} đã tồn tại, vui lòng nhập lại`
           );
           return;
         }
@@ -135,8 +158,8 @@ export class WcComponent {
     this.isSubmit = false;
   }
 
-  deleteItem(iwerk: string) {
-    this._service.delete(iwerk).subscribe({
+  deleteItem(tplnr: string) {
+    this._service.delete(tplnr).subscribe({
       next: (data) => {
         this.search();
       },
@@ -148,8 +171,14 @@ export class WcComponent {
 
   openEdit(data: any) {
     this.validateForm.setValue({
-      arbpl: data.arbpl,
-      arbplTxt: data.arbplTxt,
+      tplnr : data.tplnr,
+      ingrp : data.ingrp,
+      iwerk : data.iwerk,
+      descript : data.descript,
+      supfloc : data.supfloc,
+      arbpl : data.arbpl,
+      startUpdate : data.startUpdate,
+      txt30 : data.txt30,
       isActive: data.isActive,
     });
     setTimeout(() => {

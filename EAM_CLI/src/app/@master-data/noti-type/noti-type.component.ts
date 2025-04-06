@@ -3,16 +3,16 @@ import { BaseFilter, PaginationResult } from '../../models/base.model';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GlobalService } from '../../service/global.service';
-import { WcService } from '../../service/master-data/wc.service';
+import { NotiTypeService } from '../../service/master-data/noti-type.service';
 import { ShareModule } from '../../shared/share-module';
 
 @Component({
-  selector: 'app-plan',
+  selector: 'app-noti-type',
   imports: [ShareModule],
-  templateUrl: './wc.component.html',
-  styleUrl: './wc.component.scss'
+  templateUrl: './noti-type.component.html',
+  styleUrl: './noti-type.component.scss'
 })
-export class WcComponent {
+export class NotiTypeComponent {
   validateForm: FormGroup;
   isSubmit: boolean = false;
   visible: boolean = false;
@@ -22,20 +22,20 @@ export class WcComponent {
   loading: boolean = false;
 
   constructor(
-    private _service: WcService,
+    private _service: NotiTypeService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({
-      arbpl: ['', [Validators.required]],
-      arbplTxt: ['', [Validators.required]],
+      code: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       isActive: [true, [Validators.required]],
     });
     this.globalService.setBreadcrumb([
       {
-        name: 'Bộ phận sửa chữa',
-        path: 'master-data/wc',
+        name: 'Loại sự cố',
+        path: 'master-data/noti-type',
       },
     ]);
     this.globalService.getLoading().subscribe((value) => {
@@ -50,10 +50,10 @@ export class WcComponent {
     this.search();
   }
 
-  onSortChange(iwerkTxt: string, value: any) {
+  onSortChange(eqtypTxt: string, value: any) {
     this.filter = {
       ...this.filter,
-      //SortColumn: iwerkTxt,
+      //SortColumn: eqtypTxt,
       //IsDescending: value === 'descend',
     };
     this.search();
@@ -71,9 +71,9 @@ export class WcComponent {
     });
   }
 
-  isCodeExist(iwerk: string): boolean {
+  isCodeExist(eqtyp: string): boolean {
     return this.paginationResult.data?.some(
-      (accType: any) => accType.iwerk === iwerk
+      (accType: any) => accType.eqtyp === eqtyp
     );
   }
   submitForm(): void {
@@ -90,9 +90,9 @@ export class WcComponent {
         });
       } else {
         const formData = this.validateForm.getRawValue();
-        if (this.isCodeExist(formData.iwerk)) {
+        if (this.isCodeExist(formData.code)) {
           this.message.error(
-            `Mã ${formData.iwerk} đã tồn tại, vui lòng nhập lại`
+            `Mã ${formData.code} đã tồn tại, vui lòng nhập lại`
           );
           return;
         }
@@ -135,8 +135,8 @@ export class WcComponent {
     this.isSubmit = false;
   }
 
-  deleteItem(iwerk: string) {
-    this._service.delete(iwerk).subscribe({
+  deleteItem(eqtyp: string) {
+    this._service.delete(eqtyp).subscribe({
       next: (data) => {
         this.search();
       },
@@ -148,8 +148,8 @@ export class WcComponent {
 
   openEdit(data: any) {
     this.validateForm.setValue({
-      arbpl: data.arbpl,
-      arbplTxt: data.arbplTxt,
+      code: data.code,
+      name: data.name,
       isActive: data.isActive,
     });
     setTimeout(() => {

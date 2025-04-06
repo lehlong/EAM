@@ -1,0 +1,177 @@
+<nz-page-header nzBackIcon>
+  <nz-page-header-title>Khu vực chức năng</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách khu vực chức năng</nz-page-header-subtitle>
+  <nz-page-header-extra>
+    <div class="flex-grow-2 flex">
+      <nz-space>
+        <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()" [(value)]="filter.keyWord"></app-input-clear>
+        <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+          nzType="default">
+          <span nz-icon nzType="search"></span>
+        </button>
+        <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+          nzType="default">
+          <span nz-icon nzType="redo"></span>
+        </button>
+      </nz-space>
+      <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
+        <span nz-icon nzType="plus-circle"></span> Thêm mới
+      </button>
+    </div>
+  </nz-page-header-extra>
+  <nz-page-header-content class="main-content">
+    <nz-table #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false">
+      <thead>
+        <tr>
+          <th nzWidth="60px">STT</th>
+          <th>Mã</th>
+          <th>Maintenance <br> Planning Plant</th>
+          <th>Planner Group for <br> Customer Service <br> and Plant Maintenance</th>
+          <th>Superior functional location</th>
+          <th>Work center</th>
+          <th>Start Date</th>
+          <th nzAlign="center">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
+          <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
+          </td>
+          <td> <a (click)="openEdit(data)">{{ data.tplnr }}</a></td>
+          <td>{{ data.iwerk }}</td>
+          <td>{{ data.ingrp }}</td>
+          <td>{{ data.supfloc }}</td>
+          <td>{{ data.arbpl }}</td>
+          <td>{{ data.startUpdate }}</td>
+          <td nzAlign="center">
+            <nz-tag nzColor="success" *ngIf="data.isActive">
+              <nz-icon nzType="check-circle" />
+              <span>Kích hoạt</span>
+            </nz-tag>
+            <nz-tag nzColor="error" *ngIf="!data.isActive">
+              <nz-icon nzType="close-circle" />
+              <span>Khoá</span>
+            </nz-tag>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-page-header-content>
+  <nz-page-header-content class="footer-content">
+    <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+      <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+        [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+        (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+    </div>
+  </nz-page-header-content>
+</nz-page-header>
+
+<!--Create Update-->
+<nz-drawer nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+  [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+  <ng-container *nzDrawerContent>
+    <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+
+      <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+        <div nz-col class="gutter-row" [nzSpan]="11">
+          <div class="inner-box">
+            <app-input-clear placeholder="Equipment Number" [required]="true" label="Equipment Number"
+              [control]="$any(validateForm).controls['equnr']" [required]="true"
+              [disabled]="edit ? true : false"></app-input-clear>
+
+          </div>
+        </div>
+        <!-- <div  class="gutter-row" > -->
+          <nz-form-control nz-col style="margin-bottom: 15px;"[nzSpan]="12">
+            <label style="margin-bottom: 15px;">Maintenance Planning Plant</label>
+            <nz-select style="margin-bottom: 8px 0;" nzShowSearch nzAllowClear placeholder="Maintenance Planning Plant" formControlName="iwerk">
+              <ng-container *ngFor="let item of lstPlant">
+                <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.iwerkTxt" [nzValue]="item.iwerk">
+                </nz-option>
+              </ng-container>
+            </nz-select>
+          </nz-form-control>
+        <!-- </div> -->
+      </div>
+
+      <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+        <div nz-col class="gutter-row" [nzSpan]="11" style="margin-bottom: 15px;">
+          <label>Valid-From Date</label>
+          <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm" formControlName="datab"
+            [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
+        </div>
+        <div nz-col class="gutter-row" [nzSpan]="12" style="margin-bottom: 15px;">
+          <label>Valid To Date</label>
+          <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm" formControlName="datbi"
+            [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
+        </div>
+      </div>
+
+      <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+        <div nz-col class="gutter-row" [nzSpan]="11">
+          <nz-form-control style="margin-bottom: 15px;">
+            <label>Maintenance Planning Plant</label>
+            <nz-select nzShowSearch nzAllowClear placeholder="Maintenance Planning Plant" formControlName="tplnr">
+              <ng-container *ngFor="let item of lstFloc">
+                <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.ingrp" [nzValue]="item.tplnr">
+                </nz-option>
+              </ng-container>
+            </nz-select>
+          </nz-form-control>
+        </div>
+        <div nz-col class="gutter-row" [nzSpan]="12">
+          <nz-form-control style="margin-bottom: 15px;">
+            <label>Functional Location</label>
+            <nz-select nzShowSearch nzAllowClear placeholder="Functional Location" formControlName="eqtyp">
+              <ng-container *ngFor="let item of lstCat">
+                <nz-option cdkScrollable *ngIf="item.isActive" (click)="setValueCat(item.eqtyp)" [nzLabel]="item.eqtypTxt" [nzValue]="item.eqtyp">
+                </nz-option>
+              </ng-container>
+            </nz-select>
+          </nz-form-control>
+        </div>
+      </div>
+
+
+
+      <div class="inner-box" style="margin-bottom: 15px;">
+        <label>Start-up Date of the Technical Object</label>
+        <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="startUpdate"
+          [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
+      </div>
+
+      <app-input-clear placeholder="Object status" label="Object status"
+        [control]="$any(validateForm).controls['txt30']"></app-input-clear>
+
+      <nz-form-item>
+        <nz-form-label>Trạng thái</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group formControlName="isActive">
+            <label nz-radio [nzValue]="true">Kích hoạt</label>
+            <label nz-radio [nzValue]="false">Khoá</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-drawer>
+<ng-template #extra>
+  <nz-space>
+    <ng-container *ngIf="edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+      (click)="close()">
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
+  </nz-space>
+</ng-template>

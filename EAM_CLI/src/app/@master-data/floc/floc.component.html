@@ -1,6 +1,6 @@
 <nz-page-header nzBackIcon>
-  <nz-page-header-title>Đơn vị bảo trì</nz-page-header-title>
-  <nz-page-header-subtitle>Danh sách đơn vị bảo trì</nz-page-header-subtitle>
+  <nz-page-header-title>Khu vực chức năng</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách khu vực chức năng</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
       <nz-space>
@@ -20,12 +20,16 @@
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
-    <nz-table #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
+    <nz-table #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false">
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
           <th>Mã</th>
-          <th>Tên</th>
+          <th>Maintenance <br> Planning Plant</th>
+          <th>Planner Group for <br> Customer Service <br> and Plant Maintenance</th>
+          <th>Superior functional location</th>
+          <th>Work center</th>
+          <th>Start Date</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
@@ -33,8 +37,12 @@
         <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
           <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
           </td>
-          <td> <a (click)="openEdit(data)">{{ data.iwerk }}</a></td>
-          <td>{{ data.iwerkTxt }}</td>
+          <td> <a (click)="openEdit(data)">{{ data.tplnr }}</a></td>
+          <td>{{ data.iwerk }}</td>
+          <td>{{ data.ingrp }}</td>
+          <td>{{ data.supfloc }}</td>
+          <td>{{ data.arbpl }}</td>
+          <td>{{ data.startUpdate }}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />
@@ -59,15 +67,43 @@
 </nz-page-header>
 
 <!--Create Update-->
-<nz-drawer [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer nzWidth="40%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Mã thông tin" [required]="true" label="Mã"
-        [control]="$any(validateForm).controls['iwerk']" [required]="true"
+      <app-input-clear placeholder="Mã" [required]="true" label="Mã"
+        [control]="$any(validateForm).controls['tplnr']" [required]="true"
         [disabled]="edit ? true : false"></app-input-clear>
-      <app-input-clear placeholder="Tên thông tin" [required]="true" label="Tên"
-        [control]="$any(validateForm).controls['iwerkTxt']"></app-input-clear>
+        <nz-form-control style="margin-bottom: 15px;">
+          <label>Maintenance Planning Plant</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Maintenance Planning Plant" formControlName="iwerk">
+            <ng-container *ngFor="let item of lstPlant">
+              <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.iwerkTxt" [nzValue]="item.iwerk">
+              </nz-option>
+            </ng-container>
+          </nz-select>
+        </nz-form-control>
+
+      <app-input-clear placeholder="Planner Group for Customer Service and Plant Maintenance" label="Planner Group for Customer Service and Plant Maintenance"
+        [control]="$any(validateForm).controls['ingrp']"></app-input-clear>
+
+      <app-input-clear placeholder="Description of technical object" label="Description of technical object"
+        [control]="$any(validateForm).controls['descript']"></app-input-clear>
+
+      <app-input-clear placeholder="Superior functional location" label="Superior functional location"
+        [control]="$any(validateForm).controls['supfloc']"></app-input-clear>
+
+      <app-input-clear placeholder="Work center" label="Work center"
+        [control]="$any(validateForm).controls['arbpl']"></app-input-clear>
+
+      <div class="inner-box" style="margin-bottom: 15px;">
+        <label>Start-up Date of the Technical Object</label>
+        <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="startUpdate"
+          [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
+      </div>
+
+      <app-input-clear placeholder="Object status" label="Object status"
+        [control]="$any(validateForm).controls['txt30']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>

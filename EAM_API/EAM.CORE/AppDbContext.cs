@@ -130,6 +130,10 @@ namespace EAM.CORE
         public DbSet<TblMdEqCat> TblMdEqCat { get; set; }
         public DbSet<TblMdPlant> TblMdPlant { get; set; }
         public DbSet<TblMdWc> TblMdWc { get; set; }
+        public DbSet<TblMdNotiType> TblMdNotiType { get; set; }
+        public DbSet<TblMdOrderType> TblMdOrderType { get; set; }
+        public DbSet<TblMdFloc> TblMdFloc { get; set; }
+        public DbSet<TblMdEquip> TblMdEquip { get; set; }
         #endregion
 
     }

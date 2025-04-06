@@ -1,6 +1,6 @@
 <nz-page-header nzBackIcon>
-  <nz-page-header-title>Đơn vị bảo trì</nz-page-header-title>
-  <nz-page-header-subtitle>Danh sách đơn vị bảo trì</nz-page-header-subtitle>
+  <nz-page-header-title>Loại sửa chữa</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách loại sửa chữa</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
       <nz-space>
@@ -33,8 +33,8 @@
         <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
           <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
           </td>
-          <td> <a (click)="openEdit(data)">{{ data.iwerk }}</a></td>
-          <td>{{ data.iwerkTxt }}</td>
+          <td> <a (click)="openEdit(data)">{{ data.code }}</a></td>
+          <td>{{ data.name }}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />
@@ -64,10 +64,10 @@
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
       <app-input-clear placeholder="Mã thông tin" [required]="true" label="Mã"
-        [control]="$any(validateForm).controls['iwerk']" [required]="true"
+        [control]="$any(validateForm).controls['code']" [required]="true"
         [disabled]="edit ? true : false"></app-input-clear>
       <app-input-clear placeholder="Tên thông tin" [required]="true" label="Tên"
-        [control]="$any(validateForm).controls['iwerkTxt']"></app-input-clear>
+        [control]="$any(validateForm).controls['name']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
