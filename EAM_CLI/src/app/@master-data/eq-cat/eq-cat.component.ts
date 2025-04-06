@@ -1,43 +1,41 @@
 import { Component } from '@angular/core';
-import { ShareModule } from '../../shared/share-module';
+import { BaseFilter, PaginationResult } from '../../models/base.model';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { AccountTypeFilter } from '../../models/master-data/account-type.model';
-import { PaginationResult } from '../../models/base.model';
-import { AccountTypeService } from '../../service/master-data/account-type.service';
-import { GlobalService } from '../../service/global.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { GlobalService } from '../../service/global.service';
+import { EqCatService } from '../../service/master-data/eq-cat.service';
+import { ShareModule } from '../../shared/share-module';
 
 @Component({
-  selector: 'app-account-type',
-  standalone: true,
+  selector: 'app-eq-cat',
   imports: [ShareModule],
-  templateUrl: './account-type.component.html',
-  styleUrl: './account-type.component.scss',
+  templateUrl: './eq-cat.component.html',
+  styleUrl: './eq-cat.component.scss'
 })
-export class AccountTypeComponent {
+export class EqCatComponent {
   validateForm: FormGroup;
   isSubmit: boolean = false;
   visible: boolean = false;
   edit: boolean = false;
-  filter = new AccountTypeFilter();
+  filter = new BaseFilter();
   paginationResult = new PaginationResult();
   loading: boolean = false;
 
   constructor(
-    private _service: AccountTypeService,
+    private _service: EqCatService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({
-      code: ['', [Validators.required]],
-      name: ['', [Validators.required]],
+      eqtyp: ['', [Validators.required]],
+      eqtypTxt: ['', [Validators.required]],
       isActive: [true, [Validators.required]],
     });
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách kiểu người dùng',
-        path: 'master-data/account-type',
+        name: 'Loại thiết bị',
+        path: 'master-data/eq-cat',
       },
     ]);
     this.globalService.getLoading().subscribe((value) => {
@@ -52,11 +50,11 @@ export class AccountTypeComponent {
     this.search();
   }
 
-  onSortChange(name: string, value: any) {
+  onSortChange(eqtypTxt: string, value: any) {
     this.filter = {
       ...this.filter,
-      SortColumn: name,
-      IsDescending: value === 'descend',
+      //SortColumn: eqtypTxt,
+      //IsDescending: value === 'descend',
     };
     this.search();
   }
@@ -73,9 +71,9 @@ export class AccountTypeComponent {
     });
   }
 
-  isCodeExist(code: string): boolean {
+  isCodeExist(eqtyp: string): boolean {
     return this.paginationResult.data?.some(
-      (accType: any) => accType.code === code
+      (accType: any) => accType.eqtyp === eqtyp
     );
   }
   submitForm(): void {
@@ -92,9 +90,9 @@ export class AccountTypeComponent {
         });
       } else {
         const formData = this.validateForm.getRawValue();
-        if (this.isCodeExist(formData.code)) {
+        if (this.isCodeExist(formData.eqtyp)) {
           this.message.error(
-            `Mã ${formData.code} đã tồn tại, vui lòng nhập lại`
+            `Mã ${formData.eqtyp} đã tồn tại, vui lòng nhập lại`
           );
           return;
         }
@@ -123,7 +121,7 @@ export class AccountTypeComponent {
   }
 
   reset() {
-    this.filter = new AccountTypeFilter();
+    this.filter = new BaseFilter();
     this.search();
   }
 
@@ -137,8 +135,8 @@ export class AccountTypeComponent {
     this.isSubmit = false;
   }
 
-  deleteItem(code: string) {
-    this._service.delete(code).subscribe({
+  deleteItem(eqtyp: string) {
+    this._service.delete(eqtyp).subscribe({
       next: (data) => {
         this.search();
       },
@@ -148,10 +146,10 @@ export class AccountTypeComponent {
     });
   }
 
-  openEdit(data: { code: string; name: number; isActive: boolean }) {
+  openEdit(data: { eqtyp: string; eqtypTxt: number; isActive: boolean }) {
     this.validateForm.setValue({
-      code: data.code,
-      name: data.name,
+      eqtyp: data.eqtyp,
+      eqtypTxt: data.eqtypTxt,
       isActive: data.isActive,
     });
     setTimeout(() => {
@@ -171,3 +169,4 @@ export class AccountTypeComponent {
     this.search();
   }
 }
+

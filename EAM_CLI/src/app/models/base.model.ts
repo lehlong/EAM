@@ -2,9 +2,6 @@ export class BaseFilter {
   currentPage: number = 1;
   pageSize: number = 20;
   keyWord: string = '';
-  orgCode?: string = '';
-  warehouseCode? : string = '';
-  displayId? : string = '';
 }
 
 export class PaginationResult {

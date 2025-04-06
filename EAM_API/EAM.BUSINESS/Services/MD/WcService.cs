@@ -7,19 +7,19 @@ using EAM.CORE.Entities.MD;
 
 namespace EAM.BUSINESS.Services.MD
 {
-    public interface IAccountTypeService : IGenericService<TblMdAccountType, AccountTypeDto>
+    public interface IWcService : IGenericService<TblMdWc, WcDto>
     {
     }
-    public class AccountTypeService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdAccountType, AccountTypeDto>(dbContext, mapper), IAccountTypeService
+    public class WcService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdWc, WcDto>(dbContext, mapper), IWcService
     {
         public override async Task<PagedResponseDto> Search(BaseFilter filter)
         {
             try
             {
-                var query = _dbContext.TblMdAccountType.AsQueryable();
+                var query = _dbContext.TblMdWc.AsQueryable();
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x => x.Code.ToString().Contains(filter.KeyWord) || x.Name.Contains(filter.KeyWord));
+                    query = query.Where(x => x.Arbpl.ToString().Contains(filter.KeyWord) || x.ArbplTxt.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {

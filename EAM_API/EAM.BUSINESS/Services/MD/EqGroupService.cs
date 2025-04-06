@@ -7,19 +7,19 @@ using EAM.CORE.Entities.MD;
 
 namespace EAM.BUSINESS.Services.MD
 {
-    public interface IAccountTypeService : IGenericService<TblMdAccountType, AccountTypeDto>
+    public interface IEqGroupService : IGenericService<TblMdEqGroup, EqGroupDto>
     {
     }
-    public class AccountTypeService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdAccountType, AccountTypeDto>(dbContext, mapper), IAccountTypeService
+    public class EqGroupService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdEqGroup, EqGroupDto>(dbContext, mapper), IEqGroupService
     {
         public override async Task<PagedResponseDto> Search(BaseFilter filter)
         {
             try
             {
-                var query = _dbContext.TblMdAccountType.AsQueryable();
+                var query = _dbContext.TblMdEqGroup.AsQueryable();
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x => x.Code.ToString().Contains(filter.KeyWord) || x.Name.Contains(filter.KeyWord));
+                    query = query.Where(x => x.Eqart.ToString().Contains(filter.KeyWord) || x.EqartTxt.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {
@@ -35,5 +35,6 @@ namespace EAM.BUSINESS.Services.MD
                 return null;
             }
         }
+       
     }
 }

@@ -26,8 +26,8 @@
           <th nzWidth="60px">STT</th>
           <th>Tên nhóm tài khoản</th>
           <th>Ghi chú</th>
-          <th>Số lượng tài khoản</th>
-          <th>Trạng thái</th>
+          <th nzAlign="center">Số lượng tài khoản</th>
+          <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +35,7 @@
           <td>{{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}</td>
           <td><a (click)="openEdit(data.id)">{{ data.name }}</a></td>
           <td>{{ data.notes }}</td>
-          <td nzAlign="right">{{ data.totalAccount }}</td>
+          <td nzAlign="center">{{ data.totalAccount }}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />

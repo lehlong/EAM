@@ -5,15 +5,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EAM.BUSINESS.Dtos.MD
 {
-    public class AccountTypeDto : BaseMdDto, IMapFrom, IDto
+    public class EqGroupDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
-        public string Code { get; set; }
-        public string Name { get; set; }
+        public string Eqart { get; set; }
+        public string EqartTxt { get; set; }
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<TblMdAccountType, AccountTypeDto>().ReverseMap();
+            profile.CreateMap<TblMdEqGroup, EqGroupDto>().ReverseMap();
         }
     }
 }

@@ -119,14 +119,18 @@ namespace EAM.CORE
         public DbSet<TblAdAccountRefreshToken> TblAdAccountRefreshToken { get; set; }
         public DbSet<TblAdAppVersion> TblAdAppVersion { get; set; }
         public DbSet<TblAdAccount_AccountGroup> TblAdAccount_AccountGroup { get; set; }
-        public DbSet<TblActionLog> TblActionLogs {get; set;}
+        public DbSet<TblActionLog> TblActionLogs { get; set; }
         public DbSet<TblAdSystemTrace> TblAdSystemTrace { get; set; }
         public DbSet<tblAdOrganize> tblAdOrganize { get; set; }
         #endregion
 
         #region Master Data
-        public DbSet<TblMdAccountType> tblMdAccountType { get; set; }
+        public DbSet<TblMdAccountType> TblMdAccountType { get; set; }
+        public DbSet<TblMdEqGroup> TblMdEqGroup { get; set; }
+        public DbSet<TblMdEqCat> TblMdEqCat { get; set; }
+        public DbSet<TblMdPlant> TblMdPlant { get; set; }
+        public DbSet<TblMdWc> TblMdWc { get; set; }
         #endregion
-       
+
     }
 }

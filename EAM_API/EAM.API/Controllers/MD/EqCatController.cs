@@ -3,16 +3,15 @@ using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
 using EAM.BUSINESS.Services.MD;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EAM.API.Controllers.MD
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountTypeController(IAccountTypeService service) : ControllerBase
+    public class EqCatController(IEqCatService service) : ControllerBase
     {
-        public readonly IAccountTypeService _service = service;
+        public readonly IEqCatService _service = service;
 
         [HttpGet("Search")]
         public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
@@ -49,7 +48,7 @@ namespace EAM.API.Controllers.MD
             return Ok(transferObject);
         }
         [HttpPost("Insert")]
-        public async Task<IActionResult> Insert([FromBody] AccountTypeDto time)
+        public async Task<IActionResult> Insert([FromBody] EqCatDto time)
         {
             var transferObject = new TransferObject();
             var result = await _service.Add(time);
@@ -69,7 +68,7 @@ namespace EAM.API.Controllers.MD
             return Ok(transferObject);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] AccountTypeDto time)
+        public async Task<IActionResult> Update([FromBody] EqCatDto time)
         {
             var transferObject = new TransferObject();
             await _service.Update(time);
