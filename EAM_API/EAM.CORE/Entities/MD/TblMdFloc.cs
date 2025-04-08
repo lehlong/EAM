@@ -1,12 +1,7 @@
-﻿using EAM.CORE.Common;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NPOI.SS.Formula.Functions;
+using System.ComponentModel.DataAnnotations.Schema;
+using EAM.CORE.Common;
 
 namespace EAM.CORE.Entities.MD
 {
@@ -15,28 +10,35 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("TPLNR")]
-        public string Tplnr { get; set; }
+        [MaxLength(30)]
+        public string Tplnr { get; set; } = null!;
 
         [Column("IWERK")]
-        public string Iwerk { get; set; }
+        [MaxLength(4)]
+        public string? Iwerk { get; set; }
 
         [Column("INGRP")]
-        public string Ingrp { get; set; }
+        [MaxLength(3)]
+        public string? Ingrp { get; set; }
 
         [Column("DESCRIPT")]
-        public string Descript { get; set; }
+        [MaxLength(50)]
+        public string? Descript { get; set; }
 
         [Column("SUPFLOC")]
-        public string Supfloc { get; set; }
+        [MaxLength(30)]
+        public string? Supfloc { get; set; }
 
         [Column("ARBPL")]
-        public string Arbpl { get; set; }
+        [MaxLength(8)]
+        public string? Arbpl { get; set; }
 
         [Column("START_UPDATE")]
-        public DateTime StartUpdate { get; set; }
+        public DateTime? StartUpdate { get; set; }
 
         [Column("TXT30")]
-        public string Txt30 { get; set; }
+        [MaxLength(30)]
+        public string? Txt30 { get; set; }
 
     }
 }

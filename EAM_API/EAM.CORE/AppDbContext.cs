@@ -1,6 +1,7 @@
 ﻿using EAM.CORE.Common;
 using EAM.CORE.Entities.AD;
 using EAM.CORE.Entities.MD;
+using EAM.CORE.Entities.TRAN;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -134,6 +135,28 @@ namespace EAM.CORE
         public DbSet<TblMdOrderType> TblMdOrderType { get; set; }
         public DbSet<TblMdFloc> TblMdFloc { get; set; }
         public DbSet<TblMdEquip> TblMdEquip { get; set; }
+        public DbSet<TblMdTasklist> TblMdTasklist { get; set; }
+        public DbSet<TblMdEquipPic> TblMdEquipPic { get; set; }
+        public DbSet<TblMdEquipMic> TblMdEquipMic { get; set; }
+        public DbSet<TblMdEquipDoc> TblMdEquipDoc { get; set; }
+        public DbSet<TblMdEquipChar> TblMdEquipChar { get; set; }
+        public DbSet<TblMdEquipClass> TblMdEquipClass { get; set; }
+        public DbSet<TblMdChar> TblMdChar { get; set; }
+        public DbSet<TblMdClassH> TblMdClassH { get; set; }
+        public DbSet<TblMdClassD> TblMdClassD { get; set; }
+        public DbSet<TblMdCatalog> TblMdCatalog { get; set; }
+        public DbSet<TblMdAsset> TblMdAsset { get; set; }
+        #endregion
+
+        #region Transaction Data
+        public DbSet<TblTranNoti> TblTranNoti { get; set; }
+        public DbSet<TblTranNotiAtt> TblTranNotiAtt { get; set; }
+        public DbSet<TblTranNotiCatalog> TblTranNotiCatalog { get; set; }
+        public DbSet<TblTranOrder> TblTranOrder { get; set; }
+        public DbSet<TblTranOrderAtt> TblTranOrderAtt { get; set; }
+        public DbSet<TblTranOrderEq> TblTranOrderEq { get; set; }
+        public DbSet<TblTranOrderOperation> TblTranOrderOperation { get; set; }
+        public DbSet<TblTranOrderVt> TblTranOrderVt { get; set; }
         #endregion
 
     }
