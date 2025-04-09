@@ -13,12 +13,10 @@ namespace EAM.CORE.Entities.TRAN
         [MaxLength(12)]
         public string Qmnum { get; set; } = null!;
 
-        [Key]
         [Column("OBJPART")]
         [MaxLength(18)]
         public string Objpart { get; set; } = null!;
 
-        [Key]
         [Column("TYPECODE")]
         [MaxLength(10)]
         public string TypeCode { get; set; } = null!;
@@ -27,7 +25,6 @@ namespace EAM.CORE.Entities.TRAN
         [MaxLength(50)]
         public string? TypeTxt { get; set; }
 
-        [Key]
         [Column("CAUSECODE")]
         [MaxLength(10)]
         public string CauseCode { get; set; } = null!;
@@ -36,7 +33,6 @@ namespace EAM.CORE.Entities.TRAN
         [MaxLength(50)]
         public string? CauseTxt { get; set; }
 
-        [Key]
         [Column("TASKCODE")]
         [MaxLength(10)]
         public string TaskCode { get; set; } = null!;
@@ -45,7 +41,6 @@ namespace EAM.CORE.Entities.TRAN
         [MaxLength(50)]
         public string? TaskTxt { get; set; }
 
-        [Key]
         [Column("ACTCODE")]
         [MaxLength(10)]
         public string ActCode { get; set; } = null!;

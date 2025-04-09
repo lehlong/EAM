@@ -8,6 +8,7 @@ namespace EAM.CORE.Entities.TRAN
     [Table("EAM_TRAN_ORDER_VT")]
     public class TblTranOrderVt : SoftDeleteEntity
     {
+        [Key]
         [Column("AUFNR")]
         [MaxLength(12)]
         public string? Aufnr { get; set; }

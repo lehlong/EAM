@@ -12,6 +12,7 @@ namespace EAM.CORE.Entities.TRAN
         [MaxLength(12)]
         public string? Aufnr { get; set; }
 
+        [Key]
         [Column("EQUNR")]
         [MaxLength(18)]
         public string? Equnr { get; set; }

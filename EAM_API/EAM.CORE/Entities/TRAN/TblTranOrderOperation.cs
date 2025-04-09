@@ -12,6 +12,7 @@ namespace EAM.CORE.Entities.TRAN
         [MaxLength(12)]
         public string? Aufnr { get; set; }
 
+        [Key]
         [Column("VORNR")]
         [MaxLength(4)]
         public string? Vornr { get; set; }
