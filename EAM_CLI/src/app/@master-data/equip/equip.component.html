@@ -1,6 +1,6 @@
 <nz-page-header nzBackIcon>
-  <nz-page-header-title>Khu vực chức năng</nz-page-header-title>
-  <nz-page-header-subtitle>Danh sách khu vực chức năng</nz-page-header-subtitle>
+  <nz-page-header-title>Thiết bị</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách thiết bị</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
       <nz-space>
@@ -24,8 +24,8 @@
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
-          <th>Mã</th>
-          <th>Maintenance <br> Planning Plant</th>
+          <th>Equipment Number</th>
+          <th>Equipment description</th>
           <th>Planner Group for <br> Customer Service <br> and Plant Maintenance</th>
           <th>Superior functional location</th>
           <th>Work center</th>
@@ -37,7 +37,8 @@
         <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
           <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
           </td>
-          <td> <a (click)="openEdit(data)">{{ data.tplnr }}</a></td>
+          <td> <a (click)="openEdit(data)">{{ data.equnr }}</a></td>
+          <td>{{data.eqktx}}</td>
           <td>{{ data.iwerk }}</td>
           <td>{{ data.ingrp }}</td>
           <td>{{ data.supfloc }}</td>
@@ -67,7 +68,7 @@
 </nz-page-header>
 
 <!--Create Update-->
-<nz-drawer nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<!-- <nz-drawer nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
@@ -169,4 +170,4 @@
       <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
     </button>
   </nz-space>
-</ng-template>
+</ng-template> -->

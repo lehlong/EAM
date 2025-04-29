@@ -11,6 +11,7 @@ namespace EAM.BUSINESS.Dtos.MD
         [Key]
         public string Equnr { get; set; }
 
+        public string Eqktx { get; set; }
         public string Iwerk { get; set; }
 
         public DateTime Datab { get; set; }

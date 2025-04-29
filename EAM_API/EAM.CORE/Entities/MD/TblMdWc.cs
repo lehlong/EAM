@@ -18,5 +18,7 @@ namespace EAM.CORE.Entities.MD
 
         [Column("ARBPL_TXT")]
         public string ArbplTxt { get; set; }
+        [Column("IWERK")]
+        public string Iwerk { get; set; }
     }
 }

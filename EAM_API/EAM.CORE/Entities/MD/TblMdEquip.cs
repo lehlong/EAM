@@ -13,6 +13,9 @@ namespace EAM.CORE.Entities.MD
         [MaxLength(18)]
         public string EqUnr { get; set; } = null!; // Not nullable
 
+        [Column("EQKTX")]
+        public string Eqktx { get; set; }
+
         [Column("IWERK")]
         [MaxLength(4)]
         public string Iwerk { get; set; } = null!; // Not nullable

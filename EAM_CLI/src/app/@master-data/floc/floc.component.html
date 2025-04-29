@@ -25,10 +25,9 @@
         <tr>
           <th nzWidth="60px">STT</th>
           <th>Mã</th>
+          <th>Description of technical object</th>
           <th>Maintenance <br> Planning Plant</th>
-          <th>Planner Group for <br> Customer Service <br> and Plant Maintenance</th>
           <th>Superior functional location</th>
-          <th>Work center</th>
           <th>Start Date</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
@@ -38,11 +37,10 @@
           <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
           </td>
           <td> <a (click)="openEdit(data)">{{ data.tplnr }}</a></td>
-          <td>{{ data.iwerk }}</td>
-          <td>{{ data.ingrp }}</td>
-          <td>{{ data.supfloc }}</td>
-          <td>{{ data.arbpl }}</td>
-          <td>{{ data.startUpdate }}</td>
+          <td>{{ data.descript }}</td>
+          <td>{{ getNamePlant(data.iwerk) }}</td>
+          <td>{{ getNameFloc(data.supfloc) }}</td>
+          <td>{{ data.startUpdate | date: 'dd/MM/yyyy hh:mm' }}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />
@@ -71,27 +69,34 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Mã" [required]="true" label="Mã"
-        [control]="$any(validateForm).controls['tplnr']" [required]="true"
-        [disabled]="edit ? true : false"></app-input-clear>
-        <nz-form-control style="margin-bottom: 15px;">
-          <label>Maintenance Planning Plant</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Maintenance Planning Plant" formControlName="iwerk">
-            <ng-container *ngFor="let item of lstPlant">
-              <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.iwerkTxt" [nzValue]="item.iwerk">
-              </nz-option>
-            </ng-container>
-          </nz-select>
-        </nz-form-control>
+      <app-input-clear placeholder="Mã" [required]="true" label="Mã" [control]="$any(validateForm).controls['tplnr']"
+        [required]="true" [disabled]="edit ? true : false"></app-input-clear>
+      <nz-form-control style="margin-bottom: 15px;">
+        <label>Maintenance Planning Plant</label>
+        <nz-select nzShowSearch nzAllowClear placeholder="Maintenance Planning Plant" formControlName="iwerk">
+          <ng-container *ngFor="let item of lstPlants">
+            <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.iwerkTxt" [nzValue]="item.iwerk">
+            </nz-option>
+          </ng-container>
+        </nz-select>
+      </nz-form-control>
 
-      <app-input-clear placeholder="Planner Group for Customer Service and Plant Maintenance" label="Planner Group for Customer Service and Plant Maintenance"
+      <app-input-clear placeholder="Planner Group for Customer Service and Plant Maintenance"
+        label="Planner Group for Customer Service and Plant Maintenance"
         [control]="$any(validateForm).controls['ingrp']"></app-input-clear>
 
       <app-input-clear placeholder="Description of technical object" label="Description of technical object"
         [control]="$any(validateForm).controls['descript']"></app-input-clear>
 
-      <app-input-clear placeholder="Superior functional location" label="Superior functional location"
-        [control]="$any(validateForm).controls['supfloc']"></app-input-clear>
+        <nz-form-control style="margin-bottom: 15px;">
+          <label>Superior functional location</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Superior functional location" formControlName="supfloc">
+            <ng-container *ngFor="let item of lstFloc">
+              <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.descript" [nzValue]="item.tplnr">
+              </nz-option>
+            </ng-container>
+          </nz-select>
+        </nz-form-control>
 
       <app-input-clear placeholder="Work center" label="Work center"
         [control]="$any(validateForm).controls['arbpl']"></app-input-clear>

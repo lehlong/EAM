@@ -5,12 +5,13 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { GlobalService } from '../../service/global.service';
 import { WcService } from '../../service/master-data/wc.service';
 import { ShareModule } from '../../shared/share-module';
+import { PlantService } from '../../service/master-data/plant.service';
 
 @Component({
   selector: 'app-plan',
   imports: [ShareModule],
   templateUrl: './wc.component.html',
-  styleUrl: './wc.component.scss'
+  styleUrl: './wc.component.scss',
 })
 export class WcComponent {
   validateForm: FormGroup;
@@ -20,16 +21,19 @@ export class WcComponent {
   filter = new BaseFilter();
   paginationResult = new PaginationResult();
   loading: boolean = false;
+  lstPlants: any[] = [];
 
   constructor(
     private _service: WcService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private plant: PlantService
   ) {
     this.validateForm = this.fb.group({
       arbpl: ['', [Validators.required]],
       arbplTxt: ['', [Validators.required]],
+      iwerk: ['', [Validators.required]],
       isActive: [true, [Validators.required]],
     });
     this.globalService.setBreadcrumb([
@@ -48,6 +52,23 @@ export class WcComponent {
 
   ngOnInit(): void {
     this.search();
+    this.getPlants();
+  }
+
+  getPlants() {
+    this.plant.getAll().subscribe({
+      next: (data) => {
+        this.lstPlants = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  getNamePlant(iwerk: string): string {
+    const plant = this.lstPlants.find((plant) => plant.iwerk === iwerk);
+    return plant ? plant.iwerkTxt : iwerk;
   }
 
   onSortChange(iwerkTxt: string, value: any) {
@@ -64,6 +85,7 @@ export class WcComponent {
     this._service.search(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data;
+        console.log(this.paginationResult);
       },
       error: (response) => {
         console.log(response);
@@ -150,6 +172,7 @@ export class WcComponent {
     this.validateForm.setValue({
       arbpl: data.arbpl,
       arbplTxt: data.arbplTxt,
+      iwerk: data.iwerk,
       isActive: data.isActive,
     });
     setTimeout(() => {

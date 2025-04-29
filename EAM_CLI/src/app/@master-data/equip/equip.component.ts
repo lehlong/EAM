@@ -70,7 +70,7 @@ export class EquipComponent {
     });
     this.globalService.setBreadcrumb([
       {
-        name: 'Khu vực chức năng',
+        name: 'Thiết bị',
         path: 'master-data/equip',
       },
     ]);
@@ -103,6 +103,7 @@ export class EquipComponent {
     this._service.search(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data;
+        console.log(data)
       },
       error: (response) => {
         console.log(response);

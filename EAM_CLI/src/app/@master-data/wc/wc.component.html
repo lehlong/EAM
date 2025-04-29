@@ -1,6 +1,6 @@
 <nz-page-header nzBackIcon>
-  <nz-page-header-title>Bộ phận sửa chữa</nz-page-header-title>
-  <nz-page-header-subtitle>Danh sách bộ phận sửa chữa</nz-page-header-subtitle>
+  <nz-page-header-title>Bộ phận bảo trì, sửa chữa</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách bộ phận bảo trì, sửa chữa</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
       <nz-space>
@@ -26,6 +26,7 @@
           <th nzWidth="60px">STT</th>
           <th>Mã</th>
           <th>Tên</th>
+          <th>Đơn vị bảo trì</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
@@ -35,6 +36,7 @@
           </td>
           <td> <a (click)="openEdit(data)">{{ data.arbpl }}</a></td>
           <td>{{ data.arbplTxt }}</td>
+          <td>{{ getNamePlant(data.iwerk) }}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />
@@ -68,7 +70,15 @@
         [disabled]="edit ? true : false"></app-input-clear>
       <app-input-clear placeholder="Tên thông tin" [required]="true" label="Tên"
         [control]="$any(validateForm).controls['arbplTxt']"></app-input-clear>
-
+        <nz-form-item>
+          <nz-form-label>Đơn vị bảo trì</nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn đơn vị bảo trì" formControlName="iwerk">
+              <nz-option cdkScrollable *ngFor="let item of lstPlants" [nzLabel]="item.iwerkTxt" [nzValue]="item.iwerk">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
         <nz-form-control>

@@ -11,7 +11,7 @@ import { PlantService } from '../../service/master-data/plant.service';
   selector: 'app-floc',
   imports: [ShareModule],
   templateUrl: './floc.component.html',
-  styleUrl: './floc.component.scss'
+  styleUrl: './floc.component.scss',
 })
 export class FlocComponent {
   validateForm: FormGroup;
@@ -20,7 +20,8 @@ export class FlocComponent {
   edit: boolean = false;
   filter = new BaseFilter();
   paginationResult = new PaginationResult();
-  lstPlant : any = []
+  lstPlants: any = [];
+  lstFloc: any = [];
   loading: boolean = false;
 
   constructor(
@@ -57,7 +58,8 @@ export class FlocComponent {
 
   ngOnInit(): void {
     this.search();
-    this.searchFlant()
+    this.getLstPlants();
+    this.getAllFloc();
   }
 
   onSortChange(tplnrTxt: string, value: any) {
@@ -81,19 +83,39 @@ export class FlocComponent {
     });
   }
 
-  searchFlant() {
-    this.isSubmit = false;
-    this._servicePlant.search(this.filter).subscribe({
+  getAllFloc() {
+    this._service.getAll().subscribe({
       next: (data) => {
-        this.lstPlant = data;
-        console.log(this.lstPlant);
-
+        this.lstFloc = data;
       },
       error: (response) => {
         console.log(response);
       },
     });
   }
+
+  getNameFloc(tplnr: string): string {
+    const floc = this.lstFloc.find((x: { tplnr: string }) => x.tplnr === tplnr);
+    return floc ? floc.descript : tplnr;
+  }
+  getLstPlants() {
+    this._servicePlant.getAll().subscribe({
+      next: (data) => {
+        this.lstPlants = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  getNamePlant(iwerk: string): string {
+    const plant = this.lstPlants.find(
+      (x: { iwerk: string }) => x.iwerk === iwerk
+    );
+    return plant ? plant.iwerkTxt : iwerk;
+  }
+
   isCodeExist(tplnr: string): boolean {
     return this.paginationResult.data?.some(
       (accType: any) => accType.tplnr === tplnr
@@ -171,14 +193,14 @@ export class FlocComponent {
 
   openEdit(data: any) {
     this.validateForm.setValue({
-      tplnr : data.tplnr,
-      ingrp : data.ingrp,
-      iwerk : data.iwerk,
-      descript : data.descript,
-      supfloc : data.supfloc,
-      arbpl : data.arbpl,
-      startUpdate : data.startUpdate,
-      txt30 : data.txt30,
+      tplnr: data.tplnr,
+      ingrp: data.ingrp,
+      iwerk: data.iwerk,
+      descript: data.descript,
+      supfloc: data.supfloc,
+      arbpl: data.arbpl,
+      startUpdate: data.startUpdate,
+      txt30: data.txt30,
       isActive: data.isActive,
     });
     setTimeout(() => {
