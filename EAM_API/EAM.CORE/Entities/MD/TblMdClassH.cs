@@ -15,6 +15,9 @@ namespace EAM.CORE.Entities.MD
         [Column("KLART")]
         public string? Klart { get; set; }
 
+        [Column("CLASS_TEXT")]
+        public string? ClassTxt { get; set; }
+
         [Column("STATU")]
         public string? Statu { get; set; }
 

@@ -1,6 +1,6 @@
 <nz-page-header nzBackIcon>
-  <nz-page-header-title>Tasklist</nz-page-header-title>
-  <nz-page-header-subtitle>Danh sách Tasklist</nz-page-header-subtitle>
+  <nz-page-header-title>ĐẶC TÍNH THEO NHÓM</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách đặc tính theo nhóm</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
       <nz-space>
@@ -24,11 +24,9 @@
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
-          <th>Operation/Activity Number</th>
-          <th>Operation short text</th>
-          <th>Mã task list</th>
-          <th>Task list description</th>
-
+          <th>Class number</th>
+          <th>Characteristic Name</th>
+          <th>Name of Person Responsible for Creating the Object</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
@@ -36,13 +34,9 @@
         <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
           <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
           </td>
-
-          <td>{{ data.vornr }}</td>
-          <td>{{ data.ltxa1 }}</td>
-          <td>{{ data.plnnr }}</td>
-          <td>{{ data.ktext }}</td>
-
-
+          <td> <a (click)="openEdit(data)">{{data.class}} - {{ getClassHName(data.class) }}</a></td>
+          <td>{{ data.atnam }}</td>
+          <td>{{data.aname}}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />
@@ -71,15 +65,36 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Operation/Activity Number"  label="Operation/Activity Number"
-        [control]="$any(validateForm).controls['vornr']"
-        [disabled]="edit ? true : false"></app-input-clear>
-      <app-input-clear placeholder="Operation short text"  label="Operation short text"
-        [control]="$any(validateForm).controls['ltxa1']"></app-input-clear>
-        <app-input-clear placeholder="Mã task list"  label="Mã task list"
-        [control]="$any(validateForm).controls['plnnr']"></app-input-clear>
-        <app-input-clear placeholder="Task list description"  label="Task list description"
-        [control]="$any(validateForm).controls['ktext']"></app-input-clear>
+      <nz-form-item>
+        <nz-form-label>Class number</nz-form-label>
+        <nz-form-control nzErrorTip="Không được để trống">
+          <nz-select nzShowSearch nzAllowClear placeholder="Class number" formControlName="class">
+            <nz-option cdkScrollable *ngFor="let item of lstClassH"
+              [nzLabel]="item.class + ' - ' + item.classTxt" [nzValue]="item.class">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Characteristic Name</nz-form-label>
+        <nz-form-control nzErrorTip="Không được để trống">
+          <nz-select
+          formControlName="atnam"
+          nzShowSearch
+          nzAllowClear
+          placeholder="Characteristic Name"
+          (nzOnChange)="onClassChange($event)">
+          <nz-option
+            *ngFor="let item of lstChar"
+            [nzLabel]="item.atnam + ' - ' + item.atbez"
+            [nzValue]="item.atnam">
+          </nz-option>
+        </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <app-input-clear placeholder="Name of Person Responsible for Creating the Object" label="Name of Person Responsible for Creating the Object"
+      [control]="$any(validateForm).controls['aname']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>

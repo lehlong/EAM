@@ -191,6 +191,10 @@ export class EquipComponent {
     });
   }
 
+  getEquipmentCategoryName(code: string){
+    return this.lstEqCat.find((x: { eqtyp: string; }) => x.eqtyp == code)?.eqtypTxt
+  }
+
   setValueCat(code: any) {
     const category = this.lstEqCat.find(
       (cat: { eqtyp: any }) => cat.eqtyp === code

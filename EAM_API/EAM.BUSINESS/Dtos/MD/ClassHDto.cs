@@ -10,6 +10,7 @@ namespace EAM.BUSINESS.Dtos.MD
     {
         [Key]
         public string Class { get; set; } = null!;
+        public string? ClassTxt { get; set; }
         public string? Klart { get; set; }
         public string? Statu { get; set; }
         public string? Klagr { get; set; }

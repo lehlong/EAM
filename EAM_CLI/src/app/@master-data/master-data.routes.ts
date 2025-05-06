@@ -1,4 +1,4 @@
-import { TaskListComponent } from './task-list/task-list.component';
+import { TasklistComponent } from './task-list/task-list.component';
 import { Routes } from '@angular/router';
 import { AccountTypeComponent } from './account-type/account-type.component';
 import { EqCatComponent } from './eq-cat/eq-cat.component';
@@ -9,6 +9,9 @@ import { NotiTypeComponent } from './noti-type/noti-type.component';
 import { OrderTypeComponent } from './order-type/order-type.component';
 import { FlocComponent } from './floc/floc.component';
 import { EquipComponent } from './equip/equip.component';
+import { CharComponent } from './char/char.component';
+import { ClassDComponent } from './class-d/class-d.component';
+import { ClassHComponent } from './class-h/class-h.component';
 
 export const masterDataRoutes: Routes = [
   { path: 'account-type', component: AccountTypeComponent },
@@ -20,5 +23,8 @@ export const masterDataRoutes: Routes = [
   { path: 'order-type', component: OrderTypeComponent },
   { path: 'floc', component: FlocComponent },
   { path: 'equip', component: EquipComponent },
-  { path: 'task-list', component: TaskListComponent },
+  { path: 'task-list', component: TasklistComponent },
+  { path: 'char', component: CharComponent },
+  { path: 'class-h', component: ClassHComponent },
+  { path: 'class-d', component: ClassDComponent },
 ];

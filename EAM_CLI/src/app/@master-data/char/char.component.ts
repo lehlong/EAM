@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { ShareModule } from '../../shared/share-module';
+import { BaseFilter, PaginationResult } from '../../models/base.model';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { BaseFilter, PaginationResult } from '../../models/base.model';
 import { GlobalService } from '../../service/global.service';
-import { TasklistService } from '../../service/master-data/task-list.service';
+import { CharService } from '../../service/master-data/char.service';
+import { ShareModule } from '../../shared/share-module';
 
 @Component({
-  selector: 'app-task-list',
+  selector: 'app-char',
   imports: [ShareModule],
-  templateUrl: './task-list.component.html',
-  styleUrl: './task-list.component.scss'
+  templateUrl: './char.component.html',
+  styleUrl: './char.component.scss'
 })
-export class TasklistComponent {
+export class CharComponent {
   validateForm: FormGroup;
   isSubmit: boolean = false;
   visible: boolean = false;
@@ -22,29 +22,28 @@ export class TasklistComponent {
   loading: boolean = false;
 
   constructor(
-    private _service: TasklistService,
+    private _service: CharService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({
-      id:[''],
-      plnnr: [''],
-      ktext: [''],
-      vornr: [''],
-      ltxa1: [''],
+      atnam: ['', [Validators.required]],
+      atbez: ['', [Validators.required]],
+
       isActive: [true, [Validators.required]],
     });
     this.globalService.setBreadcrumb([
       {
-        name: 'Tasklist',
-        path: 'master-data/task-list',
+        name: 'Đặc tính',
+        path: 'master-data/char',
       },
     ]);
     this.globalService.getLoading().subscribe((value) => {
       this.loading = value;
     });
   }
+
   ngOnDestroy() {
     this.globalService.setBreadcrumb([]);
   }
@@ -53,10 +52,10 @@ export class TasklistComponent {
     this.search();
   }
 
-  onSortChange(dataTxt: string, value: any) {
+  onSortChange(column: string, value: any) {
     this.filter = {
       ...this.filter,
-      //SortColumn: dataTxt,
+      //SortColumn: column,
       //IsDescending: value === 'descend',
     };
     this.search();
@@ -67,7 +66,6 @@ export class TasklistComponent {
     this._service.search(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data;
-        console.log(data)
       },
       error: (response) => {
         console.log(response);
@@ -75,12 +73,14 @@ export class TasklistComponent {
     });
   }
 
-  isCodeExist(data: string): boolean {
+  isCodeExist(atnam: string): boolean {
     return this.paginationResult.data?.some(
-      (accType: any) => accType.data === data
+      (char: any) => char.atnam === atnam
     );
   }
-  submitForm(): void {
+
+  submitForm() {
+    debugger
     this.isSubmit = true;
     if (this.validateForm.valid) {
       if (this.edit) {
@@ -93,7 +93,13 @@ export class TasklistComponent {
           },
         });
       } else {
-
+        const formData = this.validateForm.getRawValue();
+        if (this.isCodeExist(formData.atnam)) {
+          this.message.error(
+            `Đặc tính ${formData.atnam} đã tồn tại, vui lòng nhập lại`
+          );
+          return;
+        }
         this._service.create(this.validateForm.getRawValue()).subscribe({
           next: (data) => {
             this.search();
@@ -130,11 +136,14 @@ export class TasklistComponent {
 
   resetForm() {
     this.validateForm.reset();
+    this.validateForm.patchValue({
+      isActive: true
+    });
     this.isSubmit = false;
   }
 
-  deleteItem(data: string) {
-    this._service.delete(data).subscribe({
+  deleteItem(atnam: string) {
+    this._service.delete(atnam).subscribe({
       next: (data) => {
         this.search();
       },
@@ -146,11 +155,9 @@ export class TasklistComponent {
 
   openEdit(data: any) {
     this.validateForm.setValue({
-      id: data.id,
-      plnnr: data.plnnr,
-      ktext: data.ktext,
-      vornr: data.vornr,
-      ltxa1: data.ltxa1,
+      atnam: data.atnam,
+      atbez: data.atbez,
+
       isActive: data.isActive,
     });
     setTimeout(() => {
@@ -170,4 +177,3 @@ export class TasklistComponent {
     this.search();
   }
 }
-

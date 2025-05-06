@@ -28,7 +28,7 @@ namespace EAM.BUSINESS.Services.MD
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                return await Paging(query.OrderBy(x => x.Plnnr), filter);
+                return await Paging(query.OrderBy(x => x.Plnnr).ThenBy(x => x.Vornr), filter);
             }
             catch (Exception ex)
             {
