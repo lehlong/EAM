@@ -10,58 +10,45 @@ namespace EAM.CORE.Entities.TRAN
     {
         [Key]
         [Column("QMNUM")]
-        [MaxLength(12)]
         public string Qmnum { get; set; } = null!;
 
         [Column("OBJPART")]
-        [MaxLength(18)]
-        public string Objpart { get; set; } = null!;
+        public string? Objpart { get; set; }
 
         [Column("TYPECODE")]
-        [MaxLength(10)]
-        public string TypeCode { get; set; } = null!;
+        public string? TypeCode { get; set; }
 
         [Column("TYPETXT")]
-        [MaxLength(50)]
         public string? TypeTxt { get; set; }
 
         [Column("CAUSECODE")]
-        [MaxLength(10)]
-        public string CauseCode { get; set; } = null!;
+        public string? CauseCode { get; set; }
 
         [Column("CAUSETXT")]
-        [MaxLength(50)]
         public string? CauseTxt { get; set; }
 
         [Column("TASKCODE")]
-        [MaxLength(10)]
-        public string TaskCode { get; set; } = null!;
+        public string? TaskCode { get; set; }
 
         [Column("TASKTXT")]
-        [MaxLength(50)]
         public string? TaskTxt { get; set; }
 
         [Column("ACTCODE")]
-        [MaxLength(10)]
-        public string ActCode { get; set; } = null!;
+        public string? ActCode { get; set; }
 
         [Column("ACTTXT")]
-        [MaxLength(50)]
         public string? ActTxt { get; set; }
 
         [Column("CREATBY")]
-        [MaxLength(12)]
         public string? CreatBy { get; set; }
 
         [Column("CREATEON")]
         public DateTime? CreateOn { get; set; }
 
         [Column("CHANGEBY")]
-        [MaxLength(12)]
         public string? ChangeBy { get; set; }
 
         [Column("CHANGEON")]
         public DateTime? ChangeOn { get; set; }
-
     }
 }

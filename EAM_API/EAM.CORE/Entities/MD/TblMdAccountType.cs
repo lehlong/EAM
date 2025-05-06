@@ -9,8 +9,9 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("CODE")]
-        public string Code { get; set; }
-        [Column("NAME", TypeName = "NVARCHAR(255)")]
-        public string Name { get; set; }
+        public string Code { get; set; } = null!;
+        
+        [Column("NAME")]
+        public string? Name { get; set; }
     }
 }

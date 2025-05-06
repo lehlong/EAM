@@ -10,18 +10,15 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("EQUNR")]
-        [MaxLength(18)]
-        public string? Equnr { get; set; }
+        public string Equnr { get; set; } = null!;
 
         [Column("FILETYPE")]
-        [MaxLength(4)]
         public string? Filetype { get; set; }
 
         [Column("FILESIZE")]
         public int? Filesize { get; set; }
 
         [Column("PATH")]
-        [MaxLength(200)]
         public string? Path { get; set; }
     }
 }

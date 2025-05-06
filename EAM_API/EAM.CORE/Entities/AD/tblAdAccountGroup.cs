@@ -12,17 +12,17 @@ namespace EAM.CORE.Entities.AD
         [Column("ID")]
         public Guid Id { get; set; }
 
-        [Column("NAME",TypeName = "NVARCHAR(50)")]
-        public string Name { get; set; }
+        [Column("NAME")]
+        public string? Name { get; set; }
 
-        [Column("NOTES",TypeName = "NVARCHAR(255)")]
+        [Column("NOTES")]
         public string? Notes { get; set; }
 
-        [Column("ROLE_CODE",TypeName = "VARCHAR(255)")]
+        [Column("ROLE_CODE")]
         public string? RoleCode { get; set; }
 
-        public virtual List<TblAdAccount_AccountGroup> Account_AccountGroups { get; set; }
+        public virtual List<TblAdAccount_AccountGroup>? Account_AccountGroups { get; set; }
 
-        public virtual List<TblAdAccountGroupRight> ListAccountGroupRight { get; set; }
+        public virtual List<TblAdAccountGroupRight>? ListAccountGroupRight { get; set; }
     }
 }

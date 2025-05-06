@@ -10,26 +10,21 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("ATNAM")]
-        [MaxLength(30)]
-        public string? Atnam { get; set; }
+        public string Atnam { get; set; } = null!;
 
         [Column("ATBEZ")]
-        [MaxLength(50)]
         public string? Atbez { get; set; }
 
         [Column("ATFOR")]
-        [MaxLength(4)]
         public string? Atfor { get; set; }
 
         [Column("ANAME")]
-        [MaxLength(12)]
         public string? Aname { get; set; }
 
         [Column("ADATU")]
         public DateTime? Adatu { get; set; }
 
         [Column("VNAME")]
-        [MaxLength(12)]
         public string? Vname { get; set; }
 
         [Column("VDATU")]

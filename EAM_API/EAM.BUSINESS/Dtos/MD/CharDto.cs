@@ -9,12 +9,12 @@ namespace EAM.BUSINESS.Dtos.MD
     public class CharDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
-        public string Atnam { get; set; }
-        public string Atbez { get; set; }
-        public string Atfor { get; set; }
-        public string Aname { get; set; }
+        public string Atnam { get; set; } = null!;
+        public string? Atbez { get; set; }
+        public string? Atfor { get; set; }
+        public string? Aname { get; set; }
         public DateTime? Adatu { get; set; }
-        public string Vname { get; set; }
+        public string? Vname { get; set; }
         public DateTime? Vdatu { get; set; }
         public DateTime? Vondt { get; set; }
         public DateTime? Bisdt { get; set; }

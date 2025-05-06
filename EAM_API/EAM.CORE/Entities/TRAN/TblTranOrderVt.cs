@@ -10,23 +10,18 @@ namespace EAM.CORE.Entities.TRAN
     {
         [Key]
         [Column("AUFNR")]
-        [MaxLength(12)]
-        public string? Aufnr { get; set; }
+        public string Aufnr { get; set; } = null!;
 
         [Column("CATEGORY")]
-        [MaxLength(1)]
         public string? Category { get; set; }
 
         [Column("MATNR")]
-        [MaxLength(18)]
         public string? Matnr { get; set; }
 
         [Column("MAKTX")]
-        [MaxLength(255)]
         public string? Maktx { get; set; }
 
         [Column("WERKS")]
-        [MaxLength(4)]
         public string? Werks { get; set; }
 
         [Column("BUDAT")]
@@ -36,19 +31,15 @@ namespace EAM.CORE.Entities.TRAN
         public decimal? Menge { get; set; }
 
         [Column("MEINS")]
-        [MaxLength(3)]
         public string? Meins { get; set; }
 
         [Column("CATEGORY2")]
-        [MaxLength(1)]
         public string? Category2 { get; set; }
 
         [Column("LGORT")]
-        [MaxLength(4)]
         public string? Lgort { get; set; }
 
         [Column("CHARG")]
-        [MaxLength(10)]
         public string? Charg { get; set; }
 
         [Column("PRICE")]
@@ -58,11 +49,9 @@ namespace EAM.CORE.Entities.TRAN
         public decimal? Dmbtr { get; set; }
 
         [Column("WAERS")]
-        [MaxLength(5)]
         public string? Waers { get; set; }
 
         [Column("UNAME")]
-        [MaxLength(12)]
         public string? Uname { get; set; }
 
         [Column("UDAT")]

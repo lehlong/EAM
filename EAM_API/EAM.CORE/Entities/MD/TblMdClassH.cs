@@ -10,30 +10,24 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("CLASS")]
-        [MaxLength(18)]
-        public string? Class { get; set; }
+        public string Class { get; set; } = null!;
 
         [Column("KLART")]
-        [MaxLength(3)]
         public string? Klart { get; set; }
 
         [Column("STATU")]
-        [MaxLength(1)]
         public string? Statu { get; set; }
 
         [Column("KLAGR")]
-        [MaxLength(10)]
         public string? Klagr { get; set; }
 
         [Column("ANAME")]
-        [MaxLength(12)]
         public string? Aname { get; set; }
 
         [Column("ADATU")]
         public DateTime? Adatu { get; set; }
 
         [Column("VNAME")]
-        [MaxLength(12)]
         public string? Vname { get; set; }
 
         [Column("VDATU")]
@@ -44,6 +38,5 @@ namespace EAM.CORE.Entities.MD
 
         [Column("BISDT")]
         public DateTime? Bisdt { get; set; }
-
     }
 }

@@ -14,9 +14,9 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("IWERK")]
-        public string Iwerk { get; set; }
+        public string Iwerk { get; set; } = null!;
 
         [Column("IWERK_TXT")]
-        public string IwerkTxt { get; set; }
+        public string? IwerkTxt { get; set; }
     }
 }

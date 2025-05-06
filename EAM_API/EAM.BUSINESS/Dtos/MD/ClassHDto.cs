@@ -9,13 +9,13 @@ namespace EAM.BUSINESS.Dtos.MD
     public class ClassHDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
-        public string Class { get; set; }
-        public string Klart { get; set; }
-        public string Statu { get; set; }
-        public string Klagr { get; set; }
-        public string Aname { get; set; }
+        public string Class { get; set; } = null!;
+        public string? Klart { get; set; }
+        public string? Statu { get; set; }
+        public string? Klagr { get; set; }
+        public string? Aname { get; set; }
         public DateTime? Adatu { get; set; }
-        public string Vname { get; set; }
+        public string? Vname { get; set; }
         public DateTime? Vdatu { get; set; }
         public DateTime? Vondt { get; set; }
         public DateTime? Bisdt { get; set; }

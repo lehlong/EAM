@@ -9,12 +9,12 @@ namespace EAM.BUSINESS.Dtos.MD
     public class EquipCharDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
-        public string Equnr { get; set; }
-        public string Class { get; set; }
-        public string Atnam { get; set; }
-        public string Value { get; set; }
+        public string Equnr { get; set; } = null!;
+        public string? Class { get; set; }
+        public string? Atnam { get; set; }
+        public string? Value { get; set; }
         public DateTime? Adatu { get; set; }
-        public string Vname { get; set; }
+        public string? Vname { get; set; }
         public DateTime? Vdatu { get; set; }
         public DateTime? Vondt { get; set; }
         public DateTime? Bisdt { get; set; }

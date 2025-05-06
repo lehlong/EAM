@@ -10,40 +10,38 @@ namespace EAM.CORE.Entities.AD
     public class TblAdAccount : SoftDeleteEntity
     {
         [Key]
-        [Column("USER_NAME",TypeName = "VARCHAR(50)")]
-        public string UserName { get; set; }
+        [Column("USER_NAME")]
+        public string UserName { get; set; } = null!;
 
-        [Column("FULL_NAME",TypeName = "NVARCHAR(255)")]
-        public string FullName { get; set; }
+        [Column("FULL_NAME")]
+        public string? FullName { get; set; }
 
-        [Column("PASSWORD", TypeName = "VARCHAR(50)")]
-        public string Password { get; set; }
+        [Column("PASSWORD")]
+        public string? Password { get; set; }
 
-        [Column("PHONE_NUMBER",TypeName = "VARCHAR(10)")]
+        [Column("PHONE_NUMBER")]
         public string? PhoneNumber { get; set; }
 
-        [Column("EMAIL",TypeName = "VARCHAR(255)")]
+        [Column("EMAIL")]
         public string? Email { get; set; }
 
-        [Column("ADDRESS",TypeName = "NVARCHAR(255)")]
+        [Column("ADDRESS")]
         public string? Address { get; set; }
 
-        [Column("ACCOUNT_TYPE", TypeName = "VARCHAR(10)")]
+        [Column("ACCOUNT_TYPE")]
         public string? AccountType { get; set; }
 
-        [Column("ORG_CODE", TypeName = "VARCHAR(50)")]
+        [Column("ORG_CODE")]
         public string? OrganizeCode { get; set; }
 
-        [Column("URL_IMAGE", TypeName = "VARCHAR(100)")]
+        [Column("URL_IMAGE")]
         public string? UrlImage { get; set; }
 
 
-        public virtual ICollection<TblAdAccount_AccountGroup> Account_AccountGroups { get; set; }
+        public virtual ICollection<TblAdAccount_AccountGroup>? Account_AccountGroups { get; set; }
 
-        public virtual ICollection<TblAdAccountRight> AccountRights { get; set; }
+        public virtual ICollection<TblAdAccountRight>? AccountRights { get; set; }
 
-        public virtual ICollection<TblAdAccountRefreshToken> RefreshTokens { get; set; }
-    
-
+        public virtual ICollection<TblAdAccountRefreshToken>? RefreshTokens { get; set; }
     }
 }

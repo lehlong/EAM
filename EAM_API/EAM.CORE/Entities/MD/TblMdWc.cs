@@ -14,11 +14,12 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("ARBPL")]
-        public string Arbpl { get; set; }
+        public string Arbpl { get; set; } = null!;
 
         [Column("ARBPL_TXT")]
-        public string ArbplTxt { get; set; }
+        public string? ArbplTxt { get; set; }
+        
         [Column("IWERK")]
-        public string Iwerk { get; set; }
+        public string? Iwerk { get; set; }
     }
 }

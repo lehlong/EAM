@@ -9,14 +9,14 @@ namespace EAM.BUSINESS.Dtos.MD
     public class CatalogDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
-        public string CatCode { get; set; }
-        public string CatName { get; set; }
-        public string CatType { get; set; }
-        public string Code { get; set; }
-        public string CodeDes { get; set; }
-        public string Status { get; set; }
+        public string CatCode { get; set; } = null!;
+        public string? CatName { get; set; }
+        public string? CatType { get; set; }
+        public string? Code { get; set; }
+        public string? CodeDes { get; set; }
+        public string? Status { get; set; }
         public DateTime? Adatu { get; set; }
-        public string Vname { get; set; }
+        public string? Vname { get; set; }
         public DateTime? Vdatu { get; set; }
         public DateTime? Vondt { get; set; }
         public DateTime? Bisdt { get; set; }

@@ -10,15 +10,15 @@ namespace EAM.CORE.Entities.AD
     {
         [Key]
         [Column("USER_NAME")]
-        public string UserName { get; set; }
+        public string UserName { get; set; } = null!;
 
         [Key]
         [Column("GROUP_ID")]
         public Guid GroupId { get; set; }
 
         
-        public virtual TblAdAccount Account { get; set; }
+        public virtual TblAdAccount? Account { get; set; }
 
-        public virtual TblAdAccountGroup AccountGroup { get; set; }
+        public virtual TblAdAccountGroup? AccountGroup { get; set; }
     }
 }

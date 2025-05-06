@@ -14,9 +14,9 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("EQART")]
-        public string Eqart { get; set; }
+        public string Eqart { get; set; } = null!;
 
         [Column("EQART_TXT")]
-        public string EqartTxt { get; set; }
+        public string? EqartTxt { get; set; }
     }
 }

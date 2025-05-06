@@ -9,9 +9,9 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("EQTYP")]
-        public string Eqtyp { get; set; }
+        public string Eqtyp { get; set; } = null!;
 
         [Column("EQTYP_TXT")]
-        public string EqtypTxt { get; set; }
+        public string? EqtypTxt { get; set; }
     }
 }

@@ -10,19 +10,15 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("EQUNR")]
-        [MaxLength(18)]
-        public string? Equnr { get; set; }
+        public string Equnr { get; set; } = null!;
 
         [Column("CLASS")]
-        [MaxLength(18)]
         public string? Class { get; set; }
 
         [Column("MIC")]
-        [MaxLength(30)]
         public string? Mic { get; set; }
 
         [Column("MICNAME")]
-        [MaxLength(30)]
         public string? MicName { get; set; }
 
         [Column("STVALUE")]
@@ -35,14 +31,12 @@ namespace EAM.CORE.Entities.MD
         public decimal? HiValue { get; set; }
 
         [Column("VALUEDT")]
-        [MaxLength(100)]
         public string? ValueDt { get; set; }
 
         [Column("ADATU")]
         public DateTime? Adatu { get; set; }
 
         [Column("VNAME")]
-        [MaxLength(12)]
         public string? Vname { get; set; }
 
         [Column("VDATU")]
