@@ -32,7 +32,7 @@ import { environment } from '../../../environments/environment';
 })
 export class MainLayoutComponent implements OnInit {
 
-  isCollapsed: boolean = true;
+  isCollapsed: boolean = false;
   loading: boolean = false
   user: any = {}
   userAvatar : string = '/img/profile.png'

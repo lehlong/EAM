@@ -1,0 +1,81 @@
+.main-home {
+  padding: 12px;
+}
+
+.inner-box {
+  height: 120px;
+  cursor: pointer;
+  color: white;
+  padding: 12px 18px;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  //border-radius: 4px;
+}
+
+.control {
+  display: flex;
+  gap: 12px
+}
+
+.control-btn {
+  height: 40px;
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  align-items: center;
+  padding: 18px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  justify-content: center;
+  //border-radius: 4px;
+}
+.control-btn:hover{
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+
+h3 {
+  margin-top: 6px;
+}
+
+.icon-card {
+  font-size: 40px;
+}
+
+.title-card {
+  margin-left: auto;
+  text-align: right;
+}
+
+.title-card-1 {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.title-card-2 {
+  font-size: 18px;
+}
+
+.inner-box:hover {
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.bg-orange {
+  background-color: rgb(245, 128, 38);
+}
+
+.bg-yellow {
+  background-color: rgb(253, 189, 60);
+}
+
+.bg-blue {
+  background-color: rgb(15, 92, 170);
+}
+
+.bg-green{
+  background-color: green;
+}

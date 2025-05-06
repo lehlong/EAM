@@ -1,1 +1,137 @@
-<p>home works!</p>
+<div class="main-home">
+  <div class="control">
+    <div class="control-btn bg-blue">
+      <div><nz-icon nzType="appstore-add" nzTheme="outline" /></div>
+      <div>TẠO SỰ CỐ</div>
+    </div>
+    <div class="control-btn bg-green">
+      <div><nz-icon nzType="file-done" nzTheme="outline" /></div>
+      <div>PHÊ DUYỆT</div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="12">
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-orange">
+        <div>
+          <nz-icon nzType="warning" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê bảo trì bảo dưỡng</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Lệnh phát sinh mới</div>
+
+        </div>
+      </div>
+    </div>
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-yellow">
+        <div>
+          <nz-icon nzType="history" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê bảo trì bảo dưỡng</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Lệnh trễ hạn</div>
+        </div>
+      </div>
+    </div>
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-blue">
+        <div>
+          <nz-icon nzType="control" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê bảo trì bảo dưỡng</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Đang thực hiện</div>
+        </div>
+      </div>
+    </div>
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-blue">
+        <div>
+          <nz-icon nzType="file-done" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê bảo trì bảo dưỡng</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Hoàn thành</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="12">
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-orange">
+        <div>
+          <nz-icon nzType="warning" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê sự cố</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Sự cố phát sinh</div>
+        </div>
+      </div>
+    </div>
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-yellow">
+        <div>
+          <nz-icon nzType="history" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê sự cố</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Số lệnh trễ hạn</div>
+        </div>
+      </div>
+    </div>
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-blue">
+        <div>
+          <nz-icon nzType="control" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê sự cố</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Đang thực hiện</div>
+        </div>
+      </div>
+    </div>
+    <div nz-col class="gutter-row" [nzSpan]="6">
+      <div class="inner-box bg-blue">
+        <div>
+          <nz-icon nzType="file-done" nzTheme="outline" class="icon-card" />
+        </div>
+        <div class="title-card">
+          <div>Thống kê sự cố</div>
+          <div class="title-card-1">625</div>
+          <div class="title-card-2">Phát sinh mới</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3>DANH SÁCH LỆNH BTBD/KĐHC THEO KẾ HOẠCH</h3>
+    <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzFrontPagination]="false" >
+      <thead>
+        <tr>
+          <th>Số lệnh</th>
+          <th>Nội dung bảo dưỡng</th>
+          <th>Ngày thực hiện</th>
+          <th>Bộ phận thực hiện</th>
+          <th>Khu vực phát sinh</th>
+          <th>Tên thiết bị</th>
+          <th>Người sửa chữa</th>
+          <th>Người phụ trách</th>
+          <th>Trạng thái</th>
+          <th>Mã kế hoạch</th>
+          <th>Tên kế hoạch</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </nz-table>
+  </div>
+</div>
