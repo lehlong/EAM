@@ -20,7 +20,7 @@
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
-    <nz-table #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
+    <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>

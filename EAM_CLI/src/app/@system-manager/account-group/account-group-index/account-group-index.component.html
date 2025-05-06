@@ -20,7 +20,7 @@
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
-    <nz-table  class="auto-scroll-table" #lstAccountGroup [nzData]="paginationResult.data" [nzFrontPagination]="false" [nzScroll]="{ y: 'calc(100vh - 244px)' }">
+    <nz-table nzBordered [nzSize]="'middle'"  class="auto-scroll-table" #lstAccountGroup [nzData]="paginationResult.data" [nzFrontPagination]="false" [nzScroll]="{ y: 'calc(100vh - 244px)' }">
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>

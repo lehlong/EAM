@@ -8,12 +8,14 @@ import { ShareModule } from '../../shared/share-module';
 import { PlantService } from '../../service/master-data/plant.service';
 import { FlocService } from '../../service/master-data/floc.service';
 import { EqCatService } from '../../service/master-data/eq-cat.service';
+import { EqGroupService } from '../../service/master-data/eq-group.service';
+import { WcService } from '../../service/master-data/wc.service';
 
 @Component({
   selector: 'app-equip',
   imports: [ShareModule],
   templateUrl: './equip.component.html',
-  styleUrl: './equip.component.scss'
+  styleUrl: './equip.component.scss',
 })
 export class EquipComponent {
   validateForm: FormGroup;
@@ -22,9 +24,12 @@ export class EquipComponent {
   edit: boolean = false;
   filter = new BaseFilter();
   paginationResult = new PaginationResult();
-  lstPlant : any = []
-  lstFloc : any = []
-  lstCat : any = []
+  lstPlant: any = [];
+  lstFloc: any = [];
+  lstEqCat: any = [];
+  lstEqGroup: any = [];
+  lstEquip: any = [];
+  lstEqWc: any = [];
   loading: boolean = false;
 
   constructor(
@@ -32,12 +37,15 @@ export class EquipComponent {
     private _servicePlant: PlantService,
     private _serviceFloc: FlocService,
     private _serviceCat: EqCatService,
+    private _serviceWc: WcService,
+    private _serviceEqGroup: EqGroupService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
+      eqktx: [''],
       iwerk: [''],
       datab: [''],
       datbi: [''],
@@ -84,9 +92,12 @@ export class EquipComponent {
 
   ngOnInit(): void {
     this.search();
-    this.searchFlant()
-    this.searchFloc()
-    this.searchCat()
+    this.getEqGroup();
+    this.searchFlant();
+    this.searchFloc();
+    this.searchCat();
+    this.getAllEquip();
+    this.getEqWc();
   }
 
   onSortChange(tplnrTxt: string, value: any) {
@@ -103,7 +114,18 @@ export class EquipComponent {
     this._service.search(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data;
-        console.log(data)
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  getAllEquip() {
+    this.isSubmit = false;
+    this._service.getAll().subscribe({
+      next: (data) => {
+        this.lstEquip = data;
       },
       error: (response) => {
         console.log(response);
@@ -113,11 +135,9 @@ export class EquipComponent {
 
   searchFlant() {
     this.isSubmit = false;
-    this._servicePlant.search(this.filter).subscribe({
+    this._servicePlant.getAll().subscribe({
       next: (data) => {
         this.lstPlant = data;
-        console.log(this.lstPlant);
-
       },
       error: (response) => {
         console.log(response);
@@ -126,11 +146,9 @@ export class EquipComponent {
   }
   searchFloc() {
     this.isSubmit = false;
-    this._serviceFloc.search(this.filter).subscribe({
+    this._serviceFloc.getAll().subscribe({
       next: (data) => {
         this.lstFloc = data;
-        console.log(this.lstPlant);
-
       },
       error: (response) => {
         console.log(response);
@@ -139,11 +157,9 @@ export class EquipComponent {
   }
   searchCat() {
     this.isSubmit = false;
-    this._serviceCat.search(this.filter).subscribe({
+    this._serviceCat.getAll().subscribe({
       next: (data) => {
-        this.lstCat = data;
-        console.log(this.lstPlant);
-
+        this.lstEqCat = data;
       },
       error: (response) => {
         console.log(response);
@@ -151,8 +167,34 @@ export class EquipComponent {
     });
   }
 
-  setValueCat(code : any){
-    const category = this.lstCat.find((cat: { eqtyp: any; }) => cat.eqtyp === code);
+  getEqGroup() {
+    this.isSubmit = false;
+    this._serviceEqGroup.getAll().subscribe({
+      next: (data) => {
+        this.lstEqGroup = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  getEqWc() {
+    this.isSubmit = false;
+    this._serviceWc.getAll().subscribe({
+      next: (data) => {
+        this.lstEqWc = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  setValueCat(code: any) {
+    const category = this.lstEqCat.find(
+      (cat: { eqtyp: any }) => cat.eqtyp === code
+    );
     this.validateForm.get('ingrp')?.setValue(category.name);
   }
 
@@ -234,7 +276,8 @@ export class EquipComponent {
   openEdit(data: any) {
     this.validateForm.setValue({
       iwerk: data.iwerk,
-      eqnr: data.eqnr,
+      equnr: data.equnr,
+      eqktx: data.eqktx,
       datab: data.datab,
       datbi: data.datbi,
       tplnr: data.tplnr,
@@ -254,7 +297,7 @@ export class EquipComponent {
       statusTh: data.statusTh,
       anlnr: data.anlnr,
       anlun: data.anlun,
-      klart: data.klar,
+      klart: data.klart,
       class: data.class,
       auspFlg: data.auspFlg,
       delFlg: data.delFlg,
@@ -281,4 +324,3 @@ export class EquipComponent {
     this.search();
   }
 }
-

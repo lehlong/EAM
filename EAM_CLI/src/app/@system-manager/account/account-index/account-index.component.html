@@ -47,7 +47,7 @@
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
-    <nz-table class="auto-scroll-table" [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data" [nzScroll]="{ y: 'calc(100vh - 244px)' }">
+    <nz-table nzBordered [nzSize]="'middle'" class="auto-scroll-table" [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data" [nzScroll]="{ y: 'calc(100vh - 244px)' }">
       <thead>
         <tr>
           <th nzWidth="80px">STT</th>

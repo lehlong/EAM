@@ -1,3 +1,4 @@
+import { TaskListComponent } from './task-list/task-list.component';
 import { Routes } from '@angular/router';
 import { AccountTypeComponent } from './account-type/account-type.component';
 import { EqCatComponent } from './eq-cat/eq-cat.component';
@@ -19,4 +20,5 @@ export const masterDataRoutes: Routes = [
   { path: 'order-type', component: OrderTypeComponent },
   { path: 'floc', component: FlocComponent },
   { path: 'equip', component: EquipComponent },
+  { path: 'task-list', component: TaskListComponent },
 ];

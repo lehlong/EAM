@@ -22,7 +22,7 @@
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
-    <nz-table [nzShowPagination]="false"  class="auto-scroll-table"
+    <nz-table nzBordered [nzSize]="'middle'" [nzShowPagination]="false"  class="auto-scroll-table"
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data" [nzScroll]="{ y: 'calc(100vh - 244px)' }">
       <thead>
         <tr>

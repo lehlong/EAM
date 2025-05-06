@@ -20,16 +20,17 @@
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
-    <nz-table #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false">
+    <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false"
+      nzBordered [nzSize]="'middle'">
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
           <th>Equipment Number</th>
           <th>Equipment description</th>
           <th>Planner Group for <br> Customer Service <br> and Plant Maintenance</th>
-          <th>Superior functional location</th>
-          <th>Work center</th>
-          <th>Start Date</th>
+          <th>Functional Location</th>
+          <th>Planner Group for Customer Service and Plant Maintenance</th>
+          <th>Equipment category</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
@@ -40,10 +41,10 @@
           <td> <a (click)="openEdit(data)">{{ data.equnr }}</a></td>
           <td>{{data.eqktx}}</td>
           <td>{{ data.iwerk }}</td>
-          <td>{{ data.ingrp }}</td>
-          <td>{{ data.supfloc }}</td>
-          <td>{{ data.arbpl }}</td>
-          <td>{{ data.startUpdate }}</td>
+          <td>{{data.tplnr}}</td>
+          <td>{{data.ingrp}}</td>
+          <td>{{data.eqtyp}}</td>
+
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />
@@ -67,17 +68,218 @@
   </nz-page-header-content>
 </nz-page-header>
 
-<!--Create Update-->
-<!-- <nz-drawer nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <div nz-row [nzGutter]="16">
+
+      <nz-tabset>
+        <nz-tab nzTitle="Thông tin">
+          <div nz-row [nzGutter]="16">
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Equipment Number" label="Equipment Number"
+                  [control]="$any(validateForm).controls['equnr']" [required]="true"
+                  [disabled]="edit ? true : false"></app-input-clear>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Equipment description" label="Equipment description"
+                  [control]="$any(validateForm).controls['eqktx']"></app-input-clear>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Maintenance Planning Plant</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Maintenance Planning Plant"
+                      formControlName="iwerk">
+                      <nz-option cdkScrollable *ngFor="let item of lstPlant"
+                        [nzLabel]="item.iwerk + ' - ' +item.iwerkTxt" [nzValue]="item.iwerk">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Functional Location</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Functional Location" formControlName="tplnr">
+                      <nz-option cdkScrollable *ngFor="let item of lstFloc"
+                        [nzLabel]="item.tplnr + ' - ' + item.descript" [nzValue]="item.tplnr">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Planner Group for Customer Service and Plant Maintenance"
+                  label="Planner Group for Customer Service and Plant Maintenance"
+                  [control]="$any(validateForm).controls['ingrp']"></app-input-clear>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Equipment category</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Equipment category" formControlName="eqtyp">
+                      <nz-option cdkScrollable *ngFor="let item of lstEqCat"
+                        [nzLabel]="item.eqtyp + ' - '+item.eqtypTxt" [nzValue]="item.eqtyp">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Type of Technical Object</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Type of Technical Object" formControlName="eqart">
+                      <nz-option cdkScrollable *ngFor="let item of lstEqGroup"
+                        [nzLabel]="item.eqart+ ' - '+item.eqartTxt" [nzValue]="item.eqart">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Type of Technical Object Sub</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Type of Technical Object Sub"
+                      formControlName="eqartSub">
+                      <nz-option cdkScrollable *ngFor="let item of lstEqGroup"
+                        [nzLabel]="item.eqart+ ' - '+item.eqartTxt" [nzValue]="item.eqart">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Type of Technical Object Tp</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Type of Technical Object Tp"
+                      formControlName="eqartTp">
+                      <nz-option cdkScrollable *ngFor="let item of lstEqGroup"
+                        [nzLabel]="item.eqart +' - '+item.eqartTxt" [nzValue]="item.eqart">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Mã thiết bị cha</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Mã thiết bị cha" formControlName="hequi">
+                      <nz-option cdkScrollable *ngFor="let item of lstEquip" [nzLabel]="item.equnr+' - '+item.eqktx"
+                        [nzValue]="item.equnr">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Single-Character Indicator" label="Single-Character Indicator"
+                  [control]="$any(validateForm).controls['parentFlg']"></app-input-clear>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Natural Number" label="Natural Number"
+                  [control]="$any(validateForm).controls['childCnt']"></app-input-clear>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <nz-form-item>
+                  <nz-form-label>Work center</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Work center" formControlName="arbpl">
+                      <nz-option cdkScrollable *ngFor="let item of lstEqWc"
+                        [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Cost Center" label="Cost Center"
+                  [control]="$any(validateForm).controls['kostl']"></app-input-clear>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Plant section" label="Plant section"
+                  [control]="$any(validateForm).controls['beber']"></app-input-clear>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Object status" label="Object status"
+                  [control]="$any(validateForm).controls['statAct']"></app-input-clear>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Individual status of an object (short form)" label="Individual status of an object (short form)"
+                  [control]="$any(validateForm).controls['statActT']"></app-input-clear>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear placeholder="Trạng thái thực hiện" label="Trạng thái thực hiện"
+                  [control]="$any(validateForm).controls['statusTh']"></app-input-clear>
+              </div>
+            </div>
+
+
+
+
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Hình ảnh"></nz-tab>
+        <nz-tab nzTitle="File đính kèm">
+
+        </nz-tab>
+      </nz-tabset>
+      <!-- <div nz-row [nzGutter]="16">
         <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
-          <label>Equipment Number</label>
-          <app-input-clear placeholder="Equipment Number"
-          [control]="$any(validateForm).controls['equnr']"
-          [disabled]="edit ? true : false"></app-input-clear>
+
         </div></div>
 
         <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
@@ -147,7 +349,7 @@
             <label nz-radio [nzValue]="false">Khoá</label>
           </nz-radio-group>
         </nz-form-control>
-      </nz-form-item>
+      </nz-form-item> -->
     </form>
   </ng-container>
 </nz-drawer>
@@ -170,4 +372,4 @@
       <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
     </button>
   </nz-space>
-</ng-template> -->
+</ng-template>

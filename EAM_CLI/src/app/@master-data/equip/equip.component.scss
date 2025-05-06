@@ -1,9 +1,10 @@
 nz-select{
   width: 100%;
+  margin-bottom: 12px;
 }
 nz-date-picker{
   width: 100%;
 }
-.ant-form-item{
-  margin-bottom: 6px !important;
+.ant-form-item, nz-form-item{
+  margin-bottom: 0 !important;
 }

@@ -52,7 +52,7 @@
         (nzChange)="change($event)">
         <ng-template #renderList let-items let-direction="direction" let-stat="stat"
           let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
-          <nz-table #t [nzData]="items" nzSize="small">
+          <nz-table nzBordered [nzSize]="'middle'" #t [nzData]="items" nzSize="small">
             <thead>
               <tr>
                 <th [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
