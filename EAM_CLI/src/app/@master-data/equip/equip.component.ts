@@ -16,6 +16,9 @@ import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { CommonService } from '../../service/common.service';
 import { environment } from '../../../environments/environment';
+import { OrganizeService } from '../../service/system-manager/organize.service';
+import { UsageStatusService } from '../../service/master-data/usage-status.service';
+import { ActiveStatusService } from '../../service/master-data/active-status.service';
 
 @Component({
   selector: 'app-equip',
@@ -36,6 +39,9 @@ export class EquipComponent {
   lstEqGroup: any = [];
   lstEquip: any = [];
   lstEqWc: any = [];
+  lstOrganize: any = [];
+  lstUsageStatus: any =[];
+  lstActiveStatus : any = [];
   loading: boolean = false;
 
   // Environment for template
@@ -54,6 +60,8 @@ export class EquipComponent {
   selectedDocType: string = '';
 
   constructor(
+    private _sUsageStatus: UsageStatusService,
+    private _sActiveStatus: ActiveStatusService,
     private _service: EquipService,
     private _servicePlant: PlantService,
     private _serviceFloc: FlocService,
@@ -62,6 +70,7 @@ export class EquipComponent {
     private _serviceEqGroup: EqGroupService,
     private _serviceEquipDoc: EquipDocService,
     private _serviceEquipPic: EquipPicService,
+    private _sOrganize: OrganizeService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
@@ -122,6 +131,9 @@ export class EquipComponent {
     this.searchCat();
     this.getAllEquip();
     this.getEqWc();
+    this.getAllOrganize();
+    this.getAllActiveStatus();
+    this.getAllUsageStatus();
   }
 
   onSortChange(tplnrTxt: string, value: any) {
@@ -145,6 +157,30 @@ export class EquipComponent {
     });
   }
 
+  getAllUsageStatus() {
+    this.isSubmit = false;
+    this._sUsageStatus.getAll().subscribe({
+      next: (data) => {
+        this.lstUsageStatus = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  getAllActiveStatus() {
+    this.isSubmit = false;
+    this._sActiveStatus.getAll().subscribe({
+      next: (data) => {
+        this.lstActiveStatus = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
   getAllEquip() {
     this.isSubmit = false;
     this._service.getAll().subscribe({
@@ -153,6 +189,17 @@ export class EquipComponent {
       },
       error: (response) => {
         console.log(response);
+      },
+    });
+  }
+
+  getAllOrganize() {
+    this._sOrganize.getOrg().subscribe({
+      next: (data) => {
+        this.lstOrganize = data;
+      },
+      error: (err) => {
+        console.log(err);
       },
     });
   }
@@ -215,8 +262,9 @@ export class EquipComponent {
     });
   }
 
-  getEquipmentCategoryName(code: string){
-    return this.lstEqCat.find((x: { eqtyp: string; }) => x.eqtyp == code)?.eqtypTxt
+  getEquipmentCategoryName(code: string) {
+    return this.lstEqCat.find((x: { eqtyp: string }) => x.eqtyp == code)
+      ?.eqtypTxt;
   }
 
   setValueCat(code: any) {
@@ -346,13 +394,13 @@ export class EquipComponent {
     this._serviceEquipDoc.getByEqunr(equnr).subscribe({
       next: (data) => {
         this.equipDocuments = data;
-        this.equipDocuments.forEach((i)=>{
-          i.path = environment.urlFiles + "/" + i.path;
-        })
+        this.equipDocuments.forEach((i) => {
+          i.path = environment.urlFiles + '/' + i.path;
+        });
       },
       error: (error) => {
         console.error('Error loading equipment documents:', error);
-      }
+      },
     });
   }
 
@@ -361,13 +409,13 @@ export class EquipComponent {
     this._serviceEquipPic.getByEqunr(equnr).subscribe({
       next: (data) => {
         this.equipPictures = data;
-        this.equipPictures.forEach((i)=>{
-          i.path = environment.urlFiles + "/" + i.path;
-        })
+        this.equipPictures.forEach((i) => {
+          i.path = environment.urlFiles + '/' + i.path;
+        });
       },
       error: (error) => {
         console.error('Error loading equipment pictures:', error);
-      }
+      },
     });
   }
 
@@ -458,7 +506,9 @@ export class EquipComponent {
         this.currentEquipCode = this.validateForm.get('equnr')?.value;
 
         if (!this.currentEquipCode) {
-          this.message.error('Bạn cần nhập mã thiết bị trước khi tải lên tài liệu!');
+          this.message.error(
+            'Bạn cần nhập mã thiết bị trước khi tải lên tài liệu!'
+          );
           item.onError!(new Error('Missing equipment code'), item.file);
           return new Subscription();
         }
@@ -474,7 +524,7 @@ export class EquipComponent {
         filesize: file?.size || 'N/A',
         filetype: file?.type || 'N/A',
         equnr: cleanEqunr,
-        docType: this.selectedDocType
+        docType: this.selectedDocType,
       });
 
       this.uploadingDoc = true;
@@ -498,9 +548,11 @@ export class EquipComponent {
         error: (error) => {
           this.uploadingDoc = false;
           console.error('Upload error:', error);
-          this.message.error('Tải lên tài liệu thất bại: ' + (error.message || error.status));
+          this.message.error(
+            'Tải lên tài liệu thất bại: ' + (error.message || error.status)
+          );
           item.onError!(error, item.file);
-        }
+        },
       });
     } catch (err) {
       console.error('Exception during document upload:', err);
@@ -537,7 +589,9 @@ export class EquipComponent {
         this.currentEquipCode = this.validateForm.get('equnr')?.value;
 
         if (!this.currentEquipCode) {
-          this.message.error('Bạn cần nhập mã thiết bị trước khi tải lên hình ảnh!');
+          this.message.error(
+            'Bạn cần nhập mã thiết bị trước khi tải lên hình ảnh!'
+          );
           item.onError!(new Error('Missing equipment code'), item.file);
           return new Subscription();
         }
@@ -552,7 +606,7 @@ export class EquipComponent {
         filename: file?.name || 'N/A',
         filesize: file?.size || 'N/A',
         filetype: file?.type || 'N/A',
-        equnr: cleanEqunr
+        equnr: cleanEqunr,
       });
 
       this.uploadingPic = true;
@@ -573,9 +627,11 @@ export class EquipComponent {
         error: (error) => {
           this.uploadingPic = false;
           console.error('Upload error:', error);
-          this.message.error('Tải lên hình ảnh thất bại: ' + (error.message || error.status));
+          this.message.error(
+            'Tải lên hình ảnh thất bại: ' + (error.message || error.status)
+          );
           item.onError!(error, item.file);
-        }
+        },
       });
     } catch (err) {
       console.error('Exception during picture upload:', err);
@@ -597,7 +653,7 @@ export class EquipComponent {
       error: (error) => {
         this.message.error('Xóa tài liệu thất bại!');
         console.error('Error deleting document:', error);
-      }
+      },
     });
   }
 
@@ -611,7 +667,7 @@ export class EquipComponent {
       error: (error) => {
         this.message.error('Xóa hình ảnh thất bại!');
         console.error('Error deleting picture:', error);
-      }
+      },
     });
   }
 
@@ -629,7 +685,7 @@ export class EquipComponent {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result!.toString());
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
 
   // Close image preview
@@ -651,13 +707,21 @@ export class EquipComponent {
         this.message.success('Tải lên hình ảnh thành công!');
         // Add preview URL to the file object
         info.file.url = info.file.response.data?.path;
-        this.loadEquipPictures(this.currentEquipCode || this.validateForm.get('equnr')?.value);
+        this.loadEquipPictures(
+          this.currentEquipCode || this.validateForm.get('equnr')?.value
+        );
       } else {
-        this.message.error('Tải lên hình ảnh thất bại: ' + (info.file.response?.messageObject?.message || 'Lỗi không xác định'));
+        this.message.error(
+          'Tải lên hình ảnh thất bại: ' +
+            (info.file.response?.messageObject?.message || 'Lỗi không xác định')
+        );
       }
     } else if (info.file.status === 'error') {
       this.uploadingPic = false;
-      this.message.error('Tải lên hình ảnh thất bại: ' + (info.file.error?.status || 'Lỗi không xác định'));
+      this.message.error(
+        'Tải lên hình ảnh thất bại: ' +
+          (info.file.error?.status || 'Lỗi không xác định')
+      );
     }
   }
 
@@ -672,13 +736,21 @@ export class EquipComponent {
       this.uploadingDoc = false;
       if (info.file.response && info.file.response.status) {
         this.message.success('Tải lên tài liệu thành công!');
-        this.loadEquipDocuments(this.currentEquipCode || this.validateForm.get('equnr')?.value);
+        this.loadEquipDocuments(
+          this.currentEquipCode || this.validateForm.get('equnr')?.value
+        );
       } else {
-        this.message.error('Tải lên tài liệu thất bại: ' + (info.file.response?.messageObject?.message || 'Lỗi không xác định'));
+        this.message.error(
+          'Tải lên tài liệu thất bại: ' +
+            (info.file.response?.messageObject?.message || 'Lỗi không xác định')
+        );
       }
     } else if (info.file.status === 'error') {
       this.uploadingDoc = false;
-      this.message.error('Tải lên tài liệu thất bại: ' + (info.file.error?.status || 'Lỗi không xác định'));
+      this.message.error(
+        'Tải lên tài liệu thất bại: ' +
+          (info.file.error?.status || 'Lỗi không xác định')
+      );
     }
   }
 }

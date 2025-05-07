@@ -126,7 +126,8 @@ namespace EAM.CORE
         #endregion
 
         #region Master Data
-
+        public DbSet<TblMdUsageStatus> TblMdUsageStatus { get; set; }
+        public DbSet<TblMdActiveStatus> TblMdActiveStatus { get; set; }
         public DbSet<TblMdCataType> TblMdCataType { get; set; }
         public DbSet<TblMdAccountType> TblMdAccountType { get; set; }
         public DbSet<TblMdEqGroup> TblMdEqGroup { get; set; }

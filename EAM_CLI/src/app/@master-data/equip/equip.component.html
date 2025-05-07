@@ -19,7 +19,82 @@
       </button>
     </div>
   </nz-page-header-extra>
-  <nz-page-header-content class="main-content">
+  <nz-page-header-content>
+    <div nz-row [nzGutter]="12" style="margin: 0;">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="filter.tplnr">
+            <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Type of Technical Object</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Type of Technical Object">
+            <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
+              [nzValue]="item.eqart">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Sub Type Object</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Sub Type Object">
+            <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
+              [nzValue]="item.eqart">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Phòng ban sử dụng</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Phòng ban sử dụng">
+            <nz-option option cdkScrollable *ngFor="let item of lstOrganize" [nzLabel]="item.id+ ' - '+item.name"
+              [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Người sử dụng</label>
+          <app-input-clear></app-input-clear>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Trạng thái sử dụng</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái sử dụng">
+            <nz-option option cdkScrollable *ngFor="let item of lstUsageStatus" [nzLabel]="item.code+ ' - '+item.name"
+              [nzValue]="item.code">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Trạng thái hoạt động</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái hoạt động">
+            <nz-option option cdkScrollable *ngFor="let item of lstActiveStatus" [nzLabel]="item.code+ ' - '+item.name"
+              [nzValue]="item.code">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+
+
+  </nz-page-header-content>
+  <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false"
       nzBordered [nzSize]="'middle'">
       <thead>
@@ -299,14 +374,16 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear placeholder="Single-Character Indicator (AUSP_FLG)" label="Single-Character Indicator (AUSP_FLG)"
+                <app-input-clear placeholder="Single-Character Indicator (AUSP_FLG)"
+                  label="Single-Character Indicator (AUSP_FLG)"
                   [control]="$any(validateForm).controls['auspFlg']"></app-input-clear>
               </div>
             </div>
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear placeholder="Single-Character Indicator (DEL_FLG)" label="Single-Character Indicator (DEL_FLG)"
+                <app-input-clear placeholder="Single-Character Indicator (DEL_FLG)"
+                  label="Single-Character Indicator (DEL_FLG)"
                   [control]="$any(validateForm).controls['delFlg']"></app-input-clear>
               </div>
             </div>
@@ -316,7 +393,8 @@
                 <nz-form-item>
                   <nz-form-label>Date (DEL_DATE)</nz-form-label>
                   <nz-form-control>
-                    <nz-date-picker formControlName="delDate" [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
+                    <nz-date-picker formControlName="delDate" [nzPlaceHolder]="'Chọn ngày'"
+                      style="width: 100%;"></nz-date-picker>
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -324,7 +402,8 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear placeholder="Single-Character Indicator (INACT_FLG)" label="Single-Character Indicator (INACT_FLG)"
+                <app-input-clear placeholder="Single-Character Indicator (INACT_FLG)"
+                  label="Single-Character Indicator (INACT_FLG)"
                   [control]="$any(validateForm).controls['inactFlg']"></app-input-clear>
               </div>
             </div>
@@ -334,7 +413,8 @@
                 <nz-form-item>
                   <nz-form-label>Date (INACT_DATE)</nz-form-label>
                   <nz-form-control>
-                    <nz-date-picker formControlName="inactDate" [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
+                    <nz-date-picker formControlName="inactDate" [nzPlaceHolder]="'Chọn ngày'"
+                      style="width: 100%;"></nz-date-picker>
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -345,7 +425,8 @@
                 <nz-form-item>
                   <nz-form-label>Start-up Date of the Technical Object</nz-form-label>
                   <nz-form-control>
-                    <nz-date-picker formControlName="inbdt" [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
+                    <nz-date-picker formControlName="inbdt" [nzPlaceHolder]="'Chọn ngày'"
+                      style="width: 100%;"></nz-date-picker>
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -356,28 +437,24 @@
         <nz-tab nzTitle="Hình ảnh">
           <div class="image-upload-container">
             <div class="upload-section" *ngIf="edit || !edit">
-              <nz-upload
-                nzType="drag"
+              <nz-upload nzType="drag"
                 [nzAction]="environment.apiUrl + '/EquipPic/Upload?equnr=' + (currentEquipCode || validateForm.get('equnr')?.value || '')"
-                [nzName]="'file'"
-                [nzBeforeUpload]="beforePicUpload"
-                [nzShowUploadList]="false"
+                [nzName]="'file'" [nzBeforeUpload]="beforePicUpload" [nzShowUploadList]="false"
                 (nzChange)="handlePicUploadChange($event)"
-                [nzDisabled]="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
-              >
+                [nzDisabled]="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)">
                 <p class="ant-upload-drag-icon">
                   <span nz-icon nzType="picture" nzTheme="outline"></span>
                 </p>
                 <p class="ant-upload-text">Nhấp hoặc kéo file ảnh để tải lên</p>
                 <p class="ant-upload-hint">Hỗ trợ các định dạng file ảnh: JPG, PNG, GIF...</p>
-                <nz-alert *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
-                  nzType="warning"
-                  nzMessage="Vui lòng nhập mã thiết bị trước khi tải ảnh lên"
-                  nzShowIcon></nz-alert>
+                <nz-alert
+                  *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
+                  nzType="warning" nzMessage="Vui lòng nhập mã thiết bị trước khi tải ảnh lên" nzShowIcon></nz-alert>
               </nz-upload>
             </div>
 
-            <nz-divider *ngIf="equipPictures && equipPictures.length > 0" nzText="Danh sách hình ảnh đã đính kèm" nzOrientation="left"></nz-divider>
+            <nz-divider *ngIf="equipPictures && equipPictures.length > 0" nzText="Danh sách hình ảnh đã đính kèm"
+              nzOrientation="left"></nz-divider>
 
             <div class="image-gallery" *ngIf="equipPictures && equipPictures.length > 0">
               <nz-card nzHoverable style="width: 220px;" class="image-card" *ngFor="let pic of equipPictures">
@@ -390,11 +467,13 @@
               </nz-card>
             </div>
 
-            <nz-empty *ngIf="!equipPictures || equipPictures.length === 0" nzNotFoundContent="Chưa có hình ảnh cho thiết bị này"></nz-empty>
+            <nz-empty *ngIf="!equipPictures || equipPictures.length === 0"
+              nzNotFoundContent="Chưa có hình ảnh cho thiết bị này"></nz-empty>
           </div>
 
           <!-- Image preview -->
-          <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="handlePreviewCancel()">
+          <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+            (nzOnCancel)="handlePreviewCancel()">
             <ng-template #modalContent>
               <img [src]="previewImage" style="width: 100%;" />
             </ng-template>
@@ -405,28 +484,25 @@
           <div class="document-upload-container">
             <div class="upload-section" *ngIf="edit || !edit">
 
-              <nz-upload
-                nzType="drag"
+              <nz-upload nzType="drag"
                 [nzAction]="environment.apiUrl + '/EquipDoc/Upload?equnr=' + (currentEquipCode || validateForm.get('equnr')?.value || '') + (selectedDocType ? '&docType=' + selectedDocType : '')"
-                [nzName]="'file'"
-                [nzBeforeUpload]="beforeDocUpload"
-                [nzShowUploadList]="false"
+                [nzName]="'file'" [nzBeforeUpload]="beforeDocUpload" [nzShowUploadList]="false"
                 (nzChange)="handleDocUploadChange($event)"
-                [nzDisabled]="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
-              >
+                [nzDisabled]="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)">
                 <p class="ant-upload-drag-icon">
                   <span nz-icon nzType="file" nzTheme="outline"></span>
                 </p>
                 <p class="ant-upload-text">Nhấp hoặc kéo file để tải lên</p>
                 <p class="ant-upload-hint">Hỗ trợ tất cả các loại tài liệu: PDF, DOCX, XLSX...</p>
-                <nz-alert *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
-                  nzType="warning"
-                  nzMessage="Vui lòng nhập mã thiết bị trước khi tải tài liệu lên"
+                <nz-alert
+                  *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
+                  nzType="warning" nzMessage="Vui lòng nhập mã thiết bị trước khi tải tài liệu lên"
                   nzShowIcon></nz-alert>
               </nz-upload>
             </div>
 
-            <nz-divider *ngIf="equipDocuments && equipDocuments.length > 0" nzText="Danh sách tài liệu đã đính kèm" nzOrientation="left"></nz-divider>
+            <nz-divider *ngIf="equipDocuments && equipDocuments.length > 0" nzText="Danh sách tài liệu đã đính kèm"
+              nzOrientation="left"></nz-divider>
 
             <div class="document-list" *ngIf="equipDocuments && equipDocuments.length > 0">
               <nz-table #docTable [nzData]="equipDocuments" [nzShowPagination]="false" nzSize="small">
@@ -450,7 +526,8 @@
                     <td>{{ doc.filesize | number }} KB</td>
                     <td>{{ doc.createDate | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td nzAlign="center">
-                      <a nz-tooltip nzTooltipTitle="Xóa" nz-button nzType="link" nzDanger (click)="deleteDocument(doc.id)">
+                      <a nz-tooltip nzTooltipTitle="Xóa" nz-button nzType="link" nzDanger
+                        (click)="deleteDocument(doc.id)">
                         <span nz-icon nzType="delete" nzTheme="outline"></span>
                       </a>
                     </td>
@@ -459,7 +536,8 @@
               </nz-table>
             </div>
 
-            <nz-empty *ngIf="!equipDocuments || equipDocuments.length === 0" nzNotFoundContent="Chưa có tài liệu cho thiết bị này"></nz-empty>
+            <nz-empty *ngIf="!equipDocuments || equipDocuments.length === 0"
+              nzNotFoundContent="Chưa có tài liệu cho thiết bị này"></nz-empty>
           </div>
         </nz-tab>
       </nz-tabset>

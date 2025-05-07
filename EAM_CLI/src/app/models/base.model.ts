@@ -2,6 +2,7 @@ export class BaseFilter {
   currentPage: number = 1;
   pageSize: number = 20;
   keyWord: string = '';
+  tplnr: string = '';
 }
 
 export class PaginationResult {
@@ -10,5 +11,5 @@ export class PaginationResult {
   pageSize: number = 0;
   keyWord: string = '';
   totalRecord: number = 0;
-  data:any = [];
+  data: any = [];
 }

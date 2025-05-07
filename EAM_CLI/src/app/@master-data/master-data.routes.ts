@@ -14,6 +14,8 @@ import { ClassDComponent } from './class-d/class-d.component';
 import { ClassHComponent } from './class-h/class-h.component';
 import { CatalogComponent } from './catalog/catalog.component';
 import { CataTypeComponent } from './cata-type/cata-type.component';
+import { UsageStatusComponent } from './usage-status/usage-status.component';
+import { ActiveStatusComponent } from './active-status/active-status.component';
 
 export const masterDataRoutes: Routes = [
   { path: 'account-type', component: AccountTypeComponent },
@@ -31,4 +33,6 @@ export const masterDataRoutes: Routes = [
   { path: 'class-d', component: ClassDComponent },
   { path: 'catalog', component: CatalogComponent },
   { path: 'cata-type', component: CataTypeComponent },
+  { path: 'usage-status', component: UsageStatusComponent },
+  { path: 'active-status', component: ActiveStatusComponent },
 ];

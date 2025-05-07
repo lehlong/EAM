@@ -8,7 +8,13 @@ nz-date-picker{
 .ant-form-item, nz-form-item{
   margin-bottom: 0 !important;
 }
-
+.search-data{
+  display: flex;
+  gap:12px
+}
+.ant-row{
+  margin: 0 0 12px 0px !important;
+}
 // Styles for the image and document upload containers
 .image-upload-container,
 .document-upload-container {
@@ -33,7 +39,7 @@ nz-date-picker{
   .image-card {
     position: relative;
     margin-bottom: 16px;
-    
+
     img {
       width: 100%;
       height: 160px;
@@ -59,10 +65,10 @@ nz-date-picker{
 // Document list
 .document-list {
   margin-top: 16px;
-  
+
   a {
     color: #1890ff;
-    
+
     &:hover {
       text-decoration: underline;
     }
