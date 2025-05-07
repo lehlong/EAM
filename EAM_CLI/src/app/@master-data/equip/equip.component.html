@@ -65,7 +65,11 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Người sử dụng</label>
-          <app-input-clear></app-input-clear>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Người sử dụng">
+            <nz-option option cdkScrollable *ngFor="let item of lstAccount"
+              [nzLabel]="item.userName+ ' - '+item.fullName" [nzValue]="item.userName">
+            </nz-option>
+          </nz-select>
         </div>
       </div>
 
@@ -94,7 +98,7 @@
 
 
   </nz-page-header-content>
-  <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">
+  <nz-page-header-content class="main-content" style="height: calc(-344px + 100vh);">
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false"
       nzBordered [nzSize]="'middle'">
       <thead>

@@ -16,6 +16,10 @@ export class AccountService {
     return this.commonService.get('Account/GetDetail', params)
   }
 
+  getListUser(): Observable<any> {
+    return this.commonService.get('Account/GetListUser')
+  }
+
   create(params: any): Observable<any> {
     return this.commonService.post('Account/Insert', params)
   }

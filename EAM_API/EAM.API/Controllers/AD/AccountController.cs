@@ -50,6 +50,24 @@ namespace EAM.API.Controllers.MD
             return Ok(transferObject);
         }
 
+        [HttpGet("GetListUser")]
+        public async Task<IActionResult> GetListUser()
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetAll();
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpGet("GetDetail")]
         public async Task<IActionResult> GetDetail(string userName)
         {

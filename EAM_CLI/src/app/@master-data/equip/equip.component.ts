@@ -19,6 +19,7 @@ import { environment } from '../../../environments/environment';
 import { OrganizeService } from '../../service/system-manager/organize.service';
 import { UsageStatusService } from '../../service/master-data/usage-status.service';
 import { ActiveStatusService } from '../../service/master-data/active-status.service';
+import { AccountService } from '../../service/system-manager/account.service';
 
 @Component({
   selector: 'app-equip',
@@ -40,14 +41,13 @@ export class EquipComponent {
   lstEquip: any = [];
   lstEqWc: any = [];
   lstOrganize: any = [];
-  lstUsageStatus: any =[];
-  lstActiveStatus : any = [];
+  lstUsageStatus: any = [];
+  lstActiveStatus: any = [];
+  lstAccount: any = [];
   loading: boolean = false;
 
-  // Environment for template
   environment = environment;
 
-  // New variables for equipment documents and pictures
   equipDocuments: any[] = [];
   equipPictures: any[] = [];
   uploadingDoc: boolean = false;
@@ -60,6 +60,7 @@ export class EquipComponent {
   selectedDocType: string = '';
 
   constructor(
+  private _sAccount : AccountService,
     private _sUsageStatus: UsageStatusService,
     private _sActiveStatus: ActiveStatusService,
     private _service: EquipService,
@@ -134,6 +135,7 @@ export class EquipComponent {
     this.getAllOrganize();
     this.getAllActiveStatus();
     this.getAllUsageStatus();
+    this.getAllAccount();
   }
 
   onSortChange(tplnrTxt: string, value: any) {
@@ -157,8 +159,18 @@ export class EquipComponent {
     });
   }
 
+  getAllAccount() {
+    this._sAccount.getListUser().subscribe({
+      next: (data) => {
+        this.lstAccount = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
   getAllUsageStatus() {
-    this.isSubmit = false;
     this._sUsageStatus.getAll().subscribe({
       next: (data) => {
         this.lstUsageStatus = data;
@@ -170,7 +182,6 @@ export class EquipComponent {
   }
 
   getAllActiveStatus() {
-    this.isSubmit = false;
     this._sActiveStatus.getAll().subscribe({
       next: (data) => {
         this.lstActiveStatus = data;
@@ -182,7 +193,6 @@ export class EquipComponent {
   }
 
   getAllEquip() {
-    this.isSubmit = false;
     this._service.getAll().subscribe({
       next: (data) => {
         this.lstEquip = data;
@@ -694,7 +704,6 @@ export class EquipComponent {
     this.previewImage = '';
   };
 
-  // Handle picture upload change event
   handlePicUploadChange(info: any): void {
     if (info.file.status === 'uploading') {
       this.uploadingPic = true;
@@ -705,7 +714,6 @@ export class EquipComponent {
       this.uploadingPic = false;
       if (info.file.response && info.file.response.status) {
         this.message.success('Tải lên hình ảnh thành công!');
-        // Add preview URL to the file object
         info.file.url = info.file.response.data?.path;
         this.loadEquipPictures(
           this.currentEquipCode || this.validateForm.get('equnr')?.value
@@ -725,7 +733,6 @@ export class EquipComponent {
     }
   }
 
-  // Handle document upload change event
   handleDocUploadChange(info: any): void {
     if (info.file.status === 'uploading') {
       this.uploadingDoc = true;
