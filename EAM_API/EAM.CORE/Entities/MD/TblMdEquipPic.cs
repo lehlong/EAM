@@ -9,6 +9,9 @@ namespace EAM.CORE.Entities.MD
     public class TblMdEquipPic : SoftDeleteEntity
     {
         [Key]
+        [Column("ID")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
         [Column("EQUNR")]
         public string Equnr { get; set; } = null!;
 

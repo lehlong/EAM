@@ -5,9 +5,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EAM.BUSINESS.Dtos.MD
 {
-    public class EquipPicDto : BaseMdDto, IMapFrom, IDto
+    public class EquipPicDto : BaseMdTemDto, IMapFrom, IDto
     {
         [Key]
+        public string Id { get; set; }
         public string Equnr { get; set; } = null!;
         public string? Filetype { get; set; }
         public int? Filesize { get; set; }
