@@ -100,10 +100,10 @@ namespace EAM.BUSINESS.Services.MD
                 {
                     Id = Guid.NewGuid().ToString(),
                     Equnr = equnr,
-                    Doctype = docType,
+                    Doctype = fileExtension.TrimStart('.'),
                     Filetype = fileExtension.TrimStart('.'),
                     Filesize = (int)file.Length,
-                    Filename = fileName,
+                    Filename = file.FileName,
                     Path = Path.Combine(folderPath, fileName).Replace("\\", "/"),
                     IsActive = true
                 };

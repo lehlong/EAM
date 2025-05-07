@@ -524,9 +524,9 @@
                   <tr *ngFor="let doc of docTable.data; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td>
-                      <a [href]="doc.path" target="_blank">{{ doc.id }}</a>
+                      <a [href]="doc.path" target="_blank">{{ doc.filename }}</a>
                     </td>
-                    <td>{{ doc.doctype || 'N/A' }}</td>
+                    <td>{{ doc.filetype || 'N/A' }}</td>
                     <td>{{ doc.filesize | number }} KB</td>
                     <td>{{ doc.createDate | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td nzAlign="center">
