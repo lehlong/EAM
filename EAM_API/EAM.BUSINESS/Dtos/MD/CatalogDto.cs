@@ -9,7 +9,8 @@ namespace EAM.BUSINESS.Dtos.MD
     public class CatalogDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
-        public string CatCode { get; set; } = null!;
+        public string Id { get; set; } 
+        public string? CatCode { get; set; } 
         public string? CatName { get; set; }
         public string? CatType { get; set; }
         public string? Code { get; set; }

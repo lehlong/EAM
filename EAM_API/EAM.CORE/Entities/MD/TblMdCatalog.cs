@@ -9,8 +9,10 @@ namespace EAM.CORE.Entities.MD
     public class TblMdCatalog : SoftDeleteEntity
     {
         [Key]
+        [Column("ID")]
+        public string Id { get; set; }
         [Column("CATCODE")]
-        public string CatCode { get; set; } = null!;
+        public string? CatCode { get; set; }
 
         [Column("CATNAME")]
         public string? CatName { get; set; }

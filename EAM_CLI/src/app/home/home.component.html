@@ -1,10 +1,10 @@
 <div class="main-home">
   <div class="control">
-    <div class="control-btn bg-blue">
+    <div class="control-btn bg-blue" (click)="changeRoute('incident/create')">
       <div><nz-icon nzType="appstore-add" nzTheme="outline" /></div>
       <div>TẠO SỰ CỐ</div>
     </div>
-    <div class="control-btn bg-green">
+    <div class="control-btn bg-green" (click)="changeRoute('incident/approval')">
       <div><nz-icon nzType="file-done" nzTheme="outline" /></div>
       <div>PHÊ DUYỆT</div>
     </div>

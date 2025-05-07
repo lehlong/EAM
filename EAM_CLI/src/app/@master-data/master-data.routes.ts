@@ -12,6 +12,8 @@ import { EquipComponent } from './equip/equip.component';
 import { CharComponent } from './char/char.component';
 import { ClassDComponent } from './class-d/class-d.component';
 import { ClassHComponent } from './class-h/class-h.component';
+import { CatalogComponent } from './catalog/catalog.component';
+import { CataTypeComponent } from './cata-type/cata-type.component';
 
 export const masterDataRoutes: Routes = [
   { path: 'account-type', component: AccountTypeComponent },
@@ -27,4 +29,6 @@ export const masterDataRoutes: Routes = [
   { path: 'char', component: CharComponent },
   { path: 'class-h', component: ClassHComponent },
   { path: 'class-d', component: ClassDComponent },
+  { path: 'catalog', component: CatalogComponent },
+  { path: 'cata-type', component: CataTypeComponent },
 ];

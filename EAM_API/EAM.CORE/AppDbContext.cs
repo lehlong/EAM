@@ -126,6 +126,8 @@ namespace EAM.CORE
         #endregion
 
         #region Master Data
+
+        public DbSet<TblMdCataType> TblMdCataType { get; set; }
         public DbSet<TblMdAccountType> TblMdAccountType { get; set; }
         public DbSet<TblMdEqGroup> TblMdEqGroup { get; set; }
         public DbSet<TblMdEqCat> TblMdEqCat { get; set; }
