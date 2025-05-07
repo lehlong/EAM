@@ -370,15 +370,15 @@
                 </p>
                 <p class="ant-upload-text">Nhấp hoặc kéo file ảnh để tải lên</p>
                 <p class="ant-upload-hint">Hỗ trợ các định dạng file ảnh: JPG, PNG, GIF...</p>
-                <nz-alert *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)" 
-                  nzType="warning" 
-                  nzMessage="Vui lòng nhập mã thiết bị trước khi tải ảnh lên" 
+                <nz-alert *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
+                  nzType="warning"
+                  nzMessage="Vui lòng nhập mã thiết bị trước khi tải ảnh lên"
                   nzShowIcon></nz-alert>
               </nz-upload>
             </div>
-            
+
             <nz-divider *ngIf="equipPictures && equipPictures.length > 0" nzText="Danh sách hình ảnh đã đính kèm" nzOrientation="left"></nz-divider>
-            
+
             <div class="image-gallery" *ngIf="equipPictures && equipPictures.length > 0">
               <nz-card nzHoverable style="width: 220px;" class="image-card" *ngFor="let pic of equipPictures">
                 <img [src]="pic.path" alt="Equipment Image" (click)="previewImage = pic.path; previewVisible = true;" />
@@ -389,10 +389,10 @@
                 </div>
               </nz-card>
             </div>
-            
+
             <nz-empty *ngIf="!equipPictures || equipPictures.length === 0" nzNotFoundContent="Chưa có hình ảnh cho thiết bị này"></nz-empty>
           </div>
-          
+
           <!-- Image preview -->
           <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="handlePreviewCancel()">
             <ng-template #modalContent>
@@ -400,11 +400,11 @@
             </ng-template>
           </nz-modal>
         </nz-tab>
-        
+
         <nz-tab nzTitle="File đính kèm">
           <div class="document-upload-container">
-            <div class="upload-section" *ngIf="edit || !edit"> 
-              
+            <div class="upload-section" *ngIf="edit || !edit">
+
               <nz-upload
                 nzType="drag"
                 [nzAction]="environment.apiUrl + '/EquipDoc/Upload?equnr=' + (currentEquipCode || validateForm.get('equnr')?.value || '') + (selectedDocType ? '&docType=' + selectedDocType : '')"
@@ -419,15 +419,15 @@
                 </p>
                 <p class="ant-upload-text">Nhấp hoặc kéo file để tải lên</p>
                 <p class="ant-upload-hint">Hỗ trợ tất cả các loại tài liệu: PDF, DOCX, XLSX...</p>
-                <nz-alert *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)" 
-                  nzType="warning" 
-                  nzMessage="Vui lòng nhập mã thiết bị trước khi tải tài liệu lên" 
+                <nz-alert *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
+                  nzType="warning"
+                  nzMessage="Vui lòng nhập mã thiết bị trước khi tải tài liệu lên"
                   nzShowIcon></nz-alert>
               </nz-upload>
             </div>
-            
+
             <nz-divider *ngIf="equipDocuments && equipDocuments.length > 0" nzText="Danh sách tài liệu đã đính kèm" nzOrientation="left"></nz-divider>
-            
+
             <div class="document-list" *ngIf="equipDocuments && equipDocuments.length > 0">
               <nz-table #docTable [nzData]="equipDocuments" [nzShowPagination]="false" nzSize="small">
                 <thead>
@@ -444,7 +444,7 @@
                   <tr *ngFor="let doc of docTable.data; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td>
-                      <a [href]="doc.fileUrl" target="_blank">{{ doc.id }}</a>
+                      <a [href]="doc.path" target="_blank">{{ doc.id }}</a>
                     </td>
                     <td>{{ doc.doctype || 'N/A' }}</td>
                     <td>{{ doc.filesize | number }} KB</td>
@@ -458,7 +458,7 @@
                 </tbody>
               </nz-table>
             </div>
-            
+
             <nz-empty *ngIf="!equipDocuments || equipDocuments.length === 0" nzNotFoundContent="Chưa có tài liệu cho thiết bị này"></nz-empty>
           </div>
         </nz-tab>
