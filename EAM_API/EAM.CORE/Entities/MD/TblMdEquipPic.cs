@@ -20,6 +20,8 @@ namespace EAM.CORE.Entities.MD
 
         [Column("FILESIZE")]
         public int? Filesize { get; set; }
+        [Column("FILENAME")]
+        public string? Filename { get; set; }
 
         [Column("PATH")]
         public string? Path { get; set; }

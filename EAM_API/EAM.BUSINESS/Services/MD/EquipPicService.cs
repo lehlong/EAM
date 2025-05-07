@@ -101,6 +101,7 @@ namespace EAM.BUSINESS.Services.MD
                     Equnr = equnr,
                     Filetype = fileExtension.TrimStart('.'),
                     Filesize = (int)file.Length,
+                    Filename = fileName,
                     Path = Path.Combine(folderPath, fileName).Replace("\\", "/"),
                     IsActive = true
                 };
