@@ -10,6 +10,7 @@ namespace EAM.BUSINESS.Dtos.MD
         [Key]
         public string Code { get; set; } = null!;
         public string? Name { get; set; }
+        public int? Sequence { get; set; }
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
         public void Mapping(Profile profile)
         {

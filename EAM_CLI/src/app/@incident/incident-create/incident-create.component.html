@@ -24,7 +24,7 @@
           </div></div>
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
             <label>Đơn vị quản lý</label>
-            <nz-select nzShowSearch nzAllowClear>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.iwerk">
               <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
               <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
               <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
@@ -64,8 +64,15 @@
           </nz-select>
           </div></div>
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
+            <label>Loại sự cố</label>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.qmart">
+              <nz-option *ngFor="let item of lstNotiTp" [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
+              </nz-option>
+          </nz-select>
+          </div></div>
+          <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
             <label>Bộ phận tiếp nhận</label>
-            <nz-select nzShowSearch nzAllowClear>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.iwerk">
               <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
               <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
               <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
@@ -100,14 +107,15 @@
       <div nz-col class="gutter-row" [nzSpan]="10"><div class="inner-box">
         <nz-divider nzOrientation="left" nzText="FILE ĐÍNH KÈM"></nz-divider>
         <nz-upload nzType="drag" [nzMultiple]="true" >
-      <p class="ant-upload-drag-icon">
-        <nz-icon nzType="inbox" />
-      </p>
-      <p class="ant-upload-text">Ấn hoặc kéo thả để upload file đính kèm</p>
-      <p class="ant-upload-hint">
-        Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
-      </p>
-    </nz-upload>
+          <p class="ant-upload-drag-icon">
+            <nz-icon nzType="inbox" />
+          </p>
+          <p class="ant-upload-text">Ấn hoặc kéo thả để upload file đính kèm</p>
+          <p class="ant-upload-hint">
+            Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+          </p>
+        </nz-upload>
+    
       </div></div>
     </div>
   </nz-page-header-content>

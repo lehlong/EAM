@@ -18,5 +18,7 @@ namespace EAM.CORE.Entities.MD
 
         [Column("NAME")]
         public string? Name { get; set; }
+        [Column("SEQUENCE")]
+        public int? Sequence { get; set; }
     }
 }
