@@ -74,6 +74,20 @@ export class ClassDComponent implements OnInit, OnDestroy {
     };
     this.search();
   }
+  exportExcel() {
+    return this._service
+      .exportExcel(this.filter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-dac-tinh-theo-nhom.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
 
   search(): void {
     this.isSubmit = false;

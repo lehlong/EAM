@@ -78,7 +78,20 @@ export class ActiveStatusComponent implements OnInit, OnDestroy {
       (activeStatus: any) => activeStatus.code === code
     );
   }
-  
+  exportExcel() {
+    return this._service
+      .exportExcel(this.filter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-trang-thai-hoat-dong.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
   submitForm(): void {
     this.isSubmit = true;
     if (this.validateForm.valid) {

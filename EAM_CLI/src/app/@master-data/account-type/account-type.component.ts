@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ShareModule } from '../../shared/share-module';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { AccountTypeFilter } from '../../models/master-data/account-type.model';
-import { PaginationResult } from '../../models/base.model';
+import { BaseFilter, PaginationResult } from '../../models/base.model';
 import { AccountTypeService } from '../../service/master-data/account-type.service';
 import { GlobalService } from '../../service/global.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -20,6 +20,7 @@ export class AccountTypeComponent {
   visible: boolean = false;
   edit: boolean = false;
   filter = new AccountTypeFilter();
+  exportFilter = new BaseFilter();
   paginationResult = new PaginationResult();
   loading: boolean = false;
 
@@ -115,6 +116,20 @@ export class AccountTypeComponent {
         }
       });
     }
+  }
+  exportExcel() {
+    return this._service
+      .exportExcel(this.exportFilter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-kieu-nguoi-dung.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
   }
 
   close() {

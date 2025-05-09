@@ -60,6 +60,20 @@ export class CataTypeComponent implements OnInit, OnDestroy {
     };
     this.search();
   }
+  exportExcel() {
+    return this._service
+      .exportExcel(this.filter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-loai-thong-ke.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
 
   search(): void {
     this.isSubmit = false;

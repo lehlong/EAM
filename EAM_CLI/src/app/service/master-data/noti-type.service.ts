@@ -27,4 +27,7 @@ export class NotiTypeService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`NotiType/Delete/${id}`)
   }
+  exportExcel(params: any): Observable<any> {
+    return this.commonService.downloadFile('NotiType/Export', params)
+  }
 }

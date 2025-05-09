@@ -27,4 +27,7 @@ export class CataTypeService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`CataType/Delete/${id}`)
   }
+  exportExcel(params: any): Observable<any> {
+    return this.commonService.downloadFile('CataType/Export', params)
+  }
 } 
