@@ -12,6 +12,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string Qmnum { get; set; } = null!;
         public string? Iwerk { get; set; }
         public string? Qmart { get; set; }
+        public string? Qmdetail { get; set; }
         public string? Qmtxt { get; set; }
         public string? Qmnam { get; set; }
         public string? Priok { get; set; }

@@ -22,19 +22,8 @@ export class NotiAttService {
     return this.commonService.get(`NotiAtt/GetByQmnum/${qmnum}`);
   }
 
-  uploadFile(formData: FormData): Promise<any> {
-    const url = `${environment.apiUrl}/NotiAtt/Upload`;
-    console.log('Uploading to URL:', url);
-    console.log('FormData entries:');
-    
-    formData.forEach((value, key) => {
-      if (key === 'file' && value instanceof File) {
-        console.log(`${key}: ${value.name} (${value.type}, ${value.size} bytes)`);
-      } else {
-        console.log(`${key}: ${value instanceof File ? value.name : value}`);
-      }
-    });
-    
+  uploadFile(formData: FormData, qmnum: string): Promise<any> {
+    const url = `${environment.apiUrl}/NotiAtt/Upload?qmnum=${qmnum}`;
     return firstValueFrom(
       this.http.post(url, formData)
         .pipe(

@@ -8,6 +8,9 @@ import { NotiTypeService } from '../../service/master-data/noti-type.service';
 import { NotiService } from '../../service/tran/noti.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { environment } from '../../../environments/environment';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
+import { NotiAttService } from '../../service/tran/noti-att.service';
+import { OrganizeService } from '../../service/system-manager/organize.service';
 
 @Component({
   selector: 'app-incident-create',
@@ -23,13 +26,19 @@ export class IncidentCreateComponent implements OnInit {
     equnr:'',
     priok:'',
     qmtxt: '',
+    qmdetail: '',
     qmart: '',
     iwerk: '',
+    qmdat: Date,
+    isActive: true,
   };
+  qmnum: string = '';
+  lstOrg: any[] = [];
   lstNotiTp: any[] = [];
   lstFloc: any[] = [];
   lstEqGroup: any[] = [];
   lstEquip: any[] = [];
+  fileList: NzUploadFile[] = [];
   lstPriorityLevel = PriorityLevel
   environment = environment;
   constructor(
@@ -38,15 +47,28 @@ export class IncidentCreateComponent implements OnInit {
     private _sEquip: EquipService,
     private _sNotiTp: NotiTypeService,
     private _sNoti: NotiService,
-    private message: NzMessageService
+    private _sNotiAtt: NotiAttService,
+    private message: NzMessageService,
+    private _sOrg: OrganizeService
   ) {}
   ngOnInit(): void {
     this.getAllFloc();
     this.getEqGroup();
     this.getAllEquip();
     this.getAllNotiTp();
+    this.getAllOrg();
   }
 
+  getAllOrg() {
+    this._sOrg.getOrg().subscribe({
+      next: (data: any) => {
+        this.lstOrg = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   getAllNotiTp() {
     this._sNotiTp.getAll().subscribe({
       next: (data) => {
@@ -90,12 +112,45 @@ export class IncidentCreateComponent implements OnInit {
     });
   }
 
+  handleChange(info: NzUploadChangeParam): void {
+    if (info.type === 'success' || info.type === 'removed') {
+      this.fileList = info.fileList;
+    }
+  }
+  uploadFiles(): void {
+    if (!this.qmnum || this.fileList.length === 0) return;
+    this.fileList.forEach(file => {
+      const fileObj = file instanceof File ? file : file.originFileObj;
+      if (fileObj) {
+        const formData = new FormData();
+        formData.append('file', fileObj);
+        formData.append('qmnum', this.qmnum);
+        
+        this._sNotiAtt.uploadFile(formData, this.qmnum)
+          .then(res => {
+            if (res && res.status) {
+              this.message.success(`Tệp ${fileObj.name} đã được tải lên thành công`);
+            } else {
+              this.message.error(`Tải lên tệp ${fileObj.name} thất bại`);
+            }
+          })
+          .catch(err => {
+            console.error('Upload error:', err);
+            this.message.error(`Lỗi khi tải lên tệp ${fileObj.name}`);
+          });
+      }
+    });
+  }
+  beforeUpload = (file: NzUploadFile): boolean => {
+    this.fileList = [...this.fileList, file];
+    return false; // Ngăn upload tự động
+  };
   onCreate() {
-    
-    // Create new notification
     this._sNoti.create(this.model).subscribe({
       next: (data) => {
         if (data && data.qmnum) {
+          this.qmnum = data.qmnum;
+          this.uploadFiles();
           this.resetForm();
         } else {
           console.error('Response không hợp lệ:', data);
@@ -119,6 +174,8 @@ export class IncidentCreateComponent implements OnInit {
       qmtxt: '',
       qmart: '',
       iwerk: '',
+      qmdat: null,
+      qmdetail: '',
     };
   }
 }

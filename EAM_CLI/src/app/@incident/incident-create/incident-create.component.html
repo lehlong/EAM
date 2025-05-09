@@ -25,10 +25,9 @@
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
             <label>Đơn vị quản lý</label>
             <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.iwerk">
-              <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
-              <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
-              <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
-            </nz-select>
+              <nz-option *ngFor="let item of lstOrg" [nzLabel]="item.id + ' - ' + item.name" [nzValue]="item.id">
+              </nz-option>
+          </nz-select>
           </div></div>
 
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
@@ -53,7 +52,7 @@
 
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
             <label>Chi tiết sự cố</label>
-            <textarea rows="2" nz-input></textarea>
+            <textarea rows="2" nz-input [(ngModel)]="model.qmdetail"></textarea>
           </div></div>
 
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
@@ -73,10 +72,9 @@
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
             <label>Bộ phận tiếp nhận</label>
             <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.iwerk">
-              <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
-              <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
-              <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
-            </nz-select>
+              <nz-option *ngFor="let item of lstOrg" [nzLabel]="item.id + ' - ' + item.name" [nzValue]="item.id">
+              </nz-option>
+          </nz-select>
           </div></div>
 
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
@@ -84,13 +82,13 @@
             <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Từ ngày'"></nz-date-picker>
           </div></div>
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
-            <label>đến ngày</label>
+            <label>Đến ngày</label>
             <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Đến ngày'"></nz-date-picker>
           </div></div>
 
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
             <label>Ngày ghi nhận</label>
-            <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"></nz-date-picker>
+            <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="model.qmdat"></nz-date-picker>
           </div></div>
 
           <div nz-col class="gutter-row" [nzSpan]="12"><div class="inner-box">
@@ -106,7 +104,14 @@
       </div></div>
       <div nz-col class="gutter-row" [nzSpan]="10"><div class="inner-box">
         <nz-divider nzOrientation="left" nzText="FILE ĐÍNH KÈM"></nz-divider>
-        <nz-upload nzType="drag" [nzMultiple]="true" >
+        <nz-upload 
+        nzType="drag"
+        [nzMultiple]="true"
+        nzAction=""
+        [nzBeforeUpload]="beforeUpload"
+        (nzChange)="handleChange($event)" 
+        [nzFileList]="fileList"
+        >
           <p class="ant-upload-drag-icon">
             <nz-icon nzType="inbox" />
           </p>

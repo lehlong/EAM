@@ -104,26 +104,30 @@
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
-          <th>Equipment Number</th>
-          <th>Equipment description</th>
-          <th>Planner Group for <br> Customer Service <br> and Plant Maintenance</th>
-          <th>Functional Location</th>
-          <th>Planner Group for Customer Service and Plant Maintenance</th>
-          <th>Equipment category</th>
+          <th>Mã thiết bị</th>
+          <th>Tên thiết bị</th>
+          <th>Loại thiết bị</th>
+          <th>Nhóm thiết bị</th>
+          <th>Bộ phận quản lý</th>
+          <th>Khu vực chức năng</th>
+          <th>Tổ đội bảo trì</th>
+          <th>Ngày bảo trì gần nhất</th>
+          <th>Mã tài sản cố định</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
-          <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
-          </td>
-          <td> <a (click)="openEdit(data)">{{ data.equnr }}</a></td>
+          <td>{{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}</td>
+          <td><a (click)="openEdit(data)">{{ data.equnr }}</a></td>
           <td>{{data.eqktx}}</td>
-          <td>{{ data.iwerk }}</td>
-          <td>{{data.tplnr}}</td>
-          <td>{{data.ingrp}}</td>
           <td>{{getEquipmentCategoryName(data.eqtyp)}}</td>
-
+          <td>{{data.eqart}}</td>
+          <td>{{data.ingrp}}</td>
+          <td>{{data.tplnr}}</td>
+          <td>{{data.arbpl}}</td>
+          <td>{{data.lastMaintenanceDate}}</td>
+          <td>{{data.anlnr}}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />

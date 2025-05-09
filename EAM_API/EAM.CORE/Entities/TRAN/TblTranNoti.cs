@@ -18,6 +18,9 @@ namespace EAM.CORE.Entities.TRAN
         [Column("QMART")]
         public string? Qmart { get; set; }
 
+        [Column("QMDETAIL")]
+        public string? Qmdetail { get; set; }
+
         [Column("QMTXT")]
         public string? Qmtxt { get; set; }
 
