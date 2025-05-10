@@ -30,8 +30,8 @@ export class IncidentListComponent implements OnInit {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách sự cố',
-        path: 'incident/incident-list',
+        name: 'Phê duyệt sự cố',
+        path: 'incident/approval',
       },
     ]);
     this.globalService.getLoading().subscribe((value) => {

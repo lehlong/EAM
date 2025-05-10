@@ -38,6 +38,7 @@ export class IncidentCreateComponent implements OnInit {
     qmdat: new Date(),
     isActive: true,
   };
+  loading : boolean = false
   username: string =''
   qmnum: string = '';
   lstOrg: any[] = [];
@@ -61,10 +62,20 @@ export class IncidentCreateComponent implements OnInit {
     private _sNoti: NotiService,
     private _sNotiAtt: NotiAttService,
     private message: NzMessageService,
-    private _sOrg: OrganizeService
+    private _sOrg: OrganizeService,
+    private globalService: GlobalService,
   ) {
     this.username =_global.getUserName()
     this.model.qmnam = _global.getUserName()
+     this.globalService.setBreadcrumb([
+      {
+        name: 'Tạo mới sự cố',
+        path: 'incident/create',
+      },
+    ]);
+    this.globalService.getLoading().subscribe((value) => {
+      this.loading = value;
+    });
   }
   ngOnInit(): void {
     this.getAllFloc();
