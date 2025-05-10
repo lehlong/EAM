@@ -24,7 +24,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="filter.tplnr">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="filter.tplnr" (ngModelChange)="search()">
             <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
               [nzValue]="item.tplnr">
             </nz-option>
@@ -34,7 +34,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Type of Technical Object</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Type of Technical Object">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Type of Technical Object" [(ngModel)]="filter.eqart" (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
               [nzValue]="item.eqart">
             </nz-option>
@@ -122,9 +122,9 @@
           <td><a (click)="openEdit(data)">{{ data.equnr }}</a></td>
           <td>{{data.eqktx}}</td>
           <td>{{getEquipmentCategoryName(data.eqtyp)}}</td>
-          <td>{{data.eqart}}</td>
+          <td>{{getNameEquart(data.eqart)}}</td>
           <td>{{data.ingrp}}</td>
-          <td>{{data.tplnr}}</td>
+          <td>{{getNameFloc(data.tplnr)}}</td>
           <td>{{data.arbpl}}</td>
           <td>{{data.lastMaintenanceDate}}</td>
           <td>{{data.anlnr}}</td>

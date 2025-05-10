@@ -30,6 +30,7 @@ export class NotiTypeComponent {
     this.validateForm = this.fb.group({
       code: ['', [Validators.required]],
       name: ['', [Validators.required]],
+      sequence: [''],
       isActive: [true, [Validators.required]],
     });
     this.globalService.setBreadcrumb([
@@ -163,6 +164,7 @@ export class NotiTypeComponent {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
+      sequence: data.sequence,
       isActive: data.isActive,
     });
     setTimeout(() => {

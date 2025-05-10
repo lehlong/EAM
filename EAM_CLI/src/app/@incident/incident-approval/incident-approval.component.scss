@@ -1,0 +1,10 @@
+.action-td{
+  display: flex;
+  gap: 12px; /* Khoảng cách giữa các nút */
+  align-items: center; /* Căn giữa theo chiều dọc nếu cần */
+}
+
+.btn-check{
+  border-color: green;
+    background: green;
+}

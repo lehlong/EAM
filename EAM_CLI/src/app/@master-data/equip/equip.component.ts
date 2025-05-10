@@ -20,6 +20,7 @@ import { OrganizeService } from '../../service/system-manager/organize.service';
 import { UsageStatusService } from '../../service/master-data/usage-status.service';
 import { ActiveStatusService } from '../../service/master-data/active-status.service';
 import { AccountService } from '../../service/system-manager/account.service';
+import { EquipFilter } from '../../filter/master-data/equiq-filter';
 
 @Component({
   selector: 'app-equip',
@@ -32,7 +33,7 @@ export class EquipComponent {
   isSubmit: boolean = false;
   visible: boolean = false;
   edit: boolean = false;
-  filter = new BaseFilter();
+  filter = new EquipFilter();
   paginationResult = new PaginationResult();
   lstPlant: any = [];
   lstFloc: any = [];
@@ -60,7 +61,7 @@ export class EquipComponent {
   selectedDocType: string = '';
 
   constructor(
-  private _sAccount : AccountService,
+    private _sAccount: AccountService,
     private _sUsageStatus: UsageStatusService,
     private _sActiveStatus: ActiveStatusService,
     private _service: EquipService,
@@ -270,6 +271,16 @@ export class EquipComponent {
         console.log(response);
       },
     });
+  }
+
+  getNameEquart(code: string) {
+    return this.lstEqGroup.find((x: { eqart: string }) => x.eqart == code)
+      ?.eqartTxt;
+  }
+
+  getNameFloc(code : string){
+    return this.lstFloc.find((x: { tplnr: string }) => x.tplnr == code)
+    ?.descript;
   }
 
   getEquipmentCategoryName(code: string) {

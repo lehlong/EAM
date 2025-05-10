@@ -12,6 +12,10 @@ export class NotiService {
     return this.commonService.get('Noti/Search', params)
   }
 
+  searchApproval(params: any): Observable<any> {
+    return this.commonService.get('Noti/SearchApproval', params)
+  }
+
   getAll(): Observable<any> {
     return this.commonService.get('Noti/GetAll')
   }

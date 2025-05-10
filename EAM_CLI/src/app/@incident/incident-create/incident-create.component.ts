@@ -11,6 +11,9 @@ import { environment } from '../../../environments/environment';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { NotiAttService } from '../../service/tran/noti-att.service';
 import { OrganizeService } from '../../service/system-manager/organize.service';
+import { PlantService } from '../../service/master-data/plant.service';
+import { GlobalService } from '../../service/global.service';
+import { AccountService } from '../../service/system-manager/account.service';
 
 @Component({
   selector: 'app-incident-create',
@@ -23,25 +26,34 @@ export class IncidentCreateComponent implements OnInit {
     qmnum: '',
     tplnr: '',
     eqart: '',
-    equnr:'',
-    priok:'',
+    equnr: '',
+    priok: '',
     qmtxt: '',
     qmdetail: '',
     qmart: '',
     iwerk: '',
-    qmdat: Date,
+    qmnam: '',
+    staffSc: '',
+    ltrmn: new Date(),
+    qmdat: new Date(),
     isActive: true,
   };
+  username: string =''
   qmnum: string = '';
   lstOrg: any[] = [];
   lstNotiTp: any[] = [];
   lstFloc: any[] = [];
   lstEqGroup: any[] = [];
   lstEquip: any[] = [];
+  lstPlant: any[] = [];
+  lstUser: any[] = [];
   fileList: NzUploadFile[] = [];
-  lstPriorityLevel = PriorityLevel
+  lstPriorityLevel = PriorityLevel;
   environment = environment;
   constructor(
+    private _global : GlobalService,
+    private _sUser: AccountService,
+    private _sPlant: PlantService,
     private _sFloc: FlocService,
     private _sEqGroup: EqGroupService,
     private _sEquip: EquipService,
@@ -50,13 +62,29 @@ export class IncidentCreateComponent implements OnInit {
     private _sNotiAtt: NotiAttService,
     private message: NzMessageService,
     private _sOrg: OrganizeService
-  ) {}
+  ) {
+    this.username =_global.getUserName()
+    this.model.qmnam = _global.getUserName()
+  }
   ngOnInit(): void {
     this.getAllFloc();
     this.getEqGroup();
     this.getAllEquip();
     this.getAllNotiTp();
     this.getAllOrg();
+    this.getAllPlan();
+    this.getAllUser();
+  }
+
+  getAllUser() {
+    this._sUser.getListUser().subscribe({
+      next: (data: any) => {
+        this.lstUser = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   getAllOrg() {
@@ -112,6 +140,12 @@ export class IncidentCreateComponent implements OnInit {
     });
   }
 
+  getAllPlan() {
+    this._sPlant.getAll().subscribe({
+      next: (data) => (this.lstPlant = data),
+      error: (err) => console.log(err),
+    });
+  }
   handleChange(info: NzUploadChangeParam): void {
     if (info.type === 'success' || info.type === 'removed') {
       this.fileList = info.fileList;
@@ -119,22 +153,25 @@ export class IncidentCreateComponent implements OnInit {
   }
   uploadFiles(): void {
     if (!this.qmnum || this.fileList.length === 0) return;
-    this.fileList.forEach(file => {
+    this.fileList.forEach((file) => {
       const fileObj = file instanceof File ? file : file.originFileObj;
       if (fileObj) {
         const formData = new FormData();
         formData.append('file', fileObj);
         formData.append('qmnum', this.qmnum);
-        
-        this._sNotiAtt.uploadFile(formData, this.qmnum)
-          .then(res => {
+
+        this._sNotiAtt
+          .uploadFile(formData, this.qmnum)
+          .then((res) => {
             if (res && res.status) {
-              this.message.success(`Tệp ${fileObj.name} đã được tải lên thành công`);
+              this.message.success(
+                `Tệp ${fileObj.name} đã được tải lên thành công`
+              );
             } else {
               this.message.error(`Tải lên tệp ${fileObj.name} thất bại`);
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.error('Upload error:', err);
             this.message.error(`Lỗi khi tải lên tệp ${fileObj.name}`);
           });
@@ -160,7 +197,7 @@ export class IncidentCreateComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.message.error('Đã xảy ra lỗi khi tạo mới sự cố');
-      }
+      },
     });
   }
 
@@ -169,8 +206,8 @@ export class IncidentCreateComponent implements OnInit {
       qmnum: '',
       tplnr: '',
       eqart: '',
-      equnr:'',
-      priok:'',
+      equnr: '',
+      priok: '',
       qmtxt: '',
       qmart: '',
       iwerk: '',
