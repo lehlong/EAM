@@ -27,4 +27,8 @@ export class UsageStatusService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`UsageStatus/Delete/${id}`)
   }
+  
+  exportExcel(params: any): Observable<any> {
+    return this.commonService.downloadFile('UsageStatus/Export', params)
+  }
 } 

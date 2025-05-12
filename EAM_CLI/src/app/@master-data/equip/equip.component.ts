@@ -34,6 +34,7 @@ export class EquipComponent {
   visible: boolean = false;
   edit: boolean = false;
   filter = new EquipFilter();
+  exportFilter = new BaseFilter();
   paginationResult = new PaginationResult();
   lstPlant: any = [];
   lstFloc: any = [];
@@ -146,6 +147,20 @@ export class EquipComponent {
       //IsDescending: value === 'descend',
     };
     this.search();
+  }
+  exportExcel() {
+    return this._service
+      .exportExcel(this.exportFilter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-bo-thong-ke-su-co.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
   }
 
   search() {

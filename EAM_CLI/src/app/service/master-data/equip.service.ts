@@ -27,4 +27,7 @@ export class EquipService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`Equip/Delete/${id}`)
   }
+  exportExcel(params: any): Observable<any> {
+    return this.commonService.downloadFile('Equip/Export', params)
+  }
 }

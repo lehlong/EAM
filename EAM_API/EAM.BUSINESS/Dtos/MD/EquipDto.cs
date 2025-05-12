@@ -18,33 +18,33 @@ namespace EAM.BUSINESS.Dtos.MD
         [Description("Mã thiết bị")]
         public string Equnr { get; set; } = null!;
 
-        [Description("Mô tả thiết bị")]
+        [Description("Tên thiết bị")]
         public string? Eqktx { get; set; }
         [Description("Mã nhà máy")]
         public string? Iwerk { get; set; }
 
-        [Description("Ngày bắt đầu hiệu lực")]
+    //    [Description("Ngày bắt đầu hiệu lực")]
         public DateTime? Datab { get; set; }
 
-        [Description("Ngày kết thúc hiệu lực")]
+    //    [Description("Ngày kết thúc hiệu lực")]
         public DateTime? Datbi { get; set; }
 
-        [Description("Vị trí chức năng")]
+        [Description("Khu vực chức năng")]
         public string? Tplnr { get; set; }
 
-        [Description("Mã nhóm quản lý")]
+        [Description("Bộ phận quản lý")]
         public string? Ingrp { get; set; }
 
         [Description("Loại thiết bị")]
         public string? Eqtyp { get; set; }
 
-        [Description("Loại đối tượng")]
+        [Description("Nhóm thiết bị")]
         public string? Eqart { get; set; }
 
-        [Description("Loại đối tượng phụ")]
+    //    [Description("Loại đối tượng phụ")]
         public string? EqartSub { get; set; }
 
-        [Description("Loại đối tượng thường")]
+    //    [Description("Loại đối tượng thường")]
         public string? EqartTp { get; set; }
 
         [Description("Thiết bị cấp trên")]
@@ -56,7 +56,7 @@ namespace EAM.BUSINESS.Dtos.MD
         [Description("Số lượng thiết bị con")]
         public int? ChildCnt { get; set; }
 
-        [Description("Mã trung tâm công việc")]
+        [Description("Tổ đội bảo trì")]
         public string? Arbpl { get; set; }
 
         [Description("Mã trung tâm chi phí")]
@@ -74,34 +74,34 @@ namespace EAM.BUSINESS.Dtos.MD
         [Description("Trạng thái kỹ thuật")]
         public string? StatusTh { get; set; }
 
-        [Description("Mã tài sản")]
+        [Description("Mã tài sản cố định")]
         public string? Anlnr { get; set; }
 
-        [Description("Mã tài sản phụ")]
+    //    [Description("Mã tài sản phụ")]
         public string? Anlun { get; set; }
 
-        [Description("Loại lớp")]
+      //  [Description("Loại lớp")]
         public string? Klart { get; set; }
 
-        [Description("Lớp")]
+     //   [Description("Lớp")]
         public string? Class { get; set; }
 
-        [Description("Cờ đăng xuất")]
+      //  [Description("Cờ đăng xuất")]
         public string? AuspFlg { get; set; }
 
-        [Description("Cờ đã xóa")]
+     //   [Description("Cờ đã xóa")]
         public string? DelFlg { get; set; }
 
-        [Description("Ngày xóa")]
+     //   [Description("Ngày xóa")]
         public DateTime? DelDate { get; set; }
 
-        [Description("Cờ không hoạt động")]
+      //  [Description("Cờ không hoạt động")]
         public string? InactFlg { get; set; }
 
-        [Description("Ngày không hoạt động")]
+     //   [Description("Ngày không hoạt động")]
         public DateTime? InactDate { get; set; }
 
-        [Description("Ngày vận hành")]
+    //    [Description("Ngày vận hành")]
         public DateTime? Inbdt { get; set; }
 
         [Description("Trạng thái")]
