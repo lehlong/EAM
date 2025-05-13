@@ -8,6 +8,12 @@ import { FlocService } from '../../service/master-data/floc.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { WcService } from '../../service/master-data/wc.service';
 import { EquipService } from '../../service/master-data/equip.service';
+import { EqGroupService } from '../../service/master-data/eq-group.service';
+import { PlgrpService } from '../../service/master-data/plgrp.service';
+import { PlantService } from '../../service/master-data/plant.service';
+import { PriorityLevel } from '../../shared/constants/select.constants';
+import { NotiTypeService } from '../../service/master-data/noti-type.service';
+import { OrderTypeService } from '../../service/master-data/order-type.service';
 
 @Component({
   selector: 'app-incident-list',
@@ -24,15 +30,45 @@ export class IncidentListComponent implements OnInit {
   lstUser: any = [];
   lstWc : any[] = [];
   lstEquip : any[] = [];
+  lstEqGroup : any[] = [];
+  lstPlgrp : any[] = []
+  lstPlant: any[] = []
+  lstPriorityLevel = PriorityLevel;
+  lstNotiTp : any[] = []
+  lstOrderType : any[] = []
+
+   model: any = {
+    arbpl: '',
+    qmnum: '',
+    tplnr: '',
+    eqart: '',
+    equnr: '',
+    priok: '',
+    qmtxt: '',
+    qmdetail: '',
+    qmart: 'N2',
+    iwerk: '',
+    qmnam: '',
+    ingrp: '',
+    staffSc: '',
+    ltrmn: new Date(),
+    qmdat: new Date(),
+    isActive: true,
+  };
 
   constructor(
+    private _sOrderType: OrderTypeService,
+    private _sNotiTp: NotiTypeService,
+    private _sPlant: PlantService,
     private _sNoti: NotiService,
     private _sWc : WcService,
     private _sEquip : EquipService,
     private globalService: GlobalService,
     private message: NzMessageService,
     private _sFloc: FlocService,
-    private _sAccount: AccountService
+    private _sAccount: AccountService,
+    private _sEqGroup : EqGroupService,
+    private _sPlgrp : PlgrpService,
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -53,6 +89,11 @@ export class IncidentListComponent implements OnInit {
     this.getAllUser();
     this.getAllWc();
     this.getAllEquip();
+    this.getAllEgGroup();
+    this.getAllPlgrp();
+    this.getAllPlant();
+    this.getAllNotiTp();
+    this.getAllOrderType();
   }
   search() {
     this._sNoti.search(this.filter).subscribe({
@@ -63,6 +104,59 @@ export class IncidentListComponent implements OnInit {
         console.log(response);
       },
     });
+  }
+
+visibleOrder: boolean= false;
+  openAddOrder(data : any){
+    this.model = data
+    this.model.auart = 'PM02';
+    this.visibleOrder = true
+  }
+  closeOrder(){
+    this.visibleOrder = false;
+  }
+  createOrder(){
+
+  }
+
+   getAllPlant(){
+    this._sPlant.getAll().subscribe({
+      next:(data) => {
+        this.lstPlant = data
+      }
+    })
+  }
+
+  getAllOrderType(){
+    this._sOrderType.getAll().subscribe({
+      next:(data) => {
+        this.lstOrderType = data
+      }
+    })
+  }
+
+   getAllNotiTp(){
+    this._sNotiTp.getAll().subscribe({
+      next:(data) => {
+        this.lstNotiTp = data
+      }
+    })
+  }
+
+  getAllPlgrp(){
+    this._sPlgrp.getAll().subscribe({
+      next:(data) => {
+        this.lstPlgrp = data
+      }
+    })
+  }
+
+  getAllEgGroup(){
+    this._sEqGroup.getAll().subscribe({
+      next:(data) => {
+        this.lstEqGroup = data
+      }
+    })
   }
 
   getAllUser(){

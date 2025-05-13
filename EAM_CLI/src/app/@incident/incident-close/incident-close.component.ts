@@ -8,6 +8,7 @@ import { FlocService } from '../../service/master-data/floc.service';
 import { WcService } from '../../service/master-data/wc.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { NotiService } from '../../service/tran/noti.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-incident-close',
@@ -135,10 +136,22 @@ export class IncidentCloseComponent implements OnInit {
 
   updateStatusNoti(data: any, status: string) {
     data.statAct = status;
-    this._sNoti.update(data).subscribe({
+
+    Swal.fire({
+      title: status =='05' ? 'Đóng sự cố?' : 'Từ chối đóng?',
+      text: 'Bạn sẽ không thể hoàn tác điều này!',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._sNoti.update(data).subscribe({
       next: () => {
         this.search();
       },
+    });
+      }
     });
   }
   reset() {
