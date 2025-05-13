@@ -2,7 +2,7 @@
 using EAM.CORE.Entities.AD;
 using EAM.CORE.Entities.MD;
 using EAM.CORE.Entities.TRAN;
-
+using EAM.CORE.Entities.WH;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
@@ -161,6 +161,10 @@ namespace EAM.CORE
         public DbSet<TblTranOrderEq> TblTranOrderEq { get; set; }
         public DbSet<TblTranOrderOperation> TblTranOrderOperation { get; set; }
         public DbSet<TblTranOrderVt> TblTranOrderVt { get; set; }
+        #endregion
+
+        #region Warehouse
+        public DbSet<TblMdWH> TblMdWH { get; set; }
         #endregion
 
     }

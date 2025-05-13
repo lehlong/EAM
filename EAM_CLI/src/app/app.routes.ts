@@ -9,6 +9,7 @@ import { NotFoundComponent } from './layouts/not-found/not-found.component';
 import { systemManagerRoutes } from './@system-manager/system-manager.routes';
 import { masterDataRoutes } from './@master-data/master-data.routes';
 import { incidentRoutes } from './@incident/incident.routes';
+import { warehouseRoutes } from './@warehouse/warehouse.route';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       { path: 'incident', children: incidentRoutes, canActivate: [AuthGuard] },
+      { path: 'warehouse', children: warehouseRoutes, canActivate: [AuthGuard] },
     ],
   },
   {

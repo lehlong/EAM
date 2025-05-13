@@ -1,0 +1,114 @@
+﻿using AutoMapper;
+using Common;
+using EAM.BUSINESS.Common;
+using EAM.BUSINESS.Dtos.MD;
+using EAM.BUSINESS.Dtos.WH;
+using EAM.BUSINESS.Services.MD;
+using EAM.CORE;
+using EAM.CORE.Entities.MD;
+using EAM.CORE.Entities.WH;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EAM.BUSINESS.Services.WH
+{
+    public interface IWarehouseService : IGenericService<TblMdWH, WarehouseDto>
+    {
+        Task<byte[]> Export(BaseMdFilter filter);
+    }
+    public class WarehouseService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdWH, WarehouseDto>(dbContext, mapper), IWarehouseService
+    {
+        public override async Task<PagedResponseDto> Search(BaseFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblMdWH.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x => x.Iwerk.Contains(filter.KeyWord) ||
+                                          x.Werk.Contains(filter.KeyWord) ||
+                                          x.WerkTxt.Contains(filter.KeyWord));
+                }
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                return await Paging(query, filter);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+        public async Task<byte[]> Export(BaseMdFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblMdWH.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x => x.Werk.Contains(filter.KeyWord));
+                }
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                var data = await base.GetAllMd(query, filter);
+                int i = 1;
+                data.ForEach(x =>
+                {
+                    x.OrdinalNumber = i++;
+                });
+                return await ExportExtension.ExportToExcel(data);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+        public override async Task<WarehouseDto> Add(WarehouseDto dto)
+        {
+            try
+            {
+                // Trim whitespace before saving
+                dto.Werk = dto.Werk?.Trim();
+                dto.Iwerk = dto.Iwerk?.Trim();
+                dto.WerkTxt = dto.WerkTxt?.Trim();
+                
+                return await base.Add(dto);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+        public override async Task Update(WarehouseDto dto)
+        {
+            try
+            {
+                // Trim whitespace before updating
+                dto.Werk = dto.Werk?.Trim();
+                dto.Iwerk = dto.Iwerk?.Trim();
+                dto.WerkTxt = dto.WerkTxt?.Trim();
+                
+                await base.Update(dto);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+            }
+        }
+    }
+}
