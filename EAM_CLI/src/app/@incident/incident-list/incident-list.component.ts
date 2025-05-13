@@ -14,6 +14,7 @@ import { PlantService } from '../../service/master-data/plant.service';
 import { PriorityLevel } from '../../shared/constants/select.constants';
 import { NotiTypeService } from '../../service/master-data/noti-type.service';
 import { OrderTypeService } from '../../service/master-data/order-type.service';
+import { OrderService } from '../../service/tran/order.service';
 
 @Component({
   selector: 'app-incident-list',
@@ -28,16 +29,16 @@ export class IncidentListComponent implements OnInit {
   paginationResult = new PaginationResult();
   lstFloc: any = [];
   lstUser: any = [];
-  lstWc : any[] = [];
-  lstEquip : any[] = [];
-  lstEqGroup : any[] = [];
-  lstPlgrp : any[] = []
-  lstPlant: any[] = []
+  lstWc: any[] = [];
+  lstEquip: any[] = [];
+  lstEqGroup: any[] = [];
+  lstPlgrp: any[] = [];
+  lstPlant: any[] = [];
   lstPriorityLevel = PriorityLevel;
-  lstNotiTp : any[] = []
-  lstOrderType : any[] = []
+  lstNotiTp: any[] = [];
+  lstOrderType: any[] = [];
 
-   model: any = {
+  model: any = {
     arbpl: '',
     qmnum: '',
     tplnr: '',
@@ -57,18 +58,19 @@ export class IncidentListComponent implements OnInit {
   };
 
   constructor(
+    private _sOrder: OrderService,
     private _sOrderType: OrderTypeService,
     private _sNotiTp: NotiTypeService,
     private _sPlant: PlantService,
     private _sNoti: NotiService,
-    private _sWc : WcService,
-    private _sEquip : EquipService,
+    private _sWc: WcService,
+    private _sEquip: EquipService,
     private globalService: GlobalService,
     private message: NzMessageService,
     private _sFloc: FlocService,
     private _sAccount: AccountService,
-    private _sEqGroup : EqGroupService,
-    private _sPlgrp : PlgrpService,
+    private _sEqGroup: EqGroupService,
+    private _sPlgrp: PlgrpService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -106,84 +108,91 @@ export class IncidentListComponent implements OnInit {
     });
   }
 
-visibleOrder: boolean= false;
-  openAddOrder(data : any){
-    this.model = data
+  visibleOrder: boolean = false;
+  openAddOrder(data: any) {
+    this.model = data;
     this.model.auart = 'PM02';
-    this.visibleOrder = true
+    this.visibleOrder = true;
   }
-  closeOrder(){
+  closeOrder() {
     this.visibleOrder = false;
   }
-  createOrder(){
-
+  createOrder() {
+    this._sOrder.create(this.model).subscribe({
+      next: (data) => {
+        this.search();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
-   getAllPlant(){
+  getAllPlant() {
     this._sPlant.getAll().subscribe({
-      next:(data) => {
-        this.lstPlant = data
-      }
-    })
+      next: (data) => {
+        this.lstPlant = data;
+      },
+    });
   }
 
-  getAllOrderType(){
+  getAllOrderType() {
     this._sOrderType.getAll().subscribe({
-      next:(data) => {
-        this.lstOrderType = data
-      }
-    })
+      next: (data) => {
+        this.lstOrderType = data;
+      },
+    });
   }
 
-   getAllNotiTp(){
+  getAllNotiTp() {
     this._sNotiTp.getAll().subscribe({
-      next:(data) => {
-        this.lstNotiTp = data
-      }
-    })
+      next: (data) => {
+        this.lstNotiTp = data;
+      },
+    });
   }
 
-  getAllPlgrp(){
+  getAllPlgrp() {
     this._sPlgrp.getAll().subscribe({
-      next:(data) => {
-        this.lstPlgrp = data
-      }
-    })
+      next: (data) => {
+        this.lstPlgrp = data;
+      },
+    });
   }
 
-  getAllEgGroup(){
+  getAllEgGroup() {
     this._sEqGroup.getAll().subscribe({
-      next:(data) => {
-        this.lstEqGroup = data
-      }
-    })
+      next: (data) => {
+        this.lstEqGroup = data;
+      },
+    });
   }
 
-  getAllUser(){
+  getAllUser() {
     this._sAccount.getListUser().subscribe({
-      next: (data) =>{
-        this.lstUser = data
-      }
-    })
+      next: (data) => {
+        this.lstUser = data;
+      },
+    });
   }
 
-   getAllWc(){
+  getAllWc() {
     this._sWc.getAll().subscribe({
-      next: (data) =>{
-        this.lstWc = data
-      }
-    })
+      next: (data) => {
+        this.lstWc = data;
+      },
+    });
   }
 
-   getAllEquip(){
+  getAllEquip() {
     this._sEquip.getAll().subscribe({
-      next: (data) =>{
-        this.lstEquip = data
-      }
-    })
+      next: (data) => {
+        this.lstEquip = data;
+      },
+    });
   }
 
-   updateStatusNoti(data: any, status: string) {
+  updateStatusNoti(data: any, status: string) {
     data.statAct = status;
     this._sNoti.update(data).subscribe({
       next: () => {
@@ -192,24 +201,26 @@ visibleOrder: boolean= false;
     });
   }
 
-  getFullNameUser(username: any){
-    return this.lstUser.find((x: { userName: string })  => x.userName == username)?.fullName
+  getFullNameUser(username: any) {
+    return this.lstUser.find(
+      (x: { userName: string }) => x.userName == username
+    )?.fullName;
   }
-  getNameWc(code: any){
-    return this.lstWc.find(x => x.arbpl == code)?.arbplTxt;
+  getNameWc(code: any) {
+    return this.lstWc.find((x) => x.arbpl == code)?.arbplTxt;
   }
 
-  getNameEquip(code: any){
-    return this.lstEquip.find(x => x.equnr == code)?.eqktx;
+  getNameEquip(code: any) {
+    return this.lstEquip.find((x) => x.equnr == code)?.eqktx;
   }
 
   getAllFloc() {
-  this._sFloc.getAll().subscribe({
-    next: (data) => {
-      this.lstFloc = data;
-    },
-  });
-}
+    this._sFloc.getAll().subscribe({
+      next: (data) => {
+        this.lstFloc = data;
+      },
+    });
+  }
   getFlocName(code: any) {
     return this.lstFloc.find((x: { tplnr: string }) => x.tplnr == code)
       ?.descript;

@@ -15,27 +15,28 @@ import { PlantService } from '../../service/master-data/plant.service';
 })
 export class WarehouseListComponent {
   validateForm: FormGroup;
-  loading: boolean = false;
-  paginationResult = new PaginationResult();
-  filter = new BaseFilter();
   isSubmit: boolean = false;
   visible: boolean = false;
   edit: boolean = false;
-  lstIwerk: any[] = [];
+  filter = new BaseFilter();
+  exportFilter = new BaseFilter();
+  paginationResult = new PaginationResult();
+  loading: boolean = false;
+  lstPlant: any[] = []
+
   constructor(
+    private _sPlant: PlantService,
+    private _service: WarehouseService,
     private fb: NonNullableFormBuilder,
-    private _sWarehouse: WarehouseService,
     private globalService: GlobalService,
-    private message: NzMessageService,
-    private _sPlant: PlantService
-  ){
+    private message: NzMessageService
+  ) {
     this.validateForm = this.fb.group({
-      werk: ['', [Validators.required, Validators.pattern(/^\S.*\S$|^\S+$/)]],
-      iwerk: ['', [Validators.required, Validators.pattern(/^\S.*\S$|^\S+$/)]],
-      werkTxt: ['', [Validators.required, Validators.pattern(/^\S.*\S$|^\S+$/)]],
+      werk: ['', [Validators.required]],
+      werkTxt: ['', [Validators.required]],
+      iwerk: ['', [Validators.required]],
       isActive: [true, [Validators.required]],
     });
-    
     this.globalService.setBreadcrumb([
       {
         name: 'Danh sách kho',
@@ -49,22 +50,36 @@ export class WarehouseListComponent {
   ngOnDestroy() {
     this.globalService.setBreadcrumb([]);
   }
-   ngOnInit(): void {
+
+  ngOnInit(): void {
     this.search();
-    this.getIwerk();
+    this.getAllPlant()
   }
- getIwerk() {
+
+  getAllPlant(){
     this._sPlant.getAll().subscribe({
-      next: (data) => {
-        this.lstIwerk = data;
-      },
-      error: (response) => {
-        console.log(response);
-      },
-    });
+      next:(data) => {
+      this.lstPlant = data
+      }
+  })
   }
+
+  onSortChange(name: string, value: any) {
+    this.filter = {
+      ...this.filter,
+      // SortColumn: name,
+      // IsDescending: value === 'descend',
+    };
+    this.search();
+  }
+
+  getNamePlant(code: string){
+    return this.lstPlant.find(x => x.iwerk == code)?.iwerkTxt;
+  }
+
   search() {
-    this._sWarehouse.search(this.filter).subscribe({
+    this.isSubmit = false;
+    this._service.search(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data;
       },
@@ -73,43 +88,38 @@ export class WarehouseListComponent {
       },
     });
   }
-   submitForm() {
+
+  isCodeExist(code: string): boolean {
+    return this.paginationResult.data?.some(
+      (accType: any) => accType.code === code
+    );
+  }
+  submitForm(): void {
     this.isSubmit = true;
     if (this.validateForm.valid) {
-      // Trim whitespace from form values
-      const formData = this.validateForm.getRawValue();
-      formData.werk = formData.werk?.trim();
-      formData.iwerk = formData.iwerk?.trim();
-      formData.werkTxt = formData.werkTxt?.trim();
-
       if (this.edit) {
-        this._sWarehouse.update(formData).subscribe({
+        this._service.update(this.validateForm.getRawValue()).subscribe({
           next: (data) => {
             this.search();
-            this.close();
-            this.message.success('Cập nhật thành công');
           },
           error: (response) => {
             console.log(response);
-            this.message.error('Cập nhật thất bại');
           },
         });
       } else {
+        const formData = this.validateForm.getRawValue();
         if (this.isCodeExist(formData.werk)) {
           this.message.error(
-            `Kho ${formData.werk} đã tồn tại, vui lòng nhập lại`
+            `Mã ${formData.werk} đã tồn tại, vui lòng nhập lại`
           );
           return;
         }
-        this._sWarehouse.create(formData).subscribe({
+        this._service.create(this.validateForm.getRawValue()).subscribe({
           next: (data) => {
             this.search();
-            this.close();
-            this.message.success('Thêm mới thành công');
           },
           error: (response) => {
             console.log(response);
-            this.message.error('Thêm mới thất bại');
           },
         });
       }
@@ -122,46 +132,9 @@ export class WarehouseListComponent {
       });
     }
   }
-   onClassChange(data: any):void{
-    this.validateForm.patchValue({
-      aname: this.lstIwerk.find(x => x.iwerk == data)?.iwerkTxt,
-    });
-  }
-   isCodeExist(werk: string): boolean {
-    return this.paginationResult.data?.some(
-      (char: any) => char.werk === werk
-    );
-  }
- openCreate() {
-    this.edit = false;
-    this.visible = true;
-  }
- openEdit(data: any) {
-    this.validateForm.setValue({
-      werk: data.werk,
-      iwerk: data.iwerk,
-      werkTxt: data.werkTxt,
-
-      isActive: data.isActive,
-    });
-    setTimeout(() => {
-      this.edit = true;
-      this.visible = true;
-    }, 200);
-  }
-    deleteItem(werk: string) {
-    this._sWarehouse.delete(werk).subscribe({
-      next: (data) => {
-        this.search();
-      },
-      error: (response) => {
-        console.log(response);
-      },
-    });
-  }
-    exportExcel() {
-    return this._sWarehouse
-      .exportExcel(this.filter)
+  exportExcel() {
+    return this._service
+      .exportExcel(this.exportFilter)
       .subscribe((result: Blob) => {
         const blob = new Blob([result], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -173,38 +146,60 @@ export class WarehouseListComponent {
         anchor.click()
       })
   }
-   close() {
+
+  close() {
     this.visible = false;
     this.resetForm();
   }
-   getNamePlant(iwerk: string): string {
-    if (!iwerk) return '';
-    const cleanIwerk = iwerk.trim();
-    const plant = this.lstIwerk.find(
-      (x: { iwerk: string }) => x.iwerk?.trim() === cleanIwerk
-    );
-    return plant ? plant.iwerkTxt : cleanIwerk;
-  }
-  resetForm() {
-    this.validateForm.reset();
-    this.validateForm.patchValue({
-      isActive: true
-    });
-    this.isSubmit = false;
-  }
+
   reset() {
     this.filter = new BaseFilter();
     this.search();
   }
 
-  pageIndexChange(page: number): void {
-    this.filter.currentPage = page;
-    this.search();
+  openCreate() {
+    this.edit = false;
+    this.visible = true;
+  }
+
+  resetForm() {
+    this.validateForm.reset();
+    this.isSubmit = false;
+  }
+
+  deleteItem(code: string) {
+    this._service.delete(code).subscribe({
+      next: (data) => {
+        this.search();
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  openEdit(data: any) {
+    console.log(data)
+    this.validateForm.setValue({
+      werk: data.werk,
+      werkTxt: data.werkTxt,
+      iwerk: data.iwerk,
+      isActive: data.isActive,
+    });
+    setTimeout(() => {
+      this.edit = true;
+      this.visible = true;
+    }, 200);
   }
 
   pageSizeChange(size: number): void {
-    this.filter.pageSize = size;
     this.filter.currentPage = 1;
+    this.filter.pageSize = size;
+    this.search();
+  }
+
+  pageIndexChange(index: number): void {
+    this.filter.currentPage = index;
     this.search();
   }
 }

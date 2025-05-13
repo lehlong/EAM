@@ -54,10 +54,9 @@ namespace EAM.API.Controllers.TRAN
         public async Task<IActionResult> Insert([FromBody] OrderDto Order)
         {
             var transferObject = new TransferObject();
-            var result = await _service.Add(Order);
+            await _service.InsertOrder(Order);
             if (_service.Status)
             {
-                transferObject.Data = result;
                 transferObject.Status = true;
                 transferObject.MessageObject.MessageType = MessageType.Success;
                 transferObject.GetMessage("0100", _service);

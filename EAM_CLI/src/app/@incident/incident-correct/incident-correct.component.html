@@ -1,106 +1,303 @@
 <nz-page-header nzBackIcon>
   <nz-page-header-title>LỆNH SỬA CHỮA</nz-page-header-title>
   <nz-page-header-subtitle>Danh sách lệnh sửa chữa</nz-page-header-subtitle>
-  <nz-page-header-extra>
-    <!-- <div class="flex-grow-2 flex">
-      <nz-space>
-        <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Nhóm tài khoản"
-        [(ngModel)]="filter.GroupId">
-        <nz-option *ngFor="let item of listAccountGroup" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
-      </nz-select>
-      <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Kiểu người dùng"
-        [(ngModel)]="filter.AccountType">
-        <nz-option cdkScrollable *ngFor="let item of accountType" [nzLabel]="item.name" [nzValue]="item.id">
-        </nz-option>
-      </nz-select>
-
-      <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Chức vụ"
-        [(ngModel)]="filter.positionCode">
-        <nz-option cdkScrollable *ngFor="let item of positionList" [nzLabel]="item.name" [nzValue]="item.code">
-        </nz-option>
-      </nz-select>
-
-      <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái" [(ngModel)]="filter.IsActive">
-        <nz-option *ngFor="let item of listStatus" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
-      </nz-select>
-      <div class="flex-grow-2 flex">
-        <button *nzSpaceItem (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button>
-          <span nz-icon nzType="plus-circle"></span> Thêm mới
-        </button>
-        <button *nzSpaceItem class="!flex !items-center" nz-button nzType="primary" nzDanger>
-          <span nz-icon nzType="file-excel"></span>Tải Excel
-        </button>
+  <nz-page-header-content>
+    <div nz-row [nzGutter]="12" style="margin: 0;">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" (ngModelChange)="search()">
+            <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
       </div>
-        <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()" [(value)]="filter.keyWord"></app-input-clear>
-        <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
-          nzType="default">
-          <span nz-icon nzType="search"></span>
-        </button>
-        <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
-          nzType="default">
-          <span nz-icon nzType="redo"></span>
-        </button>
-      </nz-space>
-      <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
-        <span nz-icon nzType="plus-circle"></span> Thêm mới
-      </button>
-    </div> -->
-  </nz-page-header-extra>
-  <nz-page-header-content class="main-content">
-    <nz-table nzBordered [nzSize]="'middle'" class="auto-scroll-table" [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable  nzBordered [nzSize]="'middle'">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Nhóm thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị" (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
+              [nzValue]="item.eqart">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Đơn vị quản lý</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị quản lý" (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp+ ' - '+item.ingrpTxt"
+              [nzValue]="item.ingrp">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị">
+            <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Ngày yêu cầu hoàn thành</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>đến ngày</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+        </div>
+      </div>
+    </div>
+
+
+  </nz-page-header-content>
+  <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">
+    <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResult.data" class="auto-scroll-table"
+      [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable>
       <thead>
         <tr>
-          <th>Số lệnh</th>
-          <th>Nội dung sửa chữa</th>
+          <th [nzChecked]="checked"></th>
+          <th>Mã lệnh</th>
+          <th>Nội dung</th>
           <th>Mã yêu cầu</th>
-          <th>Ngày KH thực hiện</th>
-          <th>Ngày bắt đầu TH</th>
+          <th>Ngày ghi nhận</th>
           <th>Ngày hoàn thành</th>
           <th>Bộ phận thực hiện</th>
-          <th>Người thực hiện</th>
+          <th>Người tạo sự cố</th>
+          <th>Người sửa chữa</th>
           <th>Khu vực phát sinh</th>
-          <th>Tên thiết bị sửa chữa</th>
-          <th>Mã thiết bị</th>
+          <th>Tên thiết bị</th>
+          <th>Mức độ ưu tiên</th>
           <th nzAlign="center">Trạng thái</th>
-          <th>Tác vụ</th>
         </tr>
       </thead>
       <tbody>
-        <!-- <tr *ngFor="let data of headerTable.data; let i = index">
+      <tbody>
+        <tr *ngFor="let data of paginationResult.data; let i = index">
+          <td [nzChecked]="false"></td>
+          <td>{{ data.aufnr }}</td>
+          <td>{{ data.qmtxt }}</td>
+          <td>{{ data.qmnum }}</td>
+
+          <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ getNameWc(data.arbpl) }}</td>
+          <td>{{ getFullNameUser(data.qmnam) }}</td>
+          <td>{{ getFullNameUser(data.staffSc) }}</td>
+          <td>{{ getFlocName(data.tplnr) }}</td>
+          <td>{{ getNameEquip(data.equnr) }}</td>
+          <td>{{ getPriorityText(data.priok) }}</td>
           <td>
-            {{ (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1 }}
+            <nz-tag *ngIf="data.statAct == '01'" nzColor="processing">Chờ duyệt</nz-tag>
+            <nz-tag *ngIf="data.statAct == '02'" nzColor="success">Phê duyệt</nz-tag>
+            <nz-tag *ngIf="data.statAct == '03'" nzColor="error">Từ chối</nz-tag>
+            <nz-tag *ngIf="data.statAct == '04'" nzColor="success">Hoàn thành</nz-tag>
+            <nz-tag *ngIf="data.statAct == '05'" nzColor="default">Đóng</nz-tag>
+            <nz-tag *ngIf="data.statAct == '06'" nzColor="error">Từ chối đóng</nz-tag>
+            <nz-tag *ngIf="data.statAct == '07'" nzColor="processing">Đang thực hiện</nz-tag>
           </td>
-          <td>
-            <div *ngFor="let item of data?.accountGroups">
-              <a (click)="handleAccountGroup(item.id)">{{ item?.name }}</a>
-            </div>
-          </td>
-          <td>
-            <a (click)="openEdit(data.userName)">{{ data.userName }}</a>
-          </td>
-          <td>{{ data.fullName }}</td>
-          <td>{{ getAccountTypeNameById(data?.accountType) }}</td>
-          <td>{{ getPositionCodeNameById(data?.positionCode) }}</td>
-          <td nzAlign="center">
-            <nz-tag nzColor="success" *ngIf="data.isActive">
-              <nz-icon nzType="check-circle" />
-              <span>Kích hoạt</span>
-            </nz-tag>
-            <nz-tag nzColor="error" *ngIf="!data.isActive">
-              <nz-icon nzType="close-circle" />
-              <span>Khoá</span>
-            </nz-tag>
-          </td>
-        </tr> -->
+
+        </tr>
       </tbody>
     </nz-table>
+
   </nz-page-header-content>
   <nz-page-header-content class="footer-content">
-    <!-- <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+    <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
       <nz-pagination nzShowSizeChanger [nzShowTotal]="totalTemplate" [nzPageIndex]="filter.currentPage"
         [nzTotal]="paginationResult.totalRecord" [nzPageSize]="filter.pageSize"
         (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
       <ng-template #totalTemplate let-total>Tổng số {{ paginationResult.totalRecord }} mục</ng-template>
-    </div> -->
+    </div>
   </nz-page-header-content>
 </nz-page-header>
+
+
+<!-- Tạo lệnh -->
+<nz-drawer nzWidth="60%" [nzVisible]="visibleOrder" nzPlacement="right"
+  [nzTitle]="`CHI TIẾT SỰ CỐ ${model.qmnum} - ${model.qmtxt}`" [nzExtra]="extra" (nzOnClose)="closeOrder()">
+  <ng-container *nzDrawerContent>
+
+    <div nz-row [nzGutter]="16">
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Mã yêu cầu</label>
+          <app-input-clear [value]="model.qmnum" [(ngModel)]="model.qmnum" [disabled]="true"></app-input-clear>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Loại sửa chữa</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Loại sửa chữa" [(ngModel)]="model.auart">
+            <nz-option *ngFor="let item of lstOrderType" [nzLabel]="item.code + ' - ' + item.name"
+              [nzValue]="item.code">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr">
+            <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Nhóm thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" [(ngModel)]="model.eqart">
+            <nz-option *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart + ' - ' + item.eqartTxt"
+              [nzValue]="item.eqart">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="model.equnr">
+            <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Bộ phận thực hiện</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
+            <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Bộ phận tiếp nhận</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ingrp">
+            <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt"
+              [nzValue]="item.ingrp">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Loại thông báo</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.qmart">
+            <nz-option *ngFor="let item of lstNotiTp" [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Mô tả sự cố (40 kí tự)</label>
+          <textarea rows="2" nz-input [(ngModel)]="model.qmtxt"></textarea>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Chi tiết sự cố</label>
+          <textarea rows="2" nz-input [(ngModel)]="model.qmdetail"></textarea>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Người thông báo sự cố</label>
+          <app-input-clear [(value)]="model.qmnam" [(ngModel)]="model.qmnam" [disabled]="true"></app-input-clear>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Mức độ ưu tiên</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.priok">
+            <nz-option *ngFor="let item of lstPriorityLevel" [nzLabel]="item.value + ' - ' + item.name"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Ngày thông báo sự cố</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.qmdat" [disabled]="true"></nz-date-picker>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Người sửa chữa</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.staffSc">
+            <nz-option *ngFor="let item of lstUser" [nzLabel]="item.userName + ' - ' + item.fullName"
+              [nzValue]="item.userName">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Ngày yêu cầu hoàn thành</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.ltrmn"></nz-date-picker>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Đơn vị bảo trì</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Đơn vị bảo trì" [(ngModel)]="model.iwerk">
+            <nz-option *ngFor="let item of lstPlant" [nzLabel]="item.iwerk + ' - ' + item.iwerkTxt"
+              [nzValue]="item.iwerk">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Thời gian bắt đầu dừng máy</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [nzShowTime]="true"></nz-date-picker>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label nz-checkbox>Break down</label>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</nz-drawer>
+<ng-template #extra>
+  <button nz-button nzType="default" (click)="closeOrder()">Đóng</button>
+  &nbsp;
+  <button nz-button nzType="primary" (click)="createOrder()">Tạo lệnh</button>
+</ng-template>

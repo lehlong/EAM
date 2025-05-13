@@ -73,42 +73,6 @@ namespace EAM.BUSINESS.Services.WH
                 return null;
             }
         }
-
-        public override async Task<WarehouseDto> Add(WarehouseDto dto)
-        {
-            try
-            {
-                // Trim whitespace before saving
-                dto.Werk = dto.Werk?.Trim();
-                dto.Iwerk = dto.Iwerk?.Trim();
-                dto.WerkTxt = dto.WerkTxt?.Trim();
-                
-                return await base.Add(dto);
-            }
-            catch (Exception ex)
-            {
-                Status = false;
-                Exception = ex;
-                return null;
-            }
-        }
-
-        public override async Task Update(WarehouseDto dto)
-        {
-            try
-            {
-                // Trim whitespace before updating
-                dto.Werk = dto.Werk?.Trim();
-                dto.Iwerk = dto.Iwerk?.Trim();
-                dto.WerkTxt = dto.WerkTxt?.Trim();
-                
-                await base.Update(dto);
-            }
-            catch (Exception ex)
-            {
-                Status = false;
-                Exception = ex;
-            }
-        }
+     
     }
 }

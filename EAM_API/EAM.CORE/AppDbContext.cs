@@ -1,6 +1,7 @@
 ﻿using EAM.CORE.Common;
 using EAM.CORE.Entities.AD;
 using EAM.CORE.Entities.MD;
+using EAM.CORE.Entities.PLAN;
 using EAM.CORE.Entities.TRAN;
 using EAM.CORE.Entities.WH;
 using Microsoft.AspNetCore.Http;
@@ -165,6 +166,11 @@ namespace EAM.CORE
 
         #region Warehouse
         public DbSet<TblMdWH> TblMdWH { get; set; }
+        #endregion
+
+        #region Planning Data
+        public DbSet<TblPlanH> TblPlanH { get; set; }
+        public DbSet<TblPlanD> TblPlanD { get; set; }
         #endregion
 
     }

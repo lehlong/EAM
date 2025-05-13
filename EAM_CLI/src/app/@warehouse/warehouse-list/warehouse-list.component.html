@@ -1,114 +1,119 @@
 <nz-page-header nzBackIcon>
-    <nz-page-header-title>DANH SÁCH KHO</nz-page-header-title>
-    <nz-page-header-extra>
-        <div class="flex-grow-2 flex">
-            <nz-space>
-                <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
-                    [(value)]="filter.keyWord"></app-input-clear>
-                <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
-                    nzType="default">
-                    <span nz-icon nzType="search"></span>
-                </button>
-                <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
-                    nzType="default">
-                    <span nz-icon nzType="redo"></span>
-                </button>
-            </nz-space>
-            <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
-                <span nz-icon nzType="plus-circle"></span> Thêm mới
-            </button>
-            <button (click)="exportExcel()" class="!flex !items-center !border-l-0"
-                style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
-                <span nz-icon nzType="file-excel"></span>Xuất Excel
-            </button>
-        </div>
-    </nz-page-header-extra>
-    <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">
-        <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResult.data" class="auto-scroll-table"
-            [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable>
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mã kho</th>
-                    <th>Tên Kho</th>
-                    <th>Đơn vị bảo trì</th>
-                </tr>
-            </thead>
-            <tbody>
-            <tbody>
-                <tr *ngFor="let data of paginationResult.data; let i = index">
-                    <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
-                    </td>
-                    <td>{{data.werk}}</td>
-                    <td>{{data.werkTxt}}</td>
-                    <td>{{getNamePlant(data.iwerk)}}</td>
-                    
-                </tr>
-            </tbody>
-        </nz-table>
-
-    </nz-page-header-content>
-    <nz-page-header-content class="footer-content">
-        <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
-            <nz-pagination nzShowSizeChanger [nzShowTotal]="totalTemplate" [nzPageIndex]="filter.currentPage"
-                [nzTotal]="paginationResult.totalRecord" [nzPageSize]="filter.pageSize"
-                (nzPageIndexChange)="pageIndexChange($event)"
-                (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
-            <ng-template #totalTemplate let-total>Tổng số {{ paginationResult.totalRecord }} mục</ng-template>
-        </div>
-    </nz-page-header-content>
+  <nz-page-header-title>DANH SÁCH KHO</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách kho</nz-page-header-subtitle>
+  <nz-page-header-extra>
+    <div class="flex-grow-2 flex">
+      <nz-space>
+        <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()" [(value)]="filter.keyWord"></app-input-clear>
+        <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+          nzType="default">
+          <span nz-icon nzType="search"></span>
+        </button>
+        <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+          nzType="default">
+          <span nz-icon nzType="redo"></span>
+        </button>
+      </nz-space>
+      <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
+        <span nz-icon nzType="plus-circle"></span> Thêm mới
+      </button>
+      <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
+        <span nz-icon nzType="file-excel"></span>Xuất Excel
+      </button>
+    </div>
+  </nz-page-header-extra>
+  <nz-page-header-content class="main-content">
+    <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
+      <thead>
+        <tr>
+          <th nzWidth="60px">STT</th>
+          <th>Mã</th>
+          <th>Tên</th>
+          <th>Đơn vị</th>
+          <th nzAlign="center">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
+          <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
+          </td>
+          <td> <a (click)="openEdit(data)">{{ data.werk }}</a></td>
+          <td>{{ data.werkTxt }}</td>
+          <td>{{ getNamePlant(data.iwerk) }}</td>
+          <td nzAlign="center">
+            <nz-tag nzColor="success" *ngIf="data.isActive">
+              <nz-icon nzType="check-circle" />
+              <span>Kích hoạt</span>
+            </nz-tag>
+            <nz-tag nzColor="error" *ngIf="!data.isActive">
+              <nz-icon nzType="close-circle" />
+              <span>Khoá</span>
+            </nz-tag>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-page-header-content>
+  <nz-page-header-content class="footer-content">
+    <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+      <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+        [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+        (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+    </div>
+  </nz-page-header-content>
 </nz-page-header>
+
 <!--Create Update-->
 <nz-drawer [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
-    [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
-    <ng-container *nzDrawerContent>
-        <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-            <app-input-clear placeholder="Mã kho" [required]="true" label="Mã kho"
-                [control]="$any(validateForm).controls['werk']" [required]="true"
-                [disabled]="edit ? true : false"></app-input-clear>
-            <nz-form-item>
-                <nz-form-label>Đơn vị bảo trì</nz-form-label>
-                <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select formControlName="iwerk" nzShowSearch nzAllowClear placeholder="Đơn vị bảo trì"
-                        (nzOnChange)="onClassChange($event)">
-                        <nz-option *ngFor="let item of lstIwerk" [nzLabel]="item.iwerk + ' - ' + item.iwerkTxt"
-                            [nzValue]="item.iwerk">
-                        </nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
-            <app-input-clear placeholder="Tên kho" [required]="true" label="Tên kho"
-                [control]="$any(validateForm).controls['werkTxt']"></app-input-clear>
+  [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+  <ng-container *nzDrawerContent>
+    <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <app-input-clear placeholder="Mã thông tin" [required]="true" label="Mã"
+        [control]="$any(validateForm).controls['werk']" [required]="true"
+        [disabled]="edit ? true : false"></app-input-clear>
+      <app-input-clear placeholder="Tên thông tin" [required]="true" label="Tên"
+        [control]="$any(validateForm).controls['werkTxt']"></app-input-clear>
 
-            <nz-form-item>
-                <nz-form-label>Trạng thái</nz-form-label>
-                <nz-form-control>
-                    <nz-radio-group formControlName="isActive">
-                        <label nz-radio [nzValue]="true">Kích hoạt</label>
-                        <label nz-radio [nzValue]="false">Khoá</label>
-                    </nz-radio-group>
-                </nz-form-control>
-            </nz-form-item>
-        </form>
-    </ng-container>
+
+        <nz-form-control style="margin-bottom: 15px;">
+          <label>Đơn vị</label>
+          <nz-select nzShowSearch nzAllowClear formControlName="iwerk">
+            <ng-container *ngFor="let item of lstPlant">
+              <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.iwerkTxt" [nzValue]="item.iwerk">
+              </nz-option>
+            </ng-container>
+          </nz-select>
+        </nz-form-control>
+
+      <nz-form-item>
+        <nz-form-label>Trạng thái</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group formControlName="isActive">
+            <label nz-radio [nzValue]="true">Kích hoạt</label>
+            <label nz-radio [nzValue]="false">Khoá</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
 </nz-drawer>
 <ng-template #extra>
-    <nz-space>
-        <ng-container *ngIf="edit">
-            <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
-                (click)="submitForm()">
-                <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
-            </button>
-        </ng-container>
-        <ng-container *ngIf="!edit">
-            <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
-                (click)="submitForm()">
-                <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
-            </button>
-        </ng-container>
-        <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
-            (click)="close()">
-            <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
-        </button>
-    </nz-space>
+  <nz-space>
+    <ng-container *ngIf="edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+      (click)="close()">
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
+  </nz-space>
 </ng-template>

@@ -9,7 +9,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
     public class OrderDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
-        public string Aufnr { get; set; }
+        public string? Aufnr { get; set; }
         public string? Iwerk { get; set; }
         public string? Auart { get; set; }
         public string? Ktext { get; set; }
