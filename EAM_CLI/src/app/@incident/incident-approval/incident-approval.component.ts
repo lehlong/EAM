@@ -6,6 +6,15 @@ import { GlobalService } from '../../service/global.service';
 import { FlocService } from '../../service/master-data/floc.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { NotiService } from '../../service/tran/noti.service';
+import { EquipService } from '../../service/master-data/equip.service';
+import { WcService } from '../../service/master-data/wc.service';
+import { EqGroupService } from '../../service/master-data/eq-group.service';
+import { NotiTypeService } from '../../service/master-data/noti-type.service';
+import { PlantService } from '../../service/master-data/plant.service';
+import { PlgrpService } from '../../service/master-data/plgrp.service';
+import { OrganizeService } from '../../service/system-manager/organize.service';
+import { NotiAttService } from '../../service/tran/noti-att.service';
+import { PriorityLevel } from '../../shared/constants/select.constants';
 
 @Component({
   selector: 'app-incident-approval',
@@ -15,23 +24,64 @@ import { NotiService } from '../../service/tran/noti.service';
 })
 export class IncidentApprovalComponent implements OnInit {
   checked: boolean = false;
+  visibleDetail: boolean = false;
+
   filter = new BaseFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
   lstFloc: any = [];
   lstUser: any = [];
+  lstWc: any[] = [];
+  lstEquip: any[] = [];
+
+  lstOrg: any[] = [];
+  lstNotiTp: any[] = [];
+  lstEqGroup: any[] = [];
+  lstEquipSelect: any[] = [];
+  lstPlant: any[] = [];
+  lstPlgrp: any[] = [];
+  lstPriorityLevel = PriorityLevel;
+
+  model: any = {
+    arbpl: '',
+    qmnum: '',
+    tplnr: '',
+    eqart: '',
+    equnr: '',
+    priok: '',
+    qmtxt: '',
+    qmdetail: '',
+    qmart: 'N2',
+    iwerk: '',
+    qmnam: '',
+    ingrp: '',
+    staffSc: '',
+    ltrmn: new Date(),
+    qmdat: new Date(),
+    isActive: true,
+  };
 
   constructor(
     private _sNoti: NotiService,
     private globalService: GlobalService,
     private message: NzMessageService,
     private _sFloc: FlocService,
-    private _sAccount: AccountService
+    private _sAccount: AccountService,
+    private _sWc: WcService,
+    private _sEquip: EquipService,
+    private _sPlgrp: PlgrpService,
+    private _global: GlobalService,
+    private _sUser: AccountService,
+    private _sPlant: PlantService,
+    private _sEqGroup: EqGroupService,
+    private _sNotiTp: NotiTypeService,
+    private _sNotiAtt: NotiAttService,
+    private _sOrg: OrganizeService
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách sự cố',
-        path: 'incident/incident-list',
+        name: 'Phê duyệt sự cố',
+        path: 'incident/approval',
       },
     ]);
     this.globalService.getLoading().subscribe((value) => {
@@ -45,6 +95,12 @@ export class IncidentApprovalComponent implements OnInit {
     this.search();
     this.getAllFloc();
     this.getAllUser();
+    this.getAllWc();
+    this.getAllEquip();
+    this.getAllPlgrp();
+    this.getAllPlan();
+    this.getAllNotiTp();
+    this.getEqGroup();
   }
   search() {
     this._sNoti.searchApproval(this.filter).subscribe({
@@ -53,6 +109,77 @@ export class IncidentApprovalComponent implements OnInit {
       },
       error: (response) => {
         console.log(response);
+      },
+    });
+  }
+  getAllPlgrp() {
+    this._sPlgrp.getAll().subscribe({
+      next: (data: any) => {
+        this.lstPlgrp = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  getAllPlan() {
+    this._sPlant.getAll().subscribe({
+      next: (data) => (this.lstPlant = data),
+      error: (err) => console.log(err),
+    });
+  }
+
+  getAllOrg() {
+    this._sOrg.getOrg().subscribe({
+      next: (data: any) => {
+        this.lstOrg = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  getAllNotiTp() {
+    this._sNotiTp.getAll().subscribe({
+      next: (data) => {
+        this.lstNotiTp = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  getEqGroup() {
+    this._sEqGroup.getAll().subscribe({
+      next: (data) => {
+        this.lstEqGroup = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  openDetail(data: any) {
+    this.model = data;
+    console.log(this.model);
+    this.visibleDetail = true;
+  }
+
+  closeDetail() {
+    this.model = {};
+    this.visibleDetail = false;
+  }
+
+  updateDetail() {
+    this._sNoti.update(this.model).subscribe({
+      next: (data) => {
+        this.search();
+      },
+      error: (err) => {
+        console.log(err);
       },
     });
   }
@@ -69,6 +196,30 @@ export class IncidentApprovalComponent implements OnInit {
     return this.lstUser.find(
       (x: { userName: string }) => x.userName == username
     )?.fullName;
+  }
+
+  getAllWc() {
+    this._sWc.getAll().subscribe({
+      next: (data) => {
+        this.lstWc = data;
+      },
+    });
+  }
+
+  getAllEquip() {
+    this._sEquip.getAll().subscribe({
+      next: (data) => {
+        this.lstEquip = data;
+      },
+    });
+  }
+
+  getNameWc(code: any) {
+    return this.lstWc.find((x) => x.arbpl == code)?.arbplTxt;
+  }
+
+  getNameEquip(code: any) {
+    return this.lstEquip.find((x) => x.equnr == code)?.eqktx;
   }
 
   getAllFloc() {

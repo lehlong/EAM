@@ -5,7 +5,7 @@
     <div class="flex-grow-2 flex">
 
       <button class="!flex !items-center space-btn" nzType="primary" nz-button (click)="onCreate()">
-        <span nz-icon nzType="plus-circle"></span> Thêm mới
+        <span nz-icon nzType="plus-circle"></span> Lưu dữ liệu
       </button>
     </div>
   </nz-page-header-extra>
@@ -19,14 +19,58 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <label>Kho bảo trì</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Kho bảo trì" [(ngModel)]="model.tplnr">
-                  <nz-option *ngFor="let item of lstPlant" [nzLabel]="item.iwerk + ' - ' + item.iwerkTxt"
-                    [nzValue]="item.iwerk">
+                <label>Khu vực chức năng</label>
+                <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" (ngModelChange)="OnChangeEquip($event)">
+                  <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+                    [nzValue]="item.tplnr">
                   </nz-option>
                 </nz-select>
               </div>
             </div>
+
+             <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <label>Nhóm thiết bị</label>
+                <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" [(ngModel)]="model.eqart" (ngModelChange)="OnChangeEquip($event)">
+                  <nz-option *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart + ' - ' + item.eqartTxt"
+                    [nzValue]="item.eqart">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <label>Thiết bị</label>
+                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="model.equnr">
+                  <nz-option *ngFor="let item of lstEquipSelect" [nzLabel]="item.equnr + ' - ' + item.eqktx"
+                    [nzValue]="item.equnr">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <label>Bộ phận thực hiện</label>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
+                  <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+
+             <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <label>Bộ phận tiếp nhận</label>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ingrp">
+                  <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt" [nzValue]="item.ingrp">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
@@ -81,26 +125,6 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <label>Khu vực chức năng</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr">
-                  <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
-                    [nzValue]="item.tplnr">
-                  </nz-option>
-                </nz-select>
-              </div>
-            </div>
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Bộ phận thực hiện</label>
-                <nz-select nzShowSearch nzAllowClear>
-                  <nz-option *ngFor="let item of lstOrg" [nzLabel]="item.id + ' - ' + item.name" [nzValue]="item.id">
-                  </nz-option>
-                </nz-select>
-              </div>
-            </div>
-
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
                 <label>Người sửa chữa</label>
                 <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.staffSc">
                   <nz-option *ngFor="let item of lstUser" [nzLabel]="item.userName + ' - ' + item.fullName" [nzValue]="item.userName">
@@ -109,26 +133,7 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Nhóm thiết bị</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" [(ngModel)]="model.eqart">
-                  <nz-option *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart + ' - ' + item.eqartTxt"
-                    [nzValue]="item.eqart">
-                  </nz-option>
-                </nz-select>
-              </div>
-            </div>
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Thiết bị</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="model.equnr">
-                  <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx"
-                    [nzValue]="item.equnr">
-                  </nz-option>
-                </nz-select>
-              </div>
-            </div>
+
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
@@ -139,14 +144,14 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <label>Bộ phận tiếp nhận</label>
-                <nz-select nzShowSearch nzAllowClear>
-                  <nz-option *ngFor="let item of lstOrg" [nzLabel]="item.id + ' - ' + item.name" [nzValue]="item.id">
+                <label>Đơn vị bảo trì</label>
+                <nz-select nzShowSearch nzAllowClear placeholder="Đơn vị bảo trì" [(ngModel)]="model.iwerk">
+                  <nz-option *ngFor="let item of lstPlant" [nzLabel]="item.iwerk + ' - ' + item.iwerkTxt"
+                    [nzValue]="item.iwerk">
                   </nz-option>
                 </nz-select>
               </div>
             </div>
-
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
                 <label>Thời gian bắt đầu dừng máy</label>

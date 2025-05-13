@@ -13,6 +13,7 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<string> GetLastQmnum();
         Task<string> GenerateQmnum(string qmart);
         Task<PagedResponseDto> SearchApproval(BaseFilter filter);
+        Task<PagedResponseDto> SearchClose(BaseFilter filter);
     }
     
     public class NotiService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNoti, NotiDto>(dbContext, mapper), INotiService
@@ -62,6 +63,33 @@ namespace EAM.BUSINESS.Services.TRAN
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
                 return await Paging(query.Where(x => x.StatAct == "01"), filter);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+        public async Task<PagedResponseDto> SearchClose(BaseFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblTranNoti.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x => x.Qmnum.Contains(filter.KeyWord) ||
+                                        x.Qmtxt.Contains(filter.KeyWord) ||
+                                        x.Iwerk.Contains(filter.KeyWord) ||
+                                        x.Aufnr.Contains(filter.KeyWord) ||
+                                        x.Equnr.Contains(filter.KeyWord));
+                }
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                return await Paging(query.Where(x => x.StatAct == "04"), filter);
             }
             catch (Exception ex)
             {

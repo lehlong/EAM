@@ -6,7 +6,7 @@
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
     <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResult.data" class="auto-scroll-table"
-      [nzShowPagination]="false" [nzFrontPagination]="false" [nzNoResult]="" #headerTable>
+      [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable>
       <thead>
         <tr>
           <th [nzChecked]="checked"></th>
@@ -32,11 +32,11 @@
           <td>{{ data.qmtxt }}</td>
           <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
           <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ data.arbpl }}</td>
+          <td>{{ getNameWc(data.arbpl) }}</td>
           <td>{{ getFullNameUser(data.qmnam) }}</td>
           <td>{{ getFullNameUser(data.staffSc) }}</td>
           <td>{{ getFlocName(data.tplnr) }}</td>
-          <td>{{ data.equnr }}</td>
+          <td>{{ getNameEquip(data.equnr) }}</td>
           <td>{{ getPriorityText(data.priok) }}</td>
           <td>
             <nz-tag *ngIf="data.statAct == '01'" nzColor="processing">Chờ duyệt</nz-tag>
@@ -44,11 +44,21 @@
             <nz-tag *ngIf="data.statAct == '03'" nzColor="error">Từ chối</nz-tag>
             <nz-tag *ngIf="data.statAct == '04'" nzColor="success">Hoàn thành</nz-tag>
             <nz-tag *ngIf="data.statAct == '05'" nzColor="default">Đóng</nz-tag>
+            <nz-tag *ngIf="data.statAct == '06'" nzColor="error">Từ chối đóng</nz-tag>
           </td>
-          <td><button nz-button nzType="primary" *ngIf="data.statAct == '02'">
+
+             <td>
+            <div class="action-td">
+              <button nz-button nzType="primary" *ngIf="data.statAct == '02'"  class="btn-check" (click)="updateStatusNoti(data, '04')">
+                <nz-icon nzType="check" nzTheme="outline" />
+                Hoàn thành
+              </button>
+              <button nz-button nzType="primary" *ngIf="data.statAct == '02'">
               <nz-icon nzType="plus" nzTheme="outline" />
               Tạo lệnh
-            </button></td>
+            </button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </nz-table>

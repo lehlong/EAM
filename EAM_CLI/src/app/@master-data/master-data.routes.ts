@@ -16,6 +16,7 @@ import { CatalogComponent } from './catalog/catalog.component';
 import { CataTypeComponent } from './cata-type/cata-type.component';
 import { UsageStatusComponent } from './usage-status/usage-status.component';
 import { ActiveStatusComponent } from './active-status/active-status.component';
+import { PlgrpComponent } from './plgrp/plgrp.component';
 
 export const masterDataRoutes: Routes = [
   { path: 'account-type', component: AccountTypeComponent },
@@ -35,4 +36,5 @@ export const masterDataRoutes: Routes = [
   { path: 'cata-type', component: CataTypeComponent },
   { path: 'usage-status', component: UsageStatusComponent },
   { path: 'active-status', component: ActiveStatusComponent },
+  { path: 'plgrp', component: PlgrpComponent },
 ];

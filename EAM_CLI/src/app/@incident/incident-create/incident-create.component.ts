@@ -14,6 +14,9 @@ import { OrganizeService } from '../../service/system-manager/organize.service';
 import { PlantService } from '../../service/master-data/plant.service';
 import { GlobalService } from '../../service/global.service';
 import { AccountService } from '../../service/system-manager/account.service';
+import { EquipFilter } from '../../filter/master-data/equiq-filter';
+import { WcService } from '../../service/master-data/wc.service';
+import { PlgrpService } from '../../service/master-data/plgrp.service';
 
 @Component({
   selector: 'app-incident-create',
@@ -23,6 +26,7 @@ import { AccountService } from '../../service/system-manager/account.service';
 })
 export class IncidentCreateComponent implements OnInit {
   model: any = {
+    arbpl: '',
     qmnum: '',
     tplnr: '',
     eqart: '',
@@ -30,29 +34,36 @@ export class IncidentCreateComponent implements OnInit {
     priok: '',
     qmtxt: '',
     qmdetail: '',
-    qmart: '',
+    qmart: 'N2',
     iwerk: '',
     qmnam: '',
+    ingrp: '',
     staffSc: '',
     ltrmn: new Date(),
     qmdat: new Date(),
     isActive: true,
   };
-  loading : boolean = false
-  username: string =''
+
+  loading: boolean = false;
+  username: string = '';
   qmnum: string = '';
   lstOrg: any[] = [];
   lstNotiTp: any[] = [];
   lstFloc: any[] = [];
   lstEqGroup: any[] = [];
+  lstEquipSelect: any[] = [];
   lstEquip: any[] = [];
   lstPlant: any[] = [];
   lstUser: any[] = [];
+  lstWc: any[] = [];
   fileList: NzUploadFile[] = [];
+  lstPlgrp : any[] = []
   lstPriorityLevel = PriorityLevel;
   environment = environment;
   constructor(
-    private _global : GlobalService,
+    private _sPlgrp : PlgrpService,
+    private _sWc : WcService,
+    private _global: GlobalService,
     private _sUser: AccountService,
     private _sPlant: PlantService,
     private _sFloc: FlocService,
@@ -63,11 +74,11 @@ export class IncidentCreateComponent implements OnInit {
     private _sNotiAtt: NotiAttService,
     private message: NzMessageService,
     private _sOrg: OrganizeService,
-    private globalService: GlobalService,
+    private globalService: GlobalService
   ) {
-    this.username =_global.getUserName()
-    this.model.qmnam = _global.getUserName()
-     this.globalService.setBreadcrumb([
+    this.username = _global.getUserName();
+    this.model.qmnam = _global.getUserName();
+    this.globalService.setBreadcrumb([
       {
         name: 'Tạo mới sự cố',
         path: 'incident/create',
@@ -85,6 +96,29 @@ export class IncidentCreateComponent implements OnInit {
     this.getAllOrg();
     this.getAllPlan();
     this.getAllUser();
+    this.getAllWc();
+    this.getAllPlgrp();
+  }
+
+  getAllPlgrp() {
+    this._sPlgrp.getAll().subscribe({
+      next: (data: any) => {
+        this.lstPlgrp = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  getAllWc() {
+    this._sWc.getAll().subscribe({
+      next: (data: any) => {
+        this.lstWc = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   getAllUser() {
@@ -151,6 +185,19 @@ export class IncidentCreateComponent implements OnInit {
     });
   }
 
+  OnChangeEquip(data: any) {
+    this.lstEquipSelect = this.lstEquip;
+    if (this.model.tplnr != null && this.model.tplnr != '') {
+      this.lstEquipSelect = this.lstEquipSelect.filter(
+        (x) => x.tplnr == this.model.tplnr
+      );
+    }
+    if (this.model.eqart != null && this.model.eqart != '') {
+      this.lstEquipSelect = this.lstEquipSelect.filter(
+        (x) => x.eqart == this.model.eqart
+      );
+    }
+  }
   getAllPlan() {
     this._sPlant.getAll().subscribe({
       next: (data) => (this.lstPlant = data),

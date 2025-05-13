@@ -6,6 +6,8 @@ import { NotiService } from '../../service/tran/noti.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { FlocService } from '../../service/master-data/floc.service';
 import { AccountService } from '../../service/system-manager/account.service';
+import { WcService } from '../../service/master-data/wc.service';
+import { EquipService } from '../../service/master-data/equip.service';
 
 @Component({
   selector: 'app-incident-list',
@@ -20,9 +22,13 @@ export class IncidentListComponent implements OnInit {
   paginationResult = new PaginationResult();
   lstFloc: any = [];
   lstUser: any = [];
+  lstWc : any[] = [];
+  lstEquip : any[] = [];
 
   constructor(
     private _sNoti: NotiService,
+    private _sWc : WcService,
+    private _sEquip : EquipService,
     private globalService: GlobalService,
     private message: NzMessageService,
     private _sFloc: FlocService,
@@ -30,8 +36,8 @@ export class IncidentListComponent implements OnInit {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Phê duyệt sự cố',
-        path: 'incident/approval',
+        name: 'Danh sách sự cố',
+        path: 'incident/list',
       },
     ]);
     this.globalService.getLoading().subscribe((value) => {
@@ -45,6 +51,8 @@ export class IncidentListComponent implements OnInit {
     this.search();
     this.getAllFloc();
     this.getAllUser();
+    this.getAllWc();
+    this.getAllEquip();
   }
   search() {
     this._sNoti.search(this.filter).subscribe({
@@ -65,8 +73,40 @@ export class IncidentListComponent implements OnInit {
     })
   }
 
+   getAllWc(){
+    this._sWc.getAll().subscribe({
+      next: (data) =>{
+        this.lstWc = data
+      }
+    })
+  }
+
+   getAllEquip(){
+    this._sEquip.getAll().subscribe({
+      next: (data) =>{
+        this.lstEquip = data
+      }
+    })
+  }
+
+   updateStatusNoti(data: any, status: string) {
+    data.statAct = status;
+    this._sNoti.update(data).subscribe({
+      next: () => {
+        this.search();
+      },
+    });
+  }
+
   getFullNameUser(username: any){
     return this.lstUser.find((x: { userName: string })  => x.userName == username)?.fullName
+  }
+  getNameWc(code: any){
+    return this.lstWc.find(x => x.arbpl == code)?.arbplTxt;
+  }
+
+  getNameEquip(code: any){
+    return this.lstEquip.find(x => x.equnr == code)?.eqktx;
   }
 
   getAllFloc() {
