@@ -14,6 +14,10 @@
     height: 32px;
     background: rgba(255, 255, 255, 0.2);
     margin: 16px;
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
 }
 
 nz-header {
@@ -78,8 +82,8 @@ nz-content {
     padding-right: 22px;
 }
 .user{
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     cursor: pointer;
     margin-left: auto;
 }
@@ -95,7 +99,7 @@ nz-content {
     align-items: center;
     justify-content: center;
   }
-  
+
   .circle img {
     height: 36px;
     width: auto;

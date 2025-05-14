@@ -41,7 +41,7 @@
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
                 <label>Thiết bị</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="model.equnr">
+                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="model.equnr" (ngModelChange)="changeEquip($event)">
                   <nz-option *ngFor="let item of lstEquipSelect" [nzLabel]="item.equnr + ' - ' + item.eqktx"
                     [nzValue]="item.equnr">
                   </nz-option>

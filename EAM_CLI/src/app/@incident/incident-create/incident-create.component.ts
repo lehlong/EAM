@@ -178,6 +178,7 @@ export class IncidentCreateComponent implements OnInit {
     this._sEquip.getAll().subscribe({
       next: (data) => {
         this.lstEquip = data;
+        this.lstEquipSelect = data;
       },
       error: (err) => {
         console.log(err);
@@ -186,6 +187,7 @@ export class IncidentCreateComponent implements OnInit {
   }
 
   OnChangeEquip(data: any) {
+    this.model.equnr = ''
     this.lstEquipSelect = this.lstEquip;
     if (this.model.tplnr != null && this.model.tplnr != '') {
       this.lstEquipSelect = this.lstEquipSelect.filter(
@@ -198,6 +200,13 @@ export class IncidentCreateComponent implements OnInit {
       );
     }
   }
+
+  changeEquip(data: any){
+    var equip = this.lstEquip.find(x => x.equnr == data);
+   this.model.eqart = equip.eqart;
+   this.model.tplnr = equip.tplnr;
+  }
+
   getAllPlan() {
     this._sPlant.getAll().subscribe({
       next: (data) => (this.lstPlant = data),
