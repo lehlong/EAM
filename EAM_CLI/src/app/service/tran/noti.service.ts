@@ -35,6 +35,9 @@ export class NotiService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`Noti/Delete/${id}`)
   }
+    exportExcel(params: any): Observable<any> {
+      return this.commonService.downloadFile('Noti/Export', params)
+    }
 
   getLastQmnum(qmart?: string): Observable<any> {
     const url = qmart ? `Noti/GetLastQmnum?qmart=${qmart}` : 'Noti/GetLastQmnum';

@@ -14,6 +14,7 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<string> GenerateQmnum(string qmart);
         Task<PagedResponseDto> SearchApproval(BaseFilter filter);
         Task<PagedResponseDto> SearchClose(BaseFilter filter);
+        Task<byte[]> Export(BaseMdFilter filter);
     }
     
     public class NotiService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNoti, NotiDto>(dbContext, mapper), INotiService
@@ -192,6 +193,34 @@ namespace EAM.BUSINESS.Services.TRAN
                 await _dbContext.SaveChangesAsync();
 
                 return _mapper.Map<NotiDto>(entity);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+        public async Task<byte[]> Export(BaseMdFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblTranNoti.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x => x.Qmnum.Contains(filter.KeyWord));
+                }
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                var data = await base.GetAllMd(query, filter);
+                int i = 1;
+                data.ForEach(x =>
+                {
+                    x.OrdinalNumber = i++;
+                });
+                return await ExportExtension.ExportToExcel(data);
             }
             catch (Exception ex)
             {
