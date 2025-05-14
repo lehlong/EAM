@@ -95,6 +95,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 // Tạo entity để lưu vào database
                 var entity = new TblTranNotiAtt
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Qmnum = qmnum,
                     FileType = fileExtension.TrimStart('.'),
                     FileSize = (int)file.Length,

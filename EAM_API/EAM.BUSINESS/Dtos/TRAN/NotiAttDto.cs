@@ -8,6 +8,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
     public class NotiAttDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
+        public string Id { get; set; } = null!;
         public string Qmnum { get; set; } = null!;
         public string? FileType { get; set; }
         public int? FileSize { get; set; }

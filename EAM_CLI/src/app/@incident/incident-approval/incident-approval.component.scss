@@ -15,4 +15,43 @@ nz-select, nz-date-picker{
 .gutter-row{
   margin-bottom: 12px;
 }
+.tab-content {
+  padding: 16px 0;
+}
 
+.inner-box {
+  margin-bottom: 16px;
+}
+
+.inner-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+nz-select, nz-date-picker, nz-time-picker, textarea {
+  width: 100%;
+}
+.horizontal-form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.form-label {
+  min-width: 150px; /* Điều chỉnh chiều rộng của label */
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.form-control {
+  flex: 1;
+}
+
+.form-control nz-date-picker,
+.form-control nz-time-picker,
+.form-control nz-select,
+.form-control input,
+.form-control textarea {
+  width: 100%;
+}
