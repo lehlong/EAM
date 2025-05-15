@@ -156,6 +156,7 @@ namespace EAM.CORE
         #region Transaction Data
         public DbSet<TblTranNoti> TblTranNoti { get; set; }
         public DbSet<TblTranNotiAtt> TblTranNotiAtt { get; set; }
+        public DbSet<TblTranNotiReport> TblTranNotiReport { get; set; }
         public DbSet<TblTranNotiCatalog> TblTranNotiCatalog { get; set; }
         public DbSet<TblTranOrder> TblTranOrder { get; set; }
         public DbSet<TblTranOrderAtt> TblTranOrderAtt { get; set; }

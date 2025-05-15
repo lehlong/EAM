@@ -39,8 +39,4 @@
     <ProjectReference Include="..\EAM.CORE\EAM.CORE.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\TRAN\" />
-  </ItemGroup>
-
 </Project>
