@@ -1,0 +1,13 @@
+.ant-row{
+  margin: 0 !important;
+}
+nz-select, nz-date-picker{
+  width: 100%;
+}
+.gutter-row{
+  margin-bottom: 12px;
+}
+.content{
+  height: calc(100vh - 132px);
+    overflow: auto;
+}

@@ -10,6 +10,7 @@ import { systemManagerRoutes } from './@system-manager/system-manager.routes';
 import { masterDataRoutes } from './@master-data/master-data.routes';
 import { incidentRoutes } from './@incident/incident.routes';
 import { warehouseRoutes } from './@warehouse/warehouse.route';
+import { planRoutes } from './@plan/plan.route';
 
 export const routes: Routes = [
   {
@@ -29,7 +30,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       { path: 'incident', children: incidentRoutes, canActivate: [AuthGuard] },
-      { path: 'warehouse', children: warehouseRoutes, canActivate: [AuthGuard] },
+      {
+        path: 'warehouse',
+        children: warehouseRoutes,
+        canActivate: [AuthGuard],
+      },
+      { path: 'plan', children: planRoutes, canActivate: [AuthGuard] },
     ],
   },
   {

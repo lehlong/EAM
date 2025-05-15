@@ -1,0 +1,173 @@
+<nz-page-header nzBackIcon [nzGhost]="false">
+  <nz-page-header-title>KẾ HOẠCH THEO CẤP ĐỘ</nz-page-header-title>
+  <nz-page-header-subtitle>Tạo mới thông tin kế hoạch theo cấp độ</nz-page-header-subtitle>
+  <nz-page-header-extra>
+    <nz-space>
+      <button *nzSpaceItem nz-button nzType="primary"><nz-icon nzType="save" nzTheme="outline" /> Lưu dữ liệu</button>
+    </nz-space>
+  </nz-page-header-extra>
+  <nz-page-header-content class="content">
+    <div nz-row [nzGutter]="16" style="margin: 0;">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Mã kế hoạch</label>
+          <app-input-clear nz-input></app-input-clear>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Tên kế hoạch</label>
+          <app-input-clear nz-input></app-input-clear>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Loại kế hoạch</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.mpgrp">
+            <nz-option *ngFor="let item of lstMpgrp" [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Kiểu lập</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.cyctype">
+            <nz-option *ngFor="let item of lstCyctype" [nzLabel]="item.value + ' - ' + item.name"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Đơn vị đo</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.cycunit">
+            <nz-option *ngFor="let item of lstCycunit" [nzLabel]="item.value + ' - ' + item.name"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Thời gian hiệu lực (năm)</label>
+          <app-input-clear nz-input type="number"></app-input-clear>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Ngày bắt đầu kế hoạch</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+        </div>
+      </div>
+
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr">
+            <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Mã thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.plnnr" (ngModelChange)="OnChangeCheckList($event)">
+            <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx"
+              [nzValue]="item.equnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Bộ phận lập kế hoạch</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+            <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt"
+              [nzValue]="item.ingrp">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Bộ phận thực hiện</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+            <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Loại lệnh</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+            <nz-option *ngFor="let item of lstOrderType" [nzLabel]="item.code + ' - ' + item.name"
+              [nzValue]="item.code">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <nz-tabset>
+      <nz-tab nzTitle="Thiết bị lập kế hoạch">
+        <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Mã thiết bị</th>
+              <th>Tên thiết bị</th>
+              <th>Khu vực chức năng</th>
+              <th>Nhóm thiết bị</th>
+              <th>Bộ phận phụ trách</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr *ngFor="let data of checklistTable.data; let i = index">
+              <td>{{ data.vornr }}</td>
+              <td>{{ i + 1 }}</td>
+              <td>{{ data.ltxa1 }}</td>
+              <td></td>
+              <td></td>
+            </tr> -->
+          </tbody>
+        </nz-table>
+      </nz-tab>
+      <nz-tab nzTitle="Tác vụ thực hiện">
+        <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Mã bước</th>
+              <th>Thứ tự</th>
+              <th>Tên tác vụ</th>
+              <th>Bộ phận thực hiện</th>
+              <th>Thời gian thực hiện</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of checklistTable.data; let i = index">
+              <td>{{ data.vornr }}</td>
+              <td>{{ i + 1 }}</td>
+              <td>{{ data.ltxa1 }}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+      </nz-tab>
+      <nz-tab nzTitle="Kế hoạch dự kiến">Kế hoạch dự kiến</nz-tab>
+    </nz-tabset>
+  </nz-page-header-content>
+</nz-page-header>

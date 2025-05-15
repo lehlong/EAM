@@ -12,7 +12,7 @@
                         <li [nzDisabled]="loading" nz-menu-item [nzPaddingLeft]="!isCollapsed ? menu.level * 24 : 0"
                             [nzDisabled]="menu.disabled" [nzSelected]="menu.selected" (click)="navigateTo(menu.url)">
                             <ng-container *ngIf="menu.icon">
-                                <span nz-icon [nzType]="menu.icon"></span>
+                                <nz-icon [nzType]="menu.icon" nzTheme="fill"></nz-icon>
                             </ng-container>
                             <span>{{ menu.title }}</span>
                         </li>
