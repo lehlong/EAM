@@ -3,7 +3,7 @@
   <nz-page-header-subtitle>Tạo mới thông tin kế hoạch bảo trì đơn</nz-page-header-subtitle>
   <nz-page-header-extra>
     <nz-space>
-      <button *nzSpaceItem nz-button nzType="primary"><nz-icon nzType="save" nzTheme="outline" /> Lưu dữ liệu</button>
+      <button *nzSpaceItem nz-button nzType="primary" (click)="onCreate()"><nz-icon nzType="save" nzTheme="outline"/> Lưu dữ liệu</button>
     </nz-space>
   </nz-page-header-extra>
   <nz-page-header-content class="content">
@@ -87,7 +87,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Chỉ số hoạt động</label>
-          <app-input-clear nz-input type="number"></app-input-clear>
+          <input nz-input type="number">
         </div>
       </div>
 
@@ -107,7 +107,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Bộ phận lập kế hoạch</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ingrp">
             <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt"
               [nzValue]="item.ingrp">
             </nz-option>
@@ -118,7 +118,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Bộ phận thực hiện</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
             <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
             </nz-option>
           </nz-select>
@@ -128,7 +128,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Loại lệnh</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.auart">
             <nz-option *ngFor="let item of lstOrderType" [nzLabel]="item.code + ' - ' + item.name"
               [nzValue]="item.code">
             </nz-option>

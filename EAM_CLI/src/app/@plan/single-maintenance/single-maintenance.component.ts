@@ -1,3 +1,4 @@
+import { PlanHService } from './../../service/plan/plan-h.service';
 import { Component, OnInit } from '@angular/core';
 import { ShareModule } from '../../shared/share-module';
 import {
@@ -38,63 +39,65 @@ export class SingleMaintenanceComponent implements OnInit {
 
   lstEquipPlan: any[] = [
     {
-      anlnr: '',
-      anlun: '',
-      arbpl: '',
-      auspFlg: '',
-      beber: '',
-      childCnt: '',
-      class: '',
-      datab: '',
-      datbi: '',
-      delDate: '',
-      delFlg: '',
-      eqart: '',
-      eqartSub: '',
-      eqartTp: '',
-      eqktx: '',
-      eqtyp: '',
-      equnr: '',
-      hequi: '',
-      inactDate: '',
-      inactFlg: '',
-      inbdt: '',
-      ingrp: '',
-      isActive: '',
-      iwerk: '',
-      klart: '',
-      kostl: '',
-      parentFlg: '',
-      statAct: '',
-      statActT: '',
-      state: '',
-      statusTh: '',
-      tplnr: '',
+      anlnr: null,
+      anlun: null,
+      arbpl: null,
+      auspFlg: null,
+      beber: null,
+      childCnt: null,
+      class: null,
+      datab: null,
+      datbi: null,
+      delDate: null,
+      delFlg: null,
+      eqart: null,
+      eqartSub: null,
+      eqartTp: null,
+      eqktx: null,
+      eqtyp: null,
+      equnr: null,
+      hequi: null,
+      inactDate: null,
+      inactFlg: null,
+      inbdt: null,
+      ingrp: null,
+      isActive: null,
+      iwerk: null,
+      klart: null,
+      kostl: null,
+      parentFlg: null,
+      statAct: null,
+      statActT: null,
+      state: null,
+      statusTh: null,
+      tplnr: null,
     },
   ];
 
   model: any = {
-    iwerk: '',
-    warpl: '',
-    wptxt: '',
-    mptyp: '',
-    mpgrp: '',
-    cyctype: '',
-    cycunit: '',
-    cycle: '',
-    cycef: '',
-    stdate: '',
-    measure: '',
-    measvalue: '',
-    mix: '',
-    tplnr: '',
-    equnr: '',
-    plnnr: '',
-    ingrp: '',
-    arbpl: '',
-    auart: '',
+    iwerk: null,
+    warpl: null,
+    wptxt: null,
+    mptyp: '1',
+    mpgrp: null,
+    cyctype: null,
+    cycunit: null,
+    cycle: null,
+    cycef: null,
+    stdate: null,
+    measure: null,
+    measvalue: 0,
+    mix: null,
+    tplnr: null,
+    equnr: null,
+    plnnr: null,
+    ingrp: null,
+    arbpl: null,
+    auart: null,
+    isActive: true,
   };
   constructor(
+    private _sPlanH : PlanHService,
     private _sEqGroup: EqGroupService,
     private _sEquip: EquipService,
     private _sPlgrp: PlgrpService,
@@ -111,6 +114,15 @@ export class SingleMaintenanceComponent implements OnInit {
     this.getAllOrderType();
     this.getAllEquip();
     this.getAllEqGroup();
+  }
+
+  onCreate(){
+    console.log(this.model)
+    this._sPlanH.create(this.model).subscribe({
+      next: (data) => {
+
+      }
+    })
   }
 
   changeEquip(selectedValue: any, rowData: any): void {
@@ -209,10 +221,10 @@ export class SingleMaintenanceComponent implements OnInit {
 
   onChangePlan() {
     if (
-      this.model.cycunit != '' &&
+      this.model.cycunit != null &&
       this.model.cycle &&
-      this.model.cycef != '' &&
-      this.model.stdate != ''
+      this.model.cycef != null &&
+      this.model.stdate != null
     ) {
       var lstDate = this.generateDateList(
         this.model.cycunit,
@@ -243,7 +255,7 @@ export class SingleMaintenanceComponent implements OnInit {
       i.tplnr = e;
     });
     this.lstEquipSelect =
-      e == null || e == ''
+      e == null || e == null
         ? this.lstEquip
         : this.lstEquip.filter((x) => x.tplnr == e);
   }
@@ -261,38 +273,38 @@ export class SingleMaintenanceComponent implements OnInit {
 
   addEquip() {
     const newEquip = {
-      anlnr: '',
-      anlun: '',
-      arbpl: '',
-      auspFlg: '',
-      beber: '',
-      childCnt: '',
-      class: '',
-      datab: '',
-      datbi: '',
-      delDate: '',
-      delFlg: '',
-      eqart: '',
-      eqartSub: '',
-      eqartTp: '',
-      eqktx: '',
-      eqtyp: '',
-      equnr: '',
-      hequi: '',
-      inactDate: '',
-      inactFlg: '',
-      inbdt: '',
-      ingrp: '',
-      isActive: '',
-      iwerk: '',
-      klart: '',
-      kostl: '',
-      parentFlg: '',
-      statAct: '',
-      statActT: '',
-      state: '',
-      statusTh: '',
-      tplnr: '',
+      anlnr: null,
+      anlun: null,
+      arbpl: null,
+      auspFlg: null,
+      beber: null,
+      childCnt: null,
+      class: null,
+      datab: null,
+      datbi: null,
+      delDate: null,
+      delFlg: null,
+      eqart: null,
+      eqartSub: null,
+      eqartTp: null,
+      eqktx: null,
+      eqtyp: null,
+      equnr: null,
+      hequi: null,
+      inactDate: null,
+      inactFlg: null,
+      inbdt: null,
+      ingrp: null,
+      isActive: null,
+      iwerk: null,
+      klart: null,
+      kostl: null,
+      parentFlg: null,
+      statAct: null,
+      statActT: null,
+      state: null,
+      statusTh: null,
+      tplnr: null,
     };
 
     this.lstEquipPlan = [...this.lstEquipPlan, newEquip];

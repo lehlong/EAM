@@ -1,69 +1,47 @@
+﻿using AutoMapper;
+using Common;
+using EAM.CORE.Entities.MD;
+using EAM.CORE.Entities.PLAN;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EAM.CORE.Common;
+using System.Text.Json.Serialization;
 
-namespace EAM.CORE.Entities.PLAN
+namespace EAM.BUSINESS.Dtos.PLAN
 {
-    [Table("EAM_PLAN_H")]
-    public class TblPlanH : SoftDeleteEntity
+    public class PlanHDto : BaseMdDto, IMapFrom, IDto
     {
+        [JsonIgnore]
+        [Description("STT")]
+        public int OrdinalNumber { get; set; }
+
         [Key]
-        [Column("WARPL")]
-        public string Warpl { get; set; } = null!;
-
-        [Column("IWERK")]
-        public string Iwerk { get; set; } = null!;
-
-        [Column("WPTXT")]
+        public string Warpl { get; set; }
+        public string? Iwerk { get; set; }
         public string? Wptxt { get; set; }
-
-        [Column("MPTYP")]
         public string? Mptyp { get; set; }
-
-        [Column("MPGRP")]
         public string? Mpgrp { get; set; }
-
-        [Column("CYCTYPE")]
         public string? Cyctype { get; set; }
-
-        [Column("CYCUNIT")]
         public string? Cycunit { get; set; }
-
-        [Column("CYCLE")]
         public decimal? Cycle { get; set; }
-
-        [Column("CYCEF")]
         public decimal? Cycef { get; set; }
-
-        [Column("STDATE")]
         public DateTime? Stdate { get; set; }
-
-        [Column("MEASURE")]
         public string? Measure { get; set; }
-
-        [Column("MEASVALUE")]
         public decimal? Measvalue { get; set; }
-
-        [Column("MIX")]
         public string? Mix { get; set; }
-
-        [Column("TPLNR")]
         public string? Tplnr { get; set; }
-
-        [Column("EQUNR")]
         public string? Equnr { get; set; }
-
-        [Column("PLNNR")]
         public string? Plnnr { get; set; }
-
-        [Column("INGRP")]
         public string? Ingrp { get; set; }
-
-        [Column("ARBPL")]
         public string? Arbpl { get; set; }
-
-        [Column("AUART")]
         public string? Auart { get; set; }
+        [Description("Trạng thái")]
+        public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<TblPlanH, PlanHDto>().ReverseMap();
+        }
     }
-} 
+}

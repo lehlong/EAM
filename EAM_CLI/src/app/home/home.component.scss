@@ -1,5 +1,14 @@
 .main-home {
   padding: 12px;
+  height: calc(100vh - 70px);
+    overflow: auto;
+}
+.paging{
+  display: flex
+;
+    align-items: center;
+    justify-content: end;
+    margin: 12px 0px 12px 12px;
 }
 
 .inner-box {
