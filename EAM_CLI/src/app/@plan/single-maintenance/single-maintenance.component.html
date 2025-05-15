@@ -11,13 +11,13 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Mã kế hoạch</label>
-          <app-input-clear nz-input></app-input-clear>
+          <input nz-input [(ngModel)]="model.warpl">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Tên kế hoạch</label>
-          <app-input-clear nz-input></app-input-clear>
+          <input nz-input [(ngModel)]="model.wptxt">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
@@ -41,10 +41,21 @@
 
       </div>
 
+       <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" (ngModelChange)="onChangeFloc($event)">
+            <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Đơn vị đo</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.cycunit">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.cycunit" (ngModelChange)="onChangePlan()">
             <nz-option *ngFor="let item of lstCycunit" [nzLabel]="item.value + ' - ' + item.name"
               [nzValue]="item.value">
             </nz-option>
@@ -54,20 +65,20 @@
       <div nz-col class="gutter-row" [nzSpan]="2">
         <div class="inner-box">
           <label>Tần suất</label>
-          <app-input-clear nz-input type="number"></app-input-clear>
+          <input nz-input type="number" [(ngModel)]="model.cycle" (ngModelChange)="onChangePlan()" >
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="4">
         <div class="inner-box">
           <label>Thời gian hiệu lực (năm)</label>
-          <app-input-clear nz-input type="number"></app-input-clear>
+          <input nz-input type="number" [(ngModel)]="model.cycef" (ngModelChange)="onChangePlan()">
         </div>
       </div>
 
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Ngày bắt đầu kế hoạch</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate" (ngModelChange)="onChangePlan()"></nz-date-picker>
         </div>
       </div>
 
@@ -78,16 +89,7 @@
         </div>
       </div>
 
-      <div nz-col class="gutter-row" [nzSpan]="6">
-        <div class="inner-box">
-          <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr">
-            <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
-              [nzValue]="item.tplnr">
-            </nz-option>
-          </nz-select>
-        </div>
-      </div>
+
 
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
@@ -139,24 +141,28 @@
     </div>
     <nz-tabset>
       <nz-tab nzTitle="Thiết bị lập kế hoạch">
-        <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
+        <nz-table nzBordered [nzSize]="'middle'" #equipTable [nzData]="lstEquipPlan" [nzFrontPagination]="false">
           <thead>
             <tr>
-              <th>Mã thiết bị</th>
-              <th>Tên thiết bị</th>
+              <th style="width: 30%;">Chọn thiết bị (Mã - Tên)</th>
               <th>Khu vực chức năng</th>
               <th>Nhóm thiết bị</th>
               <th>Bộ phận phụ trách</th>
             </tr>
           </thead>
           <tbody>
-            <!-- <tr *ngFor="let data of checklistTable.data; let i = index">
-              <td>{{ data.vornr }}</td>
-              <td>{{ i + 1 }}</td>
-              <td>{{ data.ltxa1 }}</td>
+            <tr *ngFor="let data of equipTable.data; let i = index">
+              <td>
+                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" (ngModelChange)="changeEquip($event, data)">
+                  <nz-option *ngFor="let item of lstEquipSelect" [nzLabel]="item.equnr + ' - ' + item.eqktx"
+                    [nzValue]="item.equnr">
+                  </nz-option>
+                </nz-select>
+              </td>
               <td></td>
               <td></td>
-            </tr> -->
+              <td></td>
+            </tr>
           </tbody>
         </nz-table>
       </nz-tab>
@@ -183,7 +189,28 @@
         </nz-table>
 
       </nz-tab>
-      <nz-tab nzTitle="Kế hoạch dự kiến">Kế hoạch dự kiến</nz-tab>
+      <nz-tab nzTitle="Kế hoạch dự kiến">
+        <nz-table nzBordered [nzSize]="'middle'" #plandTable [nzData]="lstPlan" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Mã kế hoạch</th>
+              <th>Tên kế hoạch</th>
+              <th>Khu vực chức năng</th>
+              <th>Ngày dự kiến</th>
+              <th>Số lệnh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of plandTable.data; let i = index">
+              <td>{{ data.warpl}}</td>
+              <td>{{ data.wptxt }}</td>
+              <td>{{getNameFloc(data.tplnr)}}</td>
+             <td>{{ data.schstart }}</td>
+             <td></td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-tab>
     </nz-tabset>
   </nz-page-header-content>
 </nz-page-header>
