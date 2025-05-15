@@ -11,13 +11,13 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Mã kế hoạch</label>
-          <input nz-input [(ngModel)]="model.warpl">
+          <input nz-input [(ngModel)]="model.warpl" (ngModelChange)="onChangeCode($event)">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Tên kế hoạch</label>
-          <input nz-input [(ngModel)]="model.wptxt">
+          <input nz-input [(ngModel)]="model.wptxt" (ngModelChange)="onChangeName($event)">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
@@ -41,10 +41,11 @@
 
       </div>
 
-       <div nz-col class="gutter-row" [nzSpan]="6">
+      <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" (ngModelChange)="onChangeFloc($event)">
+          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr"
+            (ngModelChange)="onChangeFloc($event)">
             <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
               [nzValue]="item.tplnr">
             </nz-option>
@@ -65,7 +66,7 @@
       <div nz-col class="gutter-row" [nzSpan]="2">
         <div class="inner-box">
           <label>Tần suất</label>
-          <input nz-input type="number" [(ngModel)]="model.cycle" (ngModelChange)="onChangePlan()" >
+          <input nz-input type="number" [(ngModel)]="model.cycle" (ngModelChange)="onChangePlan()">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="4">
@@ -78,7 +79,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Ngày bắt đầu kế hoạch</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate" (ngModelChange)="onChangePlan()"></nz-date-picker>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate"
+            (ngModelChange)="onChangePlan()"></nz-date-picker>
         </div>
       </div>
 
@@ -153,18 +155,25 @@
           <tbody>
             <tr *ngFor="let data of equipTable.data; let i = index">
               <td>
-                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" (ngModelChange)="changeEquip($event, data)">
+                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="data.equnr"
+                  (ngModelChange)="changeEquip($event, data)">
                   <nz-option *ngFor="let item of lstEquipSelect" [nzLabel]="item.equnr + ' - ' + item.eqktx"
                     [nzValue]="item.equnr">
                   </nz-option>
                 </nz-select>
               </td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{getNameFloc(data.tplnr)}}</td>
+              <td>{{getNameEqGroup(data.eqart)}}</td>
+              <td>{{getNamePlgrp(data.ingrp)}}</td>
             </tr>
           </tbody>
         </nz-table>
+        <div style="display: flex; justify-content: center;">
+          <button nz-button nzType="dashed" (click)="addEquip()">
+            <nz-icon nzType="plus" />
+            Thêm thiết bị
+          </button>
+        </div>
       </nz-tab>
       <nz-tab nzTitle="Tác vụ thực hiện">
         <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
@@ -205,8 +214,8 @@
               <td>{{ data.warpl}}</td>
               <td>{{ data.wptxt }}</td>
               <td>{{getNameFloc(data.tplnr)}}</td>
-             <td>{{ data.schstart }}</td>
-             <td></td>
+              <td>{{ data.schstart }}</td>
+              <td></td>
             </tr>
           </tbody>
         </nz-table>

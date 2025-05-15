@@ -12,6 +12,7 @@ import { WcService } from '../../service/master-data/wc.service';
 import { OrderTypeService } from '../../service/master-data/order-type.service';
 import { EquipDocService } from '../../service/master-data/equip-doc.service';
 import { EquipService } from '../../service/master-data/equip.service';
+import { EqGroupService } from '../../service/master-data/eq-group.service';
 
 @Component({
   selector: 'app-single-maintenance',
@@ -33,6 +34,7 @@ export class SingleMaintenanceComponent implements OnInit {
   lstEquipSelect: any[] = [];
   lstTask: any[] = [];
   lstPlan: any[] = [];
+  lstEqGroup: any[] = [];
 
   lstEquipPlan: any[] = [
     {
@@ -93,6 +95,7 @@ export class SingleMaintenanceComponent implements OnInit {
     auart: '',
   };
   constructor(
+    private _sEqGroup: EqGroupService,
     private _sEquip: EquipService,
     private _sPlgrp: PlgrpService,
     private _sFloc: FlocService,
@@ -107,10 +110,22 @@ export class SingleMaintenanceComponent implements OnInit {
     this.getAllWc();
     this.getAllOrderType();
     this.getAllEquip();
+    this.getAllEqGroup();
   }
 
-  changeEquip(e: any, data: any) {
-    data = this.lstEquip.find((x) => x.equnr == e);
+  changeEquip(selectedValue: any, rowData: any): void {
+    const selectedEquip = this.lstEquipSelect.find(
+      (item) => item.equnr === selectedValue
+    );
+    if (selectedEquip) {
+      rowData.tplnr = selectedEquip.tplnr;
+      rowData.eqart = selectedEquip.eqart;
+      rowData.ingrp = selectedEquip.ingrp;
+    }
+  }
+
+  getNamePlgrp(code : any){
+    return this.lstPlgrp.find(x => x.ingrp == code)?.ingrpTxt
   }
 
   OnChangeCheckList(e: any) {
@@ -119,12 +134,23 @@ export class SingleMaintenanceComponent implements OnInit {
       .sort((a, b) => a.vornr.localeCompare(b.vornr));
   }
 
+  getAllEqGroup() {
+    this._sEqGroup.getAll().subscribe({
+      next: (data) => {
+        this.lstEqGroup = data;
+      },
+    });
+  }
+
+  getNameEqGroup(code: any) {
+    return this.lstEqGroup.find((x) => x.eqart == code)?.eqartTxt;
+  }
+
   getAllEquip() {
     this._sEquip.getAll().subscribe({
       next: (data) => {
         this.lstEquip = data;
         this.lstEquipSelect = data;
-        console.log(data);
       },
     });
   }
@@ -213,11 +239,63 @@ export class SingleMaintenanceComponent implements OnInit {
   }
 
   onChangeFloc(e: any) {
-    console.log(e)
+    this.lstPlan.forEach((i) => {
+      i.tplnr = e;
+    });
     this.lstEquipSelect =
       e == null || e == ''
         ? this.lstEquip
         : this.lstEquip.filter((x) => x.tplnr == e);
+  }
+
+  onChangeCode(e: any) {
+    this.lstPlan.forEach((i) => {
+      i.warpl = e;
+    });
+  }
+  onChangeName(e: any) {
+    this.lstPlan.forEach((i) => {
+      i.wptxt = e;
+    });
+  }
+
+  addEquip() {
+    const newEquip = {
+      anlnr: '',
+      anlun: '',
+      arbpl: '',
+      auspFlg: '',
+      beber: '',
+      childCnt: '',
+      class: '',
+      datab: '',
+      datbi: '',
+      delDate: '',
+      delFlg: '',
+      eqart: '',
+      eqartSub: '',
+      eqartTp: '',
+      eqktx: '',
+      eqtyp: '',
+      equnr: '',
+      hequi: '',
+      inactDate: '',
+      inactFlg: '',
+      inbdt: '',
+      ingrp: '',
+      isActive: '',
+      iwerk: '',
+      klart: '',
+      kostl: '',
+      parentFlg: '',
+      statAct: '',
+      statActT: '',
+      state: '',
+      statusTh: '',
+      tplnr: '',
+    };
+
+    this.lstEquipPlan = [...this.lstEquipPlan, newEquip];
   }
 
   generateDateList(
