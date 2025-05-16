@@ -22,9 +22,21 @@ export const CYCTYPE = [
   { name: 'Chỉ số hoạt động', value: 'P' },
 ];
 
-
 export const CYCUNIT = [
   { name: 'Theo ngày', value: 'D' },
   { name: 'Theo tuần', value: 'W' },
   { name: 'Theo tháng', value: 'M' },
+];
+
+export const HTBTBD = [
+  { name: 'Tự thực hiện', value: '01' },
+  { name: 'Thuê ngoài', value: '02' },
+  { name: 'Tự thực hiện & thuê ngoài', value: '03' },
+];
+
+export const LVTSD = [
+  { name: 'Không sử dụng', value: '01' },
+  { name: 'Vật tư trong kho', value: '02' },
+  { name: 'Mua ngoài', value: '03' },
+  { name: 'Vật tư trong kho + mua ngoài', value: '04' },
 ];

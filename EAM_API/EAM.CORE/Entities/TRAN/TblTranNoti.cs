@@ -91,10 +91,10 @@ namespace EAM.CORE.Entities.TRAN
         public string? StaffPl { get; set; }
 
         [Column("HT_BTBD")]
-        public string? HtBtbd { get; set; }
+        public string? Htbtbd { get; set; }
 
         [Column("LOAIVT_SD")]
-        public string? LoaivtSd { get; set; }
+        public string? Lvtsd { get; set; }
 
         [Column("STAFF_SC")]
         public string? StaffSc { get; set; }
@@ -167,5 +167,62 @@ namespace EAM.CORE.Entities.TRAN
 
         [Column("AEDAT")]
         public DateTime? Aedat { get; set; }
+
+        [Column("HT_NBB")]
+        public DateTime? HtNbb { get; set; }
+
+        [Column("HT_DVQL")]
+        public string? HtDvql { get; set; }
+
+        [Column("HT_DVQL_CD")]
+        public string? HtDvqlCd { get; set; }
+
+        [Column("HT_DVSD")]
+        public string? HtDvsd { get; set; }
+
+        [Column("HT_DVSD_CD")]
+        public string? HtDvsdCd { get; set; }
+
+        [Column("HT_DVTH")]
+        public string? HtDvth { get; set; }
+
+        [Column("HT_DVTH_CD")]
+        public string? HtDvthCd { get; set; }
+
+        [Column("HT_NDKT")]
+        public string? HtNdkt { get; set; }
+
+        [Column("HT_NDDX")]
+        public string? HtNddx { get; set; }
+
+        [Column("NT_NBB")]
+        public DateTime? NtNbb { get; set; }
+
+        [Column("NT_DVQL")]
+        public string? NtDvql { get; set; }
+
+        [Column("NT_DVQL_DES")]
+        public string? NtDvqlDes { get; set; }
+
+        [Column("NT_DVQL_CD")]
+        public string? NtDvqlCd { get; set; }
+
+        [Column("NT_DVSD")]
+        public string? NtDvsd { get; set; }
+
+        [Column("NT_DVSD_DES")]
+        public string? NtDvsdDes { get; set; }
+
+        [Column("NT_DVSD_CD")]
+        public string? NtDvsdCd { get; set; }
+
+        [Column("NT_DVTH")]
+        public string? NtDvth { get; set; }
+
+        [Column("NT_DVTH_DES")]
+        public string? NtDvthDes { get; set; }
+
+        [Column("NT_DVTH_CD")]
+        public string? NtDvthCd { get; set; }
     }
 }

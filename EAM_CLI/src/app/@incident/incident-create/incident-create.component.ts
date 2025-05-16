@@ -14,7 +14,6 @@ import { OrganizeService } from '../../service/system-manager/organize.service';
 import { PlantService } from '../../service/master-data/plant.service';
 import { GlobalService } from '../../service/global.service';
 import { AccountService } from '../../service/system-manager/account.service';
-import { EquipFilter } from '../../filter/master-data/equiq-filter';
 import { WcService } from '../../service/master-data/wc.service';
 import { PlgrpService } from '../../service/master-data/plgrp.service';
 
@@ -43,10 +42,9 @@ export class IncidentCreateComponent implements OnInit {
     qmdat: new Date(),
     isActive: true,
   };
-
-  loading: boolean = false;
-  username: string = '';
-  qmnum: string = '';
+  loading = false;
+  username = '';
+  qmnum = '';
   lstOrg: any[] = [];
   lstNotiTp: any[] = [];
   lstFloc: any[] = [];
@@ -57,12 +55,13 @@ export class IncidentCreateComponent implements OnInit {
   lstUser: any[] = [];
   lstWc: any[] = [];
   fileList: NzUploadFile[] = [];
-  lstPlgrp : any[] = []
+  lstPlgrp: any[] = [];
   lstPriorityLevel = PriorityLevel;
   environment = environment;
+
   constructor(
-    private _sPlgrp : PlgrpService,
-    private _sWc : WcService,
+    private _sPlgrp: PlgrpService,
+    private _sWc: WcService,
     private _global: GlobalService,
     private _sUser: AccountService,
     private _sPlant: PlantService,
@@ -79,115 +78,61 @@ export class IncidentCreateComponent implements OnInit {
     this.username = _global.getUserName();
     this.model.qmnam = _global.getUserName();
     this.globalService.setBreadcrumb([
-      {
-        name: 'Tạo mới sự cố',
-        path: 'incident/create',
-      },
+      { name: 'Tạo mới sự cố', path: 'incident/create' },
     ]);
-    this.globalService.getLoading().subscribe((value) => {
-      this.loading = value;
-    });
+    this.globalService
+      .getLoading()
+      .subscribe((value) => (this.loading = value));
   }
+
   ngOnInit(): void {
-    this.getAllFloc();
-    this.getEqGroup();
-    this.getAllEquip();
-    this.getAllNotiTp();
-    this.getAllOrg();
-    this.getAllPlan();
-    this.getAllUser();
-    this.getAllWc();
-    this.getAllPlgrp();
+    this.getMasterData();
   }
 
-  getAllPlgrp() {
+  getMasterData() {
     this._sPlgrp.getAll().subscribe({
-      next: (data: any) => {
-        this.lstPlgrp = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
+      next: (data: any) => (this.lstPlgrp = data),
+      error: (err) => console.log(err),
     });
-  }
-  getAllWc() {
     this._sWc.getAll().subscribe({
-      next: (data: any) => {
-        this.lstWc = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
+      next: (data: any) => (this.lstWc = data),
+      error: (err) => console.log(err),
     });
-  }
-
-  getAllUser() {
     this._sUser.getListUser().subscribe({
-      next: (data: any) => {
-        this.lstUser = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
+      next: (data: any) => (this.lstUser = data),
+      error: (err) => console.log(err),
     });
-  }
-
-  getAllOrg() {
     this._sOrg.getOrg().subscribe({
-      next: (data: any) => {
-        this.lstOrg = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
+      next: (data: any) => (this.lstOrg = data),
+      error: (err) => console.log(err),
     });
-  }
-  getAllNotiTp() {
     this._sNotiTp.getAll().subscribe({
-      next: (data) => {
-        this.lstNotiTp = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
+      next: (data) => (this.lstNotiTp = data),
+      error: (err) => console.log(err),
     });
-  }
-  getAllFloc() {
     this._sFloc.getAll().subscribe({
-      next: (data) => {
-        this.lstFloc = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
+      next: (data) => (this.lstFloc = data),
+      error: (err) => console.log(err),
     });
-  }
-
-  getEqGroup() {
     this._sEqGroup.getAll().subscribe({
-      next: (data) => {
-        this.lstEqGroup = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
+      next: (data) => (this.lstEqGroup = data),
+      error: (err) => console.log(err),
     });
-  }
-
-  getAllEquip() {
     this._sEquip.getAll().subscribe({
       next: (data) => {
         this.lstEquip = data;
         this.lstEquipSelect = data;
       },
-      error: (err) => {
-        console.log(err);
-      },
+      error: (err) => console.log(err),
+    });
+    this._sPlant.getAll().subscribe({
+      next: (data) => (this.lstPlant = data),
+      error: (err) => console.log(err),
     });
   }
 
   OnChangeEquip(data: any) {
-    this.model.equnr = ''
+    this.model.equnr = '';
     this.lstEquipSelect = this.lstEquip;
     if (this.model.tplnr != null && this.model.tplnr != '') {
       this.lstEquipSelect = this.lstEquipSelect.filter(
@@ -201,23 +146,18 @@ export class IncidentCreateComponent implements OnInit {
     }
   }
 
-  changeEquip(data: any){
-    var equip = this.lstEquip.find(x => x.equnr == data);
-   this.model.eqart = equip.eqart;
-   this.model.tplnr = equip.tplnr;
+  changeEquip(data: any) {
+    const equip = this.lstEquip.find((x) => x.equnr == data);
+    this.model.eqart = equip.eqart;
+    this.model.tplnr = equip.tplnr;
   }
 
-  getAllPlan() {
-    this._sPlant.getAll().subscribe({
-      next: (data) => (this.lstPlant = data),
-      error: (err) => console.log(err),
-    });
-  }
   handleChange(info: NzUploadChangeParam): void {
     if (info.type === 'success' || info.type === 'removed') {
       this.fileList = info.fileList;
     }
   }
+
   uploadFiles(): void {
     if (!this.qmnum || this.fileList.length === 0) return;
     this.fileList.forEach((file) => {
@@ -226,7 +166,6 @@ export class IncidentCreateComponent implements OnInit {
         const formData = new FormData();
         formData.append('file', fileObj);
         formData.append('qmnum', this.qmnum);
-
         this._sNotiAtt
           .uploadFile(formData, this.qmnum)
           .then((res) => {
@@ -245,10 +184,12 @@ export class IncidentCreateComponent implements OnInit {
       }
     });
   }
+
   beforeUpload = (file: NzUploadFile): boolean => {
     this.fileList = [...this.fileList, file];
-    return false; // Ngăn upload tự động
+    return false;
   };
+
   onCreate() {
     this._sNoti.create(this.model).subscribe({
       next: (data) => {

@@ -48,8 +48,8 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public DateTime? NoprDate { get; set; }
         public string? LdpbFlg { get; set; }
         public string? StaffPl { get; set; }
-        public string? HtBtbd { get; set; }
-        public string? LoaivtSd { get; set; }
+        public string? Htbtbd { get; set; }
+        public string? Lvtsd { get; set; }
         [Description("Người sửa chữa")]
         public string? StaffSc { get; set; }
         public string? StaffKt { get; set; }
@@ -78,6 +78,26 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string? Aenam { get; set; }
         public DateTime? Aedat { get; set; }
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
+
+        public DateTime? HtNbb { get; set; }
+        public string? HtDvql { get; set; }
+        public string? HtDvqlCd { get; set; }
+        public string? HtDvsd { get; set; }
+        public string? HtDvsdCd { get; set; }
+        public string? HtDvth { get; set; }
+        public string? HtDvthCd { get; set; }
+        public string? HtNdkt { get; set; }
+        public string? HtNddx { get; set; }
+        public DateTime? NtNbb { get; set; }
+        public string? NtDvql { get; set; }
+        public string? NtDvqlDes { get; set; }
+        public string? NtDvqlCd { get; set; }
+        public string? NtDvsd { get; set; }
+        public string? NtDvsdDes { get; set; }
+        public string? NtDvsdCd { get; set; }
+        public string? NtDvth { get; set; }
+        public string? NtDvthDes { get; set; }
+        public string? NtDvthCd { get; set; }
         
         public void Mapping(Profile profile)
         {

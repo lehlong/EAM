@@ -11,7 +11,7 @@ import { NotiService } from '../../service/tran/noti.service';
 import Swal from 'sweetalert2';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
-import { PriorityLevel } from '../../shared/constants/select.constants';
+import { HTBTBD, LVTSD, PriorityLevel } from '../../shared/constants/select.constants';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NotiReportService } from '../../service/tran/noti-report.service';
 import { AccountTypeService } from '../../service/master-data/account-type.service';
@@ -30,13 +30,13 @@ const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 @Component({
   selector: 'app-incident-close',
   imports: [ShareModule],
   templateUrl: './incident-close.component.html',
-  styleUrl: './incident-close.component.scss'
+  styleUrl: './incident-close.component.scss',
 })
 export class IncidentCloseComponent implements OnInit {
   checked: boolean = false;
@@ -59,6 +59,9 @@ export class IncidentCloseComponent implements OnInit {
   lstCatalog: any[] = [];
 
   lstPriorityLevel = PriorityLevel;
+  lstLvtsd = LVTSD;
+  lstHtbtbd = HTBTBD;
+
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];
   removedFiles: NzUploadFile[] = [];
@@ -83,7 +86,6 @@ export class IncidentCloseComponent implements OnInit {
   taskItems: any[] = [];
   actItems: any[] = [];
 
-
   model: any = {
     arbpl: '',
     qmnum: '',
@@ -98,54 +100,41 @@ export class IncidentCloseComponent implements OnInit {
     qmnam: '',
     ingrp: '',
     staffSc: '',
+    htbtbd: '',
+    lvtsd: '',
     ltrmn: new Date(),
     qmdat: new Date(),
     isActive: true,
-  };
-  Nmodel: any = {
-    id: '',
-    rpType: 'N',
-    qmnum: '',
-    rpDate: null,
-    rpTime: null,
-    mgUnit: '',
-    unit1: '',
-    unit2: '',
-    mgRole: '',
-    unit1R: '',
-    unit2R: '',
-    content: '',
-    output: '',
-    isActive: true,
+    htNbb: new Date(),
+    htDvql: '',
+    htDvqlCd: '',
+    htDvsd: '',
+    htDvsdCd: '',
+    htDvth: '',
+    htDvthCd: '',
+    htNdkt: '',
+    htNddx: '',
+    ntNbb: new Date(),
+    ntDvql: '',
+    ntDvqlDes: '',
+    ntDvqlCd: '',
+    ntDvsd: '',
+    ntDvsdDes: '',
+    ntDvsdCd: '',
+    ntDvth: '',
+    ntDvthDes: '',
+    ntDvthCd: '',
   };
 
-  Hmodel: any = {
-    id: '',
-    rpType: 'H',
-    qmnum: '',
-    rpDate: null,
-    rpTime: null,
-    mgUnit: '',
-    unit1: '',
-    unit2: '',
-    mgRole: '',
-    unit1R: '',
-    unit2R: '',
-    content: '',
-    output: '',
-    isActive: true,
-  };
 
   constructor(
     private _sNoti: NotiService,
     private globalService: GlobalService,
     private message: NzMessageService,
     private _sFloc: FlocService,
-    private _sAccount: AccountService,
     private _sWc: WcService,
     private _sEquip: EquipService,
     private modal: NzModalService,
-    private _sNotiReport: NotiReportService,
     private _sAccType: AccountTypeService,
     private notiCatalogService: NotiCatalogService,
     private sCatalog: CatalogService,
@@ -156,7 +145,7 @@ export class IncidentCloseComponent implements OnInit {
     private _sPlant: PlantService,
     private _sEqGroup: EqGroupService,
     private _sNotiTp: NotiTypeService,
-    private _sOrg: OrganizeService,
+    private _sOrg: OrganizeService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -173,28 +162,39 @@ export class IncidentCloseComponent implements OnInit {
   }
   ngOnInit(): void {
     this.search();
-    this.getAllFloc();
-    this.getAllUser();
-    this.getAllWc();
-    this.getAllEquip();
-    this.getAllPlgrp();
-    this.getAllPlan();
-    this.getAllNotiTp();
-    this.getEqGroup();
-    this.getAllAccountType();
-    this.getAllCatalogs();
+    this.getMasterData();
   }
-  getAllPlgrp() {
-    this._sPlgrp.getAll().subscribe({
-      next: (data: any) => {
-        this.lstPlgrp = data;
-      },
-      error: (err) => {
-        console.log(err);
+
+  getMasterData() {
+    this._sAccType.getAll().subscribe({
+      next: (data) => {
+        this.lstAccountType = data;
       },
     });
-  }
-  getAllCatalogs() {
+    this._sPlgrp.getAll().subscribe({
+      next: (data: any) => (this.lstPlgrp = data),
+      error: (err) => console.log(err),
+    });
+    this._sWc.getAll().subscribe({
+      next: (data: any) => (this.lstWc = data),
+      error: (err) => console.log(err),
+    });
+    this._sUser.getListUser().subscribe({
+      next: (data: any) => (this.lstUser = data),
+      error: (err) => console.log(err),
+    });
+    this._sOrg.getOrg().subscribe({
+      next: (data: any) => (this.lstOrg = data),
+      error: (err) => console.log(err),
+    });
+    this._sNotiTp.getAll().subscribe({
+      next: (data) => (this.lstNotiTp = data),
+      error: (err) => console.log(err),
+    });
+    this._sFloc.getAll().subscribe({
+      next: (data) => (this.lstFloc = data),
+      error: (err) => console.log(err),
+    });
     this.sCatalog.getAll().subscribe({
       next: (data: any) => {
         this.lstCatalog = data;
@@ -203,25 +203,10 @@ export class IncidentCloseComponent implements OnInit {
         console.log(err);
       },
     });
-  }
-  getAllPlan() {
     this._sPlant.getAll().subscribe({
       next: (data) => (this.lstPlant = data),
       error: (err) => console.log(err),
     });
-  }
-
-  getAllOrg() {
-    this._sOrg.getOrg().subscribe({
-      next: (data: any) => {
-        this.lstOrg = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-  }
-  getAllNotiTp() {
     this._sNotiTp.getAll().subscribe({
       next: (data) => {
         this.lstNotiTp = data;
@@ -230,9 +215,11 @@ export class IncidentCloseComponent implements OnInit {
         console.log(err);
       },
     });
-  }
-
-  getEqGroup() {
+    this._sEquip.getAll().subscribe({
+      next: (data) => {
+        this.lstEquip = data;
+      },
+    });
     this._sEqGroup.getAll().subscribe({
       next: (data) => {
         this.lstEqGroup = data;
@@ -242,12 +229,11 @@ export class IncidentCloseComponent implements OnInit {
       },
     });
   }
+
   openDetail(data: any) {
     this.model = data;
-    console.log(this.model);
     this.visibleDetail = true;
     this.loadAttachments(data.qmnum);
-    this.loadReportData(data.qmnum);
     this.loadNotiCatalogs(data.qmnum);
   }
   addCatalogItem() {
@@ -260,22 +246,26 @@ export class IncidentCloseComponent implements OnInit {
       causeCode: '',
       taskCode: '',
       actCode: '',
-      isActive: true
+      isActive: true,
     };
     if (!Array.isArray(this.catalogItems)) {
       this.catalogItems = [];
     }
     this.catalogItems = [...this.catalogItems, newItem];
-    console.log('Added new item, catalogItems:', this.catalogItems);
   }
   loadAttachments(qmnum: string) {
     this._sNotiAtt.getByQmnum(qmnum).subscribe({
       next: (result) => {
-        const attachmentData = Array.isArray(result) ? result :
-          (result && result.data ? result.data : []);
+        const attachmentData = Array.isArray(result)
+          ? result
+          : result && result.data
+          ? result.data
+          : [];
 
         const uniqueAttachments = Array.from(
-          new Map(attachmentData.map((item: { path: any; }) => [item.path, item])).values()
+          new Map(
+            attachmentData.map((item: { path: any }) => [item.path, item])
+          ).values()
         );
 
         if (uniqueAttachments && uniqueAttachments.length > 0) {
@@ -306,7 +296,7 @@ export class IncidentCloseComponent implements OnInit {
               name: item.path.split('/').pop() || 'file',
               fileType: item.fileType,
               fileSize: item.fileSize / 1024,
-              createDate: item.createDate || new Date()
+              createDate: item.createDate || new Date(),
             };
           });
         } else {
@@ -318,7 +308,7 @@ export class IncidentCloseComponent implements OnInit {
         console.error('Error loading attachments:', err);
         this.message.error('Không thể tải danh sách file đính kèm');
         this.fileList = [];
-      }
+      },
     });
   }
   async processFiles(): Promise<void> {
@@ -328,7 +318,10 @@ export class IncidentCloseComponent implements OnInit {
           const formData = new FormData();
           formData.append('file', file);
 
-          const response = await this._sNotiAtt.uploadFile(formData, this.model.qmnum);
+          const response = await this._sNotiAtt.uploadFile(
+            formData,
+            this.model.qmnum
+          );
           if (!response || !response.status) {
             console.error('Upload failed:', file.name);
             this.message.warning(`Tải file ${file.name} thất bại`);
@@ -340,7 +333,9 @@ export class IncidentCloseComponent implements OnInit {
         const fileName = file.uid ? file.uid.split('/').pop() || '' : '';
         if (fileName) {
           try {
-            const response = await firstValueFrom(this._sNotiAtt.delete(fileName));
+            const response = await firstValueFrom(
+              this._sNotiAtt.delete(fileName)
+            );
             this.message.success(`Xóa file ${file.name} thành công`);
           } catch (error) {
             console.error('Error deleting file:', fileName, error);
@@ -358,7 +353,9 @@ export class IncidentCloseComponent implements OnInit {
   }
 
   isImageType(fileType: string): boolean {
-    return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileType.toLowerCase());
+    return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(
+      fileType.toLowerCase()
+    );
   }
   getMimeType(fileType: string): string {
     const lowerType = fileType.toLowerCase();
@@ -395,7 +392,7 @@ export class IncidentCloseComponent implements OnInit {
   handleRemove = (file: NzUploadFile): boolean | Observable<boolean> => {
     if (file.originFileObj) {
       this.pendingFileList = this.pendingFileList.filter(
-        pendingFile => pendingFile !== file.originFileObj
+        (pendingFile) => pendingFile !== file.originFileObj
       );
       return true;
     }
@@ -415,7 +412,7 @@ export class IncidentCloseComponent implements OnInit {
         nzOnCancel: () => {
           observer.next(false);
           observer.complete();
-        }
+        },
       });
     });
   };
@@ -427,36 +424,19 @@ export class IncidentCloseComponent implements OnInit {
       nzOkType: 'primary',
       nzOkDanger: true,
       nzOnOk: () => {
-        const fileInUploadList = this.fileList.find(f => f.url === doc.url);
+        const fileInUploadList = this.fileList.find((f) => f.url === doc.url);
         if (fileInUploadList) {
           this.removedFiles.push(fileInUploadList);
-          this.fileList = this.fileList.filter(f => f.url !== doc.url);
-          this.fileListTable = this.fileListTable.filter(f => f.url !== doc.url);
+          this.fileList = this.fileList.filter((f) => f.url !== doc.url);
+          this.fileListTable = this.fileListTable.filter(
+            (f) => f.url !== doc.url
+          );
         }
-      }
+      },
     });
   }
 
-  loadReportData(qmnum: string) {
-    this._sNotiReport.getReportsByQmnum(qmnum).subscribe({
-      next: (data) => {
-        if (data && data.data) {
-          const reports = Array.isArray(data.data) ? data.data : [];
-          const statusReport = reports.find((r: any) => r.rpType === 'N');
-          if (statusReport) {
-            this.Nmodel = statusReport;
-          }
-          const acceptanceReport = reports.find((r: any) => r.rpType === 'H');
-          if (acceptanceReport) {
-            this.Hmodel = acceptanceReport;
-          }
-        }
-      },
-      error: (err) => {
-        console.error('Load report data error:', err);
-      }
-    });
-  }
+
   loadNotiCatalogs(qmnum: string) {
     const filter = { qmnum: qmnum };
     this.notiCatalogService.search(filter).subscribe(
@@ -479,49 +459,27 @@ export class IncidentCloseComponent implements OnInit {
     this.fileListTable = [];
   }
 
-  getAllAccountType() {
-    this._sAccType.getAll().subscribe({
-      next: (data) => {
-        this.lstAccountType = data;
-      }
-    });
-  }
   updateDetail() {
-    this.Nmodel.qmnum = this.model.qmnum;
-    this.Nmodel.rpType = 'N';
-
-    this.Hmodel.qmnum = this.model.qmnum;
-    this.Hmodel.rpType = 'H';
     this._sNoti.update(this.model).subscribe({
       next: () => {
-        this.processFiles().then(() => {
-          this._sNotiReport.saveReport(this.Nmodel).subscribe({
-            error: (err) => console.error('Save status report error:', err)
-          });
-
-          this._sNotiReport.saveReport(this.Hmodel).subscribe({
-            error: (err) => console.error('Save acceptance report error:', err)
-          });
-
-          this.message.success('Cập nhật thành công');
-          this.search();
-        }).catch(err => {
-          this.message.warning('Cập nhật thông tin thành công nhưng xử lý file gặp lỗi');
-          console.error('File processing error:', err);
-        });
+          this.processFiles();
       },
       error: (err) => {
         console.error('Update error:', err);
         this.message.error('Cập nhật thất bại');
-      }
+      },
     });
   }
   openCauseModal(item: any) {
     this.currentCatalogItemForModal = item;
-    this.causeItems = item.causeCode ? [{
-      causeType: item.causeCode,
-      causeDetail: item.causeTxt || ''
-    }] : [];
+    this.causeItems = item.causeCode
+      ? [
+          {
+            causeType: item.causeCode,
+            causeDetail: item.causeTxt || '',
+          },
+        ]
+      : [];
     this.isCauseModalVisible = true;
   }
 
@@ -529,10 +487,13 @@ export class IncidentCloseComponent implements OnInit {
     this.isCauseModalVisible = false;
   }
   addCauseItem() {
-    this.causeItems = [...this.causeItems, {
-      causeType: '',
-      causeDetail: ''
-    }];
+    this.causeItems = [
+      ...this.causeItems,
+      {
+        causeType: '',
+        causeDetail: '',
+      },
+    ];
   }
   deleteCauseItem(index: number) {
     this.causeItems = this.causeItems.filter((_, i) => i !== index);
@@ -550,9 +511,13 @@ export class IncidentCloseComponent implements OnInit {
   }
   openTaskModal(item: any) {
     this.currentCatalogItemForModal = item;
-    this.taskItems = item.taskCode ? [{
-      taskAction: item.taskCode
-    }] : [];
+    this.taskItems = item.taskCode
+      ? [
+          {
+            taskAction: item.taskCode,
+          },
+        ]
+      : [];
     this.isTaskModalVisible = true;
   }
 
@@ -561,9 +526,12 @@ export class IncidentCloseComponent implements OnInit {
   }
 
   addTaskItem() {
-    this.taskItems = [...this.taskItems, {
-      taskAction: ''
-    }];
+    this.taskItems = [
+      ...this.taskItems,
+      {
+        taskAction: '',
+      },
+    ];
   }
 
   deleteTaskItem(index: number) {
@@ -580,9 +548,13 @@ export class IncidentCloseComponent implements OnInit {
   }
   openActModal(item: any) {
     this.currentCatalogItemForModal = item;
-    this.actItems = item.actCode ? [{
-      actPrevent: item.actCode
-    }] : [];
+    this.actItems = item.actCode
+      ? [
+          {
+            actPrevent: item.actCode,
+          },
+        ]
+      : [];
     this.isActModalVisible = true;
   }
 
@@ -591,9 +563,12 @@ export class IncidentCloseComponent implements OnInit {
   }
 
   addActItem() {
-    this.actItems = [...this.actItems, {
-      actPrevent: ''
-    }];
+    this.actItems = [
+      ...this.actItems,
+      {
+        actPrevent: '',
+      },
+    ];
   }
 
   deleteActItem(index: number) {
@@ -611,6 +586,7 @@ export class IncidentCloseComponent implements OnInit {
   search() {
     this._sNoti.searchClose(this.filter).subscribe({
       next: (data) => {
+        console.log(data)
         this.paginationResult = data;
       },
       error: (response) => {
@@ -619,86 +595,41 @@ export class IncidentCloseComponent implements OnInit {
     });
   }
 
-  getAllUser() {
-    this._sAccount.getListUser().subscribe({
-      next: (data) => {
-        this.lstUser = data;
-      },
-    });
-  }
-
   getFullNameUser(username: any) {
-    return this.lstUser.find(
-      (x: { userName: string }) => x.userName == username
-    )?.fullName;
+    return this._global.getFullNameUser(this.lstUser, username);
   }
-
-  getAllWc() {
-    this._sWc.getAll().subscribe({
-      next: (data) => {
-        this.lstWc = data
-      }
-    })
-  }
-
-  getAllEquip() {
-    this._sEquip.getAll().subscribe({
-      next: (data) => {
-        this.lstEquip = data
-      }
-    })
-  }
-
 
   getNameWc(code: any) {
-    return this.lstWc.find(x => x.arbpl == code)?.arbplTxt;
+    return this._global.getNameWc(this.lstWc, code);
   }
 
   getNameEquip(code: any) {
-    return this.lstEquip.find(x => x.equnr == code)?.eqktx;
+    return this._global.getNameEquip(this.lstEquip, code);
   }
 
-  getAllFloc() {
-    this._sFloc.getAll().subscribe({
-      next: (data) => {
-        this.lstFloc = data;
-      },
-    });
-  }
   getFlocName(code: any) {
-    return this.lstFloc.find((x: { tplnr: string }) => x.tplnr == code)
-      ?.descript;
+    return this._global.getNameFloc(this.lstFloc, code);
+  }
+
+  getNameEqGroup(code: any) {
+    return this._global.getNameEqGroup(this.lstEqGroup, code);
   }
 
   getPriorityText(priok: string): string {
-    switch (priok) {
-      case '1':
-        return 'Rất Cao';
-      case '2':
-        return 'Cao';
-      case '3':
-        return 'Trung Bình';
-      case '4':
-        return 'Thấp';
-      case '5':
-        return 'Rất Thấp';
-      default:
-        return priok || '';
-    }
+    return this._global.getPriorityText(priok);
   }
 
   updateStatusNoti(data: any, status: string) {
-    data.statAct = status;
-
     Swal.fire({
       title: status == '05' ? 'Đóng sự cố?' : 'Từ chối đóng?',
       text: 'Bạn sẽ không thể hoàn tác điều này!',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Huỷ'
+      cancelButtonText: 'Huỷ',
     }).then((result) => {
       if (result.isConfirmed) {
+         data.statAct = status;
         this._sNoti.update(data).subscribe({
           next: () => {
             this.search();
@@ -723,4 +654,3 @@ export class IncidentCloseComponent implements OnInit {
     this.search();
   }
 }
-
