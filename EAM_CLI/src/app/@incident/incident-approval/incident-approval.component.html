@@ -201,8 +201,6 @@
             </div>
           </div>
 
-
-
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Ngày yêu cầu hoàn thành</label>
@@ -429,37 +427,71 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </nz-tab>
       <nz-tab nzTitle="Phân tích sự cố">
-        <nz-table #docTable [nzShowPagination]="false" nzSize="small">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Thành phần hư hỏng</th>
-              <th>Loại sự cố</th>
-              <th>Chi tiết loại sự cố</th>
-              <th>Nguyên nhân</th>
-              <th>Hành động khắc phục</th>
-              <th>Biện pháp phòng ngừa</th>
-              <th nzWidth="100px" nzAlign="center">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </nz-table>
+        <div class="tab-content">
+          <nz-table #docTable [nzShowPagination]="false" nzSize="small" [nzData]="catalogItems">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Thành phần hư hỏng</th>
+                <th>Loại sự cố</th>
+                <th>Chi tiết loại sự cố</th>
+                <th nzAlign="center">Nguyên nhân</th>
+                <th nzAlign="center">Hành động khắc phục</th>
+                <th nzAlign="center">Biện pháp phòng ngừa</th>
+                <th nzWidth="100px" nzAlign="center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of catalogItems;let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="item.objpart">
+                    <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                    <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                  </nz-select>
+                <td> <nz-select nzShowSearch nzAllowClear [(ngModel)]="item.typeCode ">
+                    <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                    <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                  </nz-select></td>
+                <td><input nz-input [(ngModel)]="item.typeTxt"></td>
+                <td>
+                  <button nz-button nzType="link" (click)="openCauseModal(item)">
+                    {{ item.causeCode || 'Thêm nguyên nhân' }}
+                  </button>
+                </td>
+                <td>
+                  <button nz-button nzType="link" (click)="openTaskModal(item)">
+                    {{ item.taskCode || 'Thêm hành động' }}
+                  </button>
+                </td>
+                <td>
+                  <button nz-button nzType="link" (click)="openActModal(item)">
+                    {{ item.actCode || 'Thêm biện pháp' }}
+                  </button>
+                </td>
+                <td nzAlign="center">
+                  <a nz-button nzType="link">
+                    <span nz-icon nzType="edit" nzTheme="outline"></span>
+                  </a>
+                  <a nz-button nzType="link" nzDanger nz-popconfirm nzPopconfirmTitle="Bạn có chắc chắn muốn xóa?"
+                    nzPopconfirmPlacement="top">
+                    <span nz-icon nzType="delete" nzTheme="outline"></span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <button nz-button nzType="dashed" (click)="addCatalogItem()">
+              <nz-icon nzType="plus" />
+              Thêm thành phần
+            </button>
+          </div>
+        </div>
       </nz-tab>
 
       <nz-tab nzTitle="File đính kèm">
@@ -524,3 +556,135 @@
   &nbsp;
   <button nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>
 </ng-template>
+<!-- Modal nguyên nhân -->
+<nz-modal [(nzVisible)]="isCauseModalVisible" nzTitle="Nguyên nhân" (nzOnCancel)="closeCauseModal()" [nzWidth]="800"
+  [nzFooter]="modalFooter">
+  <ng-container *nzModalContent>
+    <nz-table #causeTable [nzData]="causeItems" [nzShowPagination]="false" nzSize="small" nzBordered>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Loại nguyên nhân</th>
+          <th>Chi tiết nguyên nhân</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cause of causeItems; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="cause.causeType" style="width: 100%;">
+              <nz-option nzValue="cause1" nzLabel="Nguyên nhân 1"></nz-option>
+              <nz-option nzValue="cause2" nzLabel="Nguyên nhân 2"></nz-option>
+              <nz-option nzValue="cause3" nzLabel="Nguyên nhân 3"></nz-option>
+            </nz-select>
+          </td>
+          <td>
+            <input nz-input [(ngModel)]="cause.causeDetail" placeholder="Chi tiết nguyên nhân">
+          </td>
+          <td>
+            <a nz-button nzType="link" nzDanger (click)="deleteCauseItem(i)">
+              <span nz-icon nzType="delete" nzTheme="outline"></span>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <button nz-button nzType="dashed" (click)="addCauseItem()">
+        <span nz-icon nzType="plus"></span>
+        Thêm nguyên nhân
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="closeCauseModal()">Hủy</button>
+    <button nz-button nzType="primary" (click)="saveCause()">Lưu</button>
+  </ng-template>
+</nz-modal>
+
+<!-- Modal hành động khắc phục -->
+<nz-modal [(nzVisible)]="isTaskModalVisible" nzTitle="Hành động khắc phục" (nzOnCancel)="closeTaskModal()"
+  [nzWidth]="800" [nzFooter]="taskModalFooter">
+  <ng-container *nzModalContent>
+    <nz-table #taskTable [nzData]="taskItems" [nzShowPagination]="false" nzSize="small" nzBordered>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Hành động khắc phục</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of taskItems; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="task.taskAction" style="width: 100%;">
+              <nz-option nzValue="task1" nzLabel="Hành động 1"></nz-option>
+              <nz-option nzValue="task2" nzLabel="Hành động 2"></nz-option>
+              <nz-option nzValue="task3" nzLabel="Hành động 3"></nz-option>
+            </nz-select>
+          </td>
+          <td>
+            <a nz-button nzType="link" nzDanger (click)="deleteTaskItem(i)">
+              <span nz-icon nzType="delete" nzTheme="outline"></span>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <button nz-button nzType="dashed" (click)="addTaskItem()">
+        <span nz-icon nzType="plus"></span>
+        Thêm hành động
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #taskModalFooter>
+    <button nz-button nzType="default" (click)="closeTaskModal()">Hủy</button>
+    <button nz-button nzType="primary" (click)="saveTask()">Lưu</button>
+  </ng-template>
+</nz-modal>
+
+<!-- Modal biện pháp phòng ngừa -->
+<nz-modal [(nzVisible)]="isActModalVisible" nzTitle="Biện pháp phòng ngừa" (nzOnCancel)="closeActModal()"
+  [nzWidth]="800" [nzFooter]="actModalFooter">
+  <ng-container *nzModalContent>
+    <nz-table #actTable [nzData]="actItems" [nzShowPagination]="false" nzSize="small" nzBordered>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Biện pháp phòng ngừa</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let act of actItems; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="act.actPrevent" style="width: 100%;">
+              <nz-option nzValue="act1" nzLabel="Biện pháp 1"></nz-option>
+              <nz-option nzValue="act2" nzLabel="Biện pháp 2"></nz-option>
+              <nz-option nzValue="act3" nzLabel="Biện pháp 3"></nz-option>
+            </nz-select>
+          </td>
+          <td>
+            <a nz-button nzType="link" nzDanger (click)="deleteActItem(i)">
+              <span nz-icon nzType="delete" nzTheme="outline"></span>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <button nz-button nzType="dashed" (click)="addActItem()">
+        <span nz-icon nzType="plus"></span>
+        Thêm biện pháp
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #actModalFooter>
+    <button nz-button nzType="default" (click)="closeActModal()">Hủy</button>
+    <button nz-button nzType="primary" (click)="saveAct()">Lưu</button>
+  </ng-template>
+</nz-modal>

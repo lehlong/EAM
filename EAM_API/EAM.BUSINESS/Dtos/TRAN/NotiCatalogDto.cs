@@ -9,19 +9,20 @@ namespace EAM.BUSINESS.Dtos.TRAN
     public class NotiCatalogDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
+        public string Id { get; set; } = null!;
         public string Qmnum { get; set; } = null!;
-        [Key]
+      //  [Key]
         public string Objpart { get; set; } = null!;
-        [Key]
+     //   [Key]
         public string TypeCode { get; set; } = null!;
         public string? TypeTxt { get; set; }
-        [Key]
+     //   [Key]
         public string CauseCode { get; set; } = null!;
         public string? CauseTxt { get; set; }
-        [Key]
+     //   [Key]
         public string TaskCode { get; set; } = null!;
         public string? TaskTxt { get; set; }
-        [Key]
+    //    [Key]
         public string ActCode { get; set; } = null!;
         public string? ActTxt { get; set; }
         public string? CreatBy { get; set; }

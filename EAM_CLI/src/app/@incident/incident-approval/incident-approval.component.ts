@@ -21,6 +21,9 @@ import { environment } from '../../../environments/environment';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NotiReportService } from '../../service/tran/noti-report.service';
 import { AccountTypeService } from '../../service/master-data/account-type.service';
+import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
+import { NotiCatalogService } from '../../service/tran/not-catalog.service';
+import { CatalogService } from '../../service/master-data/catalog.service';
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -44,6 +47,7 @@ export class IncidentApprovalComponent implements OnInit {
   lstUser: any = [];
   lstWc: any[] = [];
   lstEquip: any[] = [];
+  lstCatalog: any[] = [];
 
   lstOrg: any[] = [];
   lstNotiTp: any[] = [];
@@ -62,6 +66,21 @@ export class IncidentApprovalComponent implements OnInit {
   previewTitle: string | undefined = '';
   previewVisible = false;
 
+  catalogItems: NotiCatalogModel[] = [];
+  currentCatalogItem: NotiCatalogModel = new NotiCatalogModel();
+  isAddingCatalog: boolean = false;
+  editCatalogIndex: number = -1;
+
+  // Thêm các biến để quản lý các modal
+  isCauseModalVisible: boolean = false;
+  isTaskModalVisible: boolean = false;
+  isActModalVisible: boolean = false;
+
+  // Thêm các biến để lưu dữ liệu cho mỗi modal
+  currentCatalogItemForModal: any;
+  causeItems: any[] = [];
+  taskItems: any[] = [];
+  actItems: any[] = [];
 
   model: any = {
     arbpl: '',
@@ -133,7 +152,9 @@ export class IncidentApprovalComponent implements OnInit {
     private _sOrg: OrganizeService,
     private modal: NzModalService,
     private _sNotiReport: NotiReportService,
-    private _sAccType: AccountTypeService
+    private _sAccType: AccountTypeService,
+    private notiCatalogService: NotiCatalogService,
+    private sCatalog: CatalogService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -159,6 +180,10 @@ export class IncidentApprovalComponent implements OnInit {
     this.getAllNotiTp();
     this.getEqGroup();
     this.getAllAccountType();
+    this.getAllCatalogs();
+    this.causeItems = [];
+    this.taskItems = [];
+    this.actItems = [];
   }
   search() {
     this._sNoti.searchApproval(this.filter).subscribe({
@@ -180,7 +205,16 @@ export class IncidentApprovalComponent implements OnInit {
       },
     });
   }
-
+  getAllCatalogs() {
+    this.sCatalog.getAll().subscribe({
+      next: (data: any) => {
+        this.lstCatalog = data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   getAllPlan() {
     this._sPlant.getAll().subscribe({
       next: (data) => (this.lstPlant = data),
@@ -240,13 +274,44 @@ export class IncidentApprovalComponent implements OnInit {
       }
     });
   }
+  loadNotiCatalogs(qmnum: string) {
+    const filter = { qmnum: qmnum };
+    this.notiCatalogService.search(filter).subscribe(
+      (response) => {
+        if (response && response.data) {
+          this.catalogItems = response.data.data;
+        }
+      },
+      (error) => {
+        console.error('Error loading analysis items', error);
+      }
+    );
+  }
 
+  addCatalogItem() {
+    const newItem: NotiCatalogModel = {
+      id: '',
+      qmnum: this.model.qmnum,
+      objpart: '',
+      typeCode: '',
+      typeTxt: '',
+      causeCode: '',
+      taskCode: '',
+      actCode: '',
+      isActive: true
+    };
+    if (!Array.isArray(this.catalogItems)) {
+      this.catalogItems = [];
+    }
+    this.catalogItems = [...this.catalogItems, newItem];
+    console.log('Added new item, catalogItems:', this.catalogItems);
+  }
   openDetail(data: any) {
     this.model = data;
-    console.log(this.model);
     this.visibleDetail = true;
     this.loadAttachments(data.qmnum);
     this.loadReportData(data.qmnum);
+    this.loadNotiCatalogs(data.qmnum);
   }
   loadAttachments(qmnum: string) {
     this._sNotiAtt.getByQmnum(qmnum).subscribe({
@@ -531,6 +596,98 @@ export class IncidentApprovalComponent implements OnInit {
     }
   }
 
+  openCauseModal(item: any) {
+    this.currentCatalogItemForModal = item;
+    this.causeItems = item.causeCode ? [{
+      causeType: item.causeCode,
+      causeDetail: item.causeTxt || ''
+    }] : [];
+    this.isCauseModalVisible = true;
+  }
+
+  closeCauseModal() {
+    this.isCauseModalVisible = false;
+  }
+  addCauseItem() {
+    this.causeItems = [...this.causeItems, {
+      causeType: '',
+      causeDetail: ''
+    }];
+  }
+  deleteCauseItem(index: number) {
+    this.causeItems = this.causeItems.filter((_, i) => i !== index);
+  }
+
+  saveCause() {
+    if (this.causeItems.length > 0) {
+      this.currentCatalogItemForModal.causeCode = this.causeItems[0].causeType;
+      this.currentCatalogItemForModal.causeTxt = this.causeItems[0].causeDetail;
+    } else {
+      this.currentCatalogItemForModal.causeCode = '';
+      this.currentCatalogItemForModal.causeTxt = '';
+    }
+    this.closeCauseModal();
+  }
+  openTaskModal(item: any) {
+    this.currentCatalogItemForModal = item;
+    this.taskItems = item.taskCode ? [{
+      taskAction: item.taskCode
+    }] : [];
+    this.isTaskModalVisible = true;
+  }
+
+  closeTaskModal() {
+    this.isTaskModalVisible = false;
+  }
+
+  addTaskItem() {
+    this.taskItems = [...this.taskItems, {
+      taskAction: ''
+    }];
+  }
+
+  deleteTaskItem(index: number) {
+    this.taskItems = this.taskItems.filter((_, i) => i !== index);
+  }
+
+  saveTask() {
+    if (this.taskItems.length > 0) {
+      this.currentCatalogItemForModal.taskCode = this.taskItems[0].taskAction;
+    } else {
+      this.currentCatalogItemForModal.taskCode = '';
+    }
+    this.closeTaskModal();
+  }
+  openActModal(item: any) {
+    this.currentCatalogItemForModal = item;
+    this.actItems = item.actCode ? [{
+      actPrevent: item.actCode
+    }] : [];
+    this.isActModalVisible = true;
+  }
+
+  closeActModal() {
+    this.isActModalVisible = false;
+  }
+
+  addActItem() {
+    this.actItems = [...this.actItems, {
+      actPrevent: ''
+    }];
+  }
+
+  deleteActItem(index: number) {
+    this.actItems = this.actItems.filter((_, i) => i !== index);
+  }
+
+  saveAct() {
+    if (this.actItems.length > 0) {
+      this.currentCatalogItemForModal.actCode = this.actItems[0].actPrevent;
+    } else {
+      this.currentCatalogItemForModal.actCode = '';
+    }
+    this.closeActModal();
+  }
   updateStatusNoti(data: any, status: string) {
     data.statAct = status;
     this._sNoti.update(data).subscribe({

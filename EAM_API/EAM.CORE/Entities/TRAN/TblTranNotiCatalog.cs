@@ -9,6 +9,10 @@ namespace EAM.CORE.Entities.TRAN
     public class TblTranNotiCatalog : SoftDeleteEntity
     {
         [Key]
+
+        [Column("ID")]
+        public string Id { get; set; } = null!;
+
         [Column("QMNUM")]
         public string Qmnum { get; set; } = null!;
 

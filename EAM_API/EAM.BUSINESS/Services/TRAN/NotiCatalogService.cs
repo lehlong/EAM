@@ -4,15 +4,32 @@ using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
 using EAM.CORE;
 using EAM.CORE.Entities.TRAN;
+using System.Net.NetworkInformation;
 
 namespace EAM.BUSINESS.Services.TRAN
 {
     public interface INotiCatalogService : IGenericService<TblTranNotiCatalog, NotiCatalogDto>
     {
+        Task<List<NotiCatalogDto>> GetByQmnum(string qmnum);
     }
     
     public class NotiCatalogService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNotiCatalog, NotiCatalogDto>(dbContext, mapper), INotiCatalogService
     {
+        public async Task<List<NotiCatalogDto>> GetByQmnum(string qmnum)
+        {
+            try
+            {
+                var items = _dbContext.TblTranNotiCatalog.Where(x => x.Qmnum == qmnum).ToList();
+                var result = _mapper.Map<List<NotiCatalogDto>>(items);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
         public override async Task<PagedResponseDto> Search(BaseFilter filter)
         {
             try

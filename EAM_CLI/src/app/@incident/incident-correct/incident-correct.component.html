@@ -85,10 +85,9 @@
       <tbody>
         <tr *ngFor="let data of paginationResult.data; let i = index">
           <td [nzChecked]="false"></td>
-          <td>{{ data.aufnr }}</td>
+          <td (click)="openAddOrder(data)"><a>{{  data.aufnr }}</a></td>
           <td>{{ data.qmtxt }}</td>
           <td>{{ data.qmnum }}</td>
-
           <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
           <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
           <td>{{ getNameWc(data.arbpl) }}</td>
