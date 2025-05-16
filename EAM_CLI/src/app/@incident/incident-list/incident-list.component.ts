@@ -552,7 +552,22 @@ export class IncidentListComponent implements OnInit {
     this.visibleOrder = false;
   }
   createOrder() {
-    this._sOrder.create(this.model).subscribe({
+    const orderData = {
+    auart: this.model.auart || 'PM02', 
+    ktext: this.model.qmtxt || '', 
+    qmnum: this.model.qmnum || '',
+    iwerk: this.model.iwerk || '',
+    tplnr: this.model.tplnr || '',
+    equnr: this.model.equnr || '',
+    arbpl: this.model.arbpl || '',
+    priok: this.model.priok || '',
+    staffSc: this.model.staffSc || '',
+    erdat: this.model.qmdat || new Date(),
+    gltri: this.model.ltrmn || new Date(),
+    qmart: this.model.qmart || 'N2',
+    ernam: this.model.qmnam || '',
+  };
+    this._sOrder.create(orderData).subscribe({
       next: (data) => {
         this.search();
       },
