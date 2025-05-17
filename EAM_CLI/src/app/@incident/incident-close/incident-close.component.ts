@@ -10,12 +10,9 @@ import { AccountService } from '../../service/system-manager/account.service';
 import { NotiService } from '../../service/tran/noti.service';
 import Swal from 'sweetalert2';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
-import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
 import { HTBTBD, LVTSD, PriorityLevel } from '../../shared/constants/select.constants';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { NotiReportService } from '../../service/tran/noti-report.service';
 import { AccountTypeService } from '../../service/master-data/account-type.service';
-import { NotiCatalogService } from '../../service/tran/not-catalog.service';
 import { CatalogService } from '../../service/master-data/catalog.service';
 import { NotiAttService } from '../../service/tran/noti-att.service';
 import { environment } from '../../../environments/environment';
@@ -70,22 +67,6 @@ export class IncidentCloseComponent implements OnInit {
   previewTitle: string | undefined = '';
   previewVisible = false;
 
-  catalogItems: NotiCatalogModel[] = [];
-  currentCatalogItem: NotiCatalogModel = new NotiCatalogModel();
-  isAddingCatalog: boolean = false;
-  editCatalogIndex: number = -1;
-
-  // Thêm các biến để quản lý các modal
-  isCauseModalVisible: boolean = false;
-  isTaskModalVisible: boolean = false;
-  isActModalVisible: boolean = false;
-
-  // Thêm các biến để lưu dữ liệu cho mỗi modal
-  currentCatalogItemForModal: any;
-  causeItems: any[] = [];
-  taskItems: any[] = [];
-  actItems: any[] = [];
-
   model: any = {
     arbpl: '',
     qmnum: '',
@@ -136,7 +117,6 @@ export class IncidentCloseComponent implements OnInit {
     private _sEquip: EquipService,
     private modal: NzModalService,
     private _sAccType: AccountTypeService,
-    private notiCatalogService: NotiCatalogService,
     private sCatalog: CatalogService,
     private _sNotiAtt: NotiAttService,
     private _sPlgrp: PlgrpService,
@@ -234,25 +214,103 @@ export class IncidentCloseComponent implements OnInit {
     this.model = data;
     this.visibleDetail = true;
     this.loadAttachments(data.qmnum);
-    this.loadNotiCatalogs(data.qmnum);
   }
   addCatalogItem() {
-    const newItem: NotiCatalogModel = {
-      id: '',
-      qmnum: this.model.qmnum,
-      objpart: '',
-      typeCode: '',
-      typeTxt: '',
-      causeCode: '',
-      taskCode: '',
-      actCode: '',
-      isActive: true,
-    };
-    if (!Array.isArray(this.catalogItems)) {
-      this.catalogItems = [];
-    }
-    this.catalogItems = [...this.catalogItems, newItem];
+
   }
+
+  closeDetail() {
+    this.model = {};
+    this.visibleDetail = false;
+    this.pendingFileList = [];
+    this.removedFiles = [];
+    this.fileList = [];
+    this.fileListTable = [];
+  }
+
+  updateDetail() {
+    this._sNoti.update(this.model).subscribe({
+      next: () => {
+          this.processFiles();
+      },
+      error: (err) => {
+        console.error('Update error:', err);
+        this.message.error('Cập nhật thất bại');
+      },
+    });
+  }
+
+
+  search() {
+    this._sNoti.searchClose(this.filter).subscribe({
+      next: (data) => {
+        this.paginationResult = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  getFullNameUser(username: any) {
+    return this._global.getFullNameUser(this.lstUser, username);
+  }
+
+  getNameWc(code: any) {
+    return this._global.getNameWc(this.lstWc, code);
+  }
+
+  getNameEquip(code: any) {
+    return this._global.getNameEquip(this.lstEquip, code);
+  }
+
+  getFlocName(code: any) {
+    return this._global.getNameFloc(this.lstFloc, code);
+  }
+
+  getNameEqGroup(code: any) {
+    return this._global.getNameEqGroup(this.lstEqGroup, code);
+  }
+
+  getPriorityText(priok: string): string {
+    return this._global.getPriorityText(priok);
+  }
+
+  updateStatusNoti(data: any, status: string) {
+    Swal.fire({
+      title: status == '05' ? 'Đóng sự cố?' : 'Từ chối đóng?',
+      text: 'Bạn sẽ không thể hoàn tác điều này!',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ',
+    }).then((result) => {
+      if (result.isConfirmed) {
+         data.statAct = status;
+        this._sNoti.update(data).subscribe({
+          next: () => {
+            this.search();
+          },
+        });
+      }
+    });
+  }
+  reset() {
+    this.filter = new BaseFilter();
+    this.search();
+  }
+
+  pageIndexChange(page: number): void {
+    this.filter.currentPage = page;
+    this.search();
+  }
+
+  pageSizeChange(size: number): void {
+    this.filter.pageSize = size;
+    this.filter.currentPage = 1;
+    this.search();
+  }
+
   loadAttachments(qmnum: string) {
     this._sNotiAtt.getByQmnum(qmnum).subscribe({
       next: (result) => {
@@ -434,223 +492,5 @@ export class IncidentCloseComponent implements OnInit {
         }
       },
     });
-  }
-
-
-  loadNotiCatalogs(qmnum: string) {
-    const filter = { qmnum: qmnum };
-    this.notiCatalogService.search(filter).subscribe(
-      (response) => {
-        if (response && response.data) {
-          this.catalogItems = response.data.data;
-        }
-      },
-      (error) => {
-        console.error('Error loading analysis items', error);
-      }
-    );
-  }
-  closeDetail() {
-    this.model = {};
-    this.visibleDetail = false;
-    this.pendingFileList = [];
-    this.removedFiles = [];
-    this.fileList = [];
-    this.fileListTable = [];
-  }
-
-  updateDetail() {
-    this._sNoti.update(this.model).subscribe({
-      next: () => {
-          this.processFiles();
-      },
-      error: (err) => {
-        console.error('Update error:', err);
-        this.message.error('Cập nhật thất bại');
-      },
-    });
-  }
-  openCauseModal(item: any) {
-    this.currentCatalogItemForModal = item;
-    this.causeItems = item.causeCode
-      ? [
-          {
-            causeType: item.causeCode,
-            causeDetail: item.causeTxt || '',
-          },
-        ]
-      : [];
-    this.isCauseModalVisible = true;
-  }
-
-  closeCauseModal() {
-    this.isCauseModalVisible = false;
-  }
-  addCauseItem() {
-    this.causeItems = [
-      ...this.causeItems,
-      {
-        causeType: '',
-        causeDetail: '',
-      },
-    ];
-  }
-  deleteCauseItem(index: number) {
-    this.causeItems = this.causeItems.filter((_, i) => i !== index);
-  }
-
-  saveCause() {
-    if (this.causeItems.length > 0) {
-      this.currentCatalogItemForModal.causeCode = this.causeItems[0].causeType;
-      this.currentCatalogItemForModal.causeTxt = this.causeItems[0].causeDetail;
-    } else {
-      this.currentCatalogItemForModal.causeCode = '';
-      this.currentCatalogItemForModal.causeTxt = '';
-    }
-    this.closeCauseModal();
-  }
-  openTaskModal(item: any) {
-    this.currentCatalogItemForModal = item;
-    this.taskItems = item.taskCode
-      ? [
-          {
-            taskAction: item.taskCode,
-          },
-        ]
-      : [];
-    this.isTaskModalVisible = true;
-  }
-
-  closeTaskModal() {
-    this.isTaskModalVisible = false;
-  }
-
-  addTaskItem() {
-    this.taskItems = [
-      ...this.taskItems,
-      {
-        taskAction: '',
-      },
-    ];
-  }
-
-  deleteTaskItem(index: number) {
-    this.taskItems = this.taskItems.filter((_, i) => i !== index);
-  }
-
-  saveTask() {
-    if (this.taskItems.length > 0) {
-      this.currentCatalogItemForModal.taskCode = this.taskItems[0].taskAction;
-    } else {
-      this.currentCatalogItemForModal.taskCode = '';
-    }
-    this.closeTaskModal();
-  }
-  openActModal(item: any) {
-    this.currentCatalogItemForModal = item;
-    this.actItems = item.actCode
-      ? [
-          {
-            actPrevent: item.actCode,
-          },
-        ]
-      : [];
-    this.isActModalVisible = true;
-  }
-
-  closeActModal() {
-    this.isActModalVisible = false;
-  }
-
-  addActItem() {
-    this.actItems = [
-      ...this.actItems,
-      {
-        actPrevent: '',
-      },
-    ];
-  }
-
-  deleteActItem(index: number) {
-    this.actItems = this.actItems.filter((_, i) => i !== index);
-  }
-
-  saveAct() {
-    if (this.actItems.length > 0) {
-      this.currentCatalogItemForModal.actCode = this.actItems[0].actPrevent;
-    } else {
-      this.currentCatalogItemForModal.actCode = '';
-    }
-    this.closeActModal();
-  }
-  search() {
-    this._sNoti.searchClose(this.filter).subscribe({
-      next: (data) => {
-        console.log(data)
-        this.paginationResult = data;
-      },
-      error: (response) => {
-        console.log(response);
-      },
-    });
-  }
-
-  getFullNameUser(username: any) {
-    return this._global.getFullNameUser(this.lstUser, username);
-  }
-
-  getNameWc(code: any) {
-    return this._global.getNameWc(this.lstWc, code);
-  }
-
-  getNameEquip(code: any) {
-    return this._global.getNameEquip(this.lstEquip, code);
-  }
-
-  getFlocName(code: any) {
-    return this._global.getNameFloc(this.lstFloc, code);
-  }
-
-  getNameEqGroup(code: any) {
-    return this._global.getNameEqGroup(this.lstEqGroup, code);
-  }
-
-  getPriorityText(priok: string): string {
-    return this._global.getPriorityText(priok);
-  }
-
-  updateStatusNoti(data: any, status: string) {
-    Swal.fire({
-      title: status == '05' ? 'Đóng sự cố?' : 'Từ chối đóng?',
-      text: 'Bạn sẽ không thể hoàn tác điều này!',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Huỷ',
-    }).then((result) => {
-      if (result.isConfirmed) {
-         data.statAct = status;
-        this._sNoti.update(data).subscribe({
-          next: () => {
-            this.search();
-          },
-        });
-      }
-    });
-  }
-  reset() {
-    this.filter = new BaseFilter();
-    this.search();
-  }
-
-  pageIndexChange(page: number): void {
-    this.filter.currentPage = page;
-    this.search();
-  }
-
-  pageSizeChange(size: number): void {
-    this.filter.pageSize = size;
-    this.filter.currentPage = 1;
-    this.search();
   }
 }
