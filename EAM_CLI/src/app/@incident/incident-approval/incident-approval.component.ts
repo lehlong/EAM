@@ -22,6 +22,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { AccountTypeService } from '../../service/master-data/account-type.service';
 import { CatalogService } from '../../service/master-data/catalog.service';
 import Swal from 'sweetalert2';
+import { NotiCatalogService } from '../../service/tran/not-catalog.service';
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -125,7 +126,9 @@ export class IncidentApprovalComponent implements OnInit {
     private _sPlant: PlantService,
     private _sEqGroup: EqGroupService,
     private _sNotiTp: NotiTypeService,
-    private _sOrg: OrganizeService
+    private _sOrg: OrganizeService,
+    private _sCatalog: CatalogService,
+    private _sNotiCatalog: NotiCatalogService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -208,15 +211,67 @@ export class IncidentApprovalComponent implements OnInit {
         console.log(err);
       },
     });
+     this._sCatalog.getAll().subscribe({
+      next: (data: any) => {
+        this.lstCatalogTypeA = data.filter(
+          (x: { catType: string }) => x.catType === 'A'
+        );
+        this.lstCatalogTypeB = data.filter(
+          (x: { catType: string }) => x.catType === 'B'
+        );
+        this.lstCatalogTypeC = data.filter(
+          (x: { catType: string }) => x.catType === 'C'
+        );
+        this.lstCatalogType2 = data.filter(
+          (x: { catType: string }) => x.catType === '2'
+        );
+        this.lstCatalogType5 = data.filter(
+          (x: { catType: string }) => x.catType === '5'
+        );
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
+
+   lstNotiCatalog: any[] = [];
+  lstCatalogTypeA: any[] = [];
+  lstCatalogTypeB: any[] = [];
+  lstCatalogTypeC: any[] = [];
+  lstCatalogType2: any[] = [];
+  lstCatalogType5: any[] = [];
 
   openDetail(data: any) {
     this.model = data;
     this.visibleDetail = true;
+    this._sNotiCatalog.getByQmnum(data.qmnum).subscribe({
+      next: (data) => {
+        this.lstNotiCatalog = data;
+      },
+      error: (err) => {},
+    });
     this.loadAttachments(data.qmnum);
   }
   addCatalogItem() {
-
+     this.lstNotiCatalog = [...this.lstNotiCatalog, {
+      id: 'A',
+      qmnum: this.model.qmnum,
+      objpart: null,
+      typeCode: null,
+      typeTxt: null,
+      causeCode: null,
+      causeTxt: null,
+      taskCode: null,
+      taskTxt: null,
+      actCode: null,
+      actTxt: null,
+      creatBy: null,
+      createOn: null,
+      changeBy: null,
+      changeOn: null,
+      isActive: true,
+    },];
   }
 
   closeDetail() {
@@ -229,17 +284,24 @@ export class IncidentApprovalComponent implements OnInit {
   }
 
   updateDetail() {
+    console.log(this.lstNotiCatalog);
     this._sNoti.update(this.model).subscribe({
       next: () => {
-          this.processFiles();
+        this.processFiles();
       },
       error: (err) => {
         console.error('Update error:', err);
         this.message.error('Cập nhật thất bại');
       },
     });
+    this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
-
 
   search() {
     this._sNoti.searchApproval(this.filter).subscribe({

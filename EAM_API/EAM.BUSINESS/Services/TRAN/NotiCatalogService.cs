@@ -4,6 +4,8 @@ using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
 using EAM.CORE;
 using EAM.CORE.Entities.TRAN;
+using Microsoft.EntityFrameworkCore;
+using NPOI.SS.Formula.Functions;
 using System.Net.NetworkInformation;
 
 namespace EAM.BUSINESS.Services.TRAN
@@ -11,15 +13,41 @@ namespace EAM.BUSINESS.Services.TRAN
     public interface INotiCatalogService : IGenericService<TblTranNotiCatalog, NotiCatalogDto>
     {
         Task<List<NotiCatalogDto>> GetByQmnum(string qmnum);
+        Task UpdateCatalog(List<TblTranNotiCatalog> data);
     }
     
     public class NotiCatalogService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNotiCatalog, NotiCatalogDto>(dbContext, mapper), INotiCatalogService
     {
+        public async Task UpdateCatalog(List<TblTranNotiCatalog> data)
+        {
+            try
+            {
+                foreach(var i in data)
+                {
+                    if(i.Id == "A")
+                    {
+                        i.Id = Guid.NewGuid().ToString();
+                        _dbContext.TblTranNotiCatalog.Add(i);
+                    }
+                    else
+                    {
+                        _dbContext.TblTranNotiCatalog.Update(i);
+                    }
+                }
+                await _dbContext.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+            }
+        }
+
         public async Task<List<NotiCatalogDto>> GetByQmnum(string qmnum)
         {
             try
             {
-                var items = _dbContext.TblTranNotiCatalog.Where(x => x.Qmnum == qmnum).ToList();
+                var items = await _dbContext.TblTranNotiCatalog.Where(x => x.Qmnum == qmnum).ToListAsync();
                 var result = _mapper.Map<List<NotiCatalogDto>>(items);
                 return result;
             }

@@ -2,6 +2,7 @@ using AutoMapper;
 using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.MD;
+using EAM.BUSINESS.Filter.MD;
 using EAM.CORE;
 using EAM.CORE.Entities.MD;
 
@@ -10,11 +11,12 @@ namespace EAM.BUSINESS.Services.MD
     public interface ICatalogService : IGenericService<TblMdCatalog, CatalogDto>
     {
         Task<byte[]> Export(BaseMdFilter filter);
+        Task<PagedResponseDto> Search(CatalogFilter filter);
     }
     
     public class CatalogService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdCatalog, CatalogDto>(dbContext, mapper), ICatalogService
     {
-        public override async Task<PagedResponseDto> Search(BaseFilter filter)
+        public async Task<PagedResponseDto> Search(CatalogFilter filter)
         {
             try
             {
@@ -25,6 +27,11 @@ namespace EAM.BUSINESS.Services.MD
                                          x.CatName.Contains(filter.KeyWord) ||
                                          x.Code.Contains(filter.KeyWord) ||
                                          x.CodeDes.Contains(filter.KeyWord));
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.CatType))
+                {
+                    query = query.Where(x => x.CatType == filter.CatType);
                 }
                 if (filter.IsActive.HasValue)
                 {

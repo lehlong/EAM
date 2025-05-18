@@ -10,7 +10,11 @@ import { AccountService } from '../../service/system-manager/account.service';
 import { NotiService } from '../../service/tran/noti.service';
 import Swal from 'sweetalert2';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
-import { HTBTBD, LVTSD, PriorityLevel } from '../../shared/constants/select.constants';
+import {
+  HTBTBD,
+  LVTSD,
+  PriorityLevel,
+} from '../../shared/constants/select.constants';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AccountTypeService } from '../../service/master-data/account-type.service';
 import { CatalogService } from '../../service/master-data/catalog.service';
@@ -22,6 +26,8 @@ import { PlantService } from '../../service/master-data/plant.service';
 import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { NotiTypeService } from '../../service/master-data/noti-type.service';
 import { OrganizeService } from '../../service/system-manager/organize.service';
+import { CatalogFilter } from '../../filter/master-data/catalog.filter';
+import { NotiCatalogService } from '../../service/tran/not-catalog.service';
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -53,7 +59,6 @@ export class IncidentCloseComponent implements OnInit {
   lstPlant: any[] = [];
   lstPlgrp: any[] = [];
   lstAccountType: any[] = [];
-  lstCatalog: any[] = [];
 
   lstPriorityLevel = PriorityLevel;
   lstLvtsd = LVTSD;
@@ -68,45 +73,44 @@ export class IncidentCloseComponent implements OnInit {
   previewVisible = false;
 
   model: any = {
-    arbpl: '',
-    qmnum: '',
-    tplnr: '',
-    eqart: '',
-    equnr: '',
-    priok: '',
-    qmtxt: '',
-    qmdetail: '',
+    arbpl: null,
+    qmnum: null,
+    tplnr: null,
+    eqart: null,
+    equnr: null,
+    priok: null,
+    qmtxt: null,
+    qmdetail: null,
     qmart: 'N2',
-    iwerk: '',
-    qmnam: '',
-    ingrp: '',
-    staffSc: '',
-    htbtbd: '',
-    lvtsd: '',
+    iwerk: null,
+    qmnam: null,
+    ingrp: null,
+    staffSc: null,
+    htbtbd: null,
+    lvtsd: null,
     ltrmn: new Date(),
     qmdat: new Date(),
     isActive: true,
     htNbb: new Date(),
-    htDvql: '',
-    htDvqlCd: '',
-    htDvsd: '',
-    htDvsdCd: '',
-    htDvth: '',
-    htDvthCd: '',
-    htNdkt: '',
-    htNddx: '',
+    htDvql: null,
+    htDvqlCd: null,
+    htDvsd: null,
+    htDvsdCd: null,
+    htDvth: null,
+    htDvthCd: null,
+    htNdkt: null,
+    htNddx: null,
     ntNbb: new Date(),
-    ntDvql: '',
-    ntDvqlDes: '',
-    ntDvqlCd: '',
-    ntDvsd: '',
-    ntDvsdDes: '',
-    ntDvsdCd: '',
-    ntDvth: '',
-    ntDvthDes: '',
-    ntDvthCd: '',
+    ntDvql: null,
+    ntDvqlDes: null,
+    ntDvqlCd: null,
+    ntDvsd: null,
+    ntDvsdDes: null,
+    ntDvsdCd: null,
+    ntDvth: null,
+    ntDvthDes: null,
+    ntDvthCd: null,
   };
-
 
   constructor(
     private _sNoti: NotiService,
@@ -117,7 +121,7 @@ export class IncidentCloseComponent implements OnInit {
     private _sEquip: EquipService,
     private modal: NzModalService,
     private _sAccType: AccountTypeService,
-    private sCatalog: CatalogService,
+    private _sCatalog: CatalogService,
     private _sNotiAtt: NotiAttService,
     private _sPlgrp: PlgrpService,
     private _global: GlobalService,
@@ -125,7 +129,8 @@ export class IncidentCloseComponent implements OnInit {
     private _sPlant: PlantService,
     private _sEqGroup: EqGroupService,
     private _sNotiTp: NotiTypeService,
-    private _sOrg: OrganizeService
+    private _sOrg: OrganizeService,
+    private _sNotiCatalog: NotiCatalogService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -175,14 +180,7 @@ export class IncidentCloseComponent implements OnInit {
       next: (data) => (this.lstFloc = data),
       error: (err) => console.log(err),
     });
-    this.sCatalog.getAll().subscribe({
-      next: (data: any) => {
-        this.lstCatalog = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+
     this._sPlant.getAll().subscribe({
       next: (data) => (this.lstPlant = data),
       error: (err) => console.log(err),
@@ -208,15 +206,68 @@ export class IncidentCloseComponent implements OnInit {
         console.log(err);
       },
     });
+
+    this._sCatalog.getAll().subscribe({
+      next: (data: any) => {
+        this.lstCatalogTypeA = data.filter(
+          (x: { catType: string }) => x.catType === 'A'
+        );
+        this.lstCatalogTypeB = data.filter(
+          (x: { catType: string }) => x.catType === 'B'
+        );
+        this.lstCatalogTypeC = data.filter(
+          (x: { catType: string }) => x.catType === 'C'
+        );
+        this.lstCatalogType2 = data.filter(
+          (x: { catType: string }) => x.catType === '2'
+        );
+        this.lstCatalogType5 = data.filter(
+          (x: { catType: string }) => x.catType === '5'
+        );
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
+
+  lstNotiCatalog: any[] = [];
+  lstCatalogTypeA: any[] = [];
+  lstCatalogTypeB: any[] = [];
+  lstCatalogTypeC: any[] = [];
+  lstCatalogType2: any[] = [];
+  lstCatalogType5: any[] = [];
 
   openDetail(data: any) {
     this.model = data;
     this.visibleDetail = true;
+    this._sNotiCatalog.getByQmnum(data.qmnum).subscribe({
+      next: (data) => {
+        this.lstNotiCatalog = data;
+      },
+      error: (err) => {},
+    });
     this.loadAttachments(data.qmnum);
   }
   addCatalogItem() {
-
+     this.lstNotiCatalog = [...this.lstNotiCatalog, {
+      id: 'A',
+      qmnum: this.model.qmnum,
+      objpart: null,
+      typeCode: null,
+      typeTxt: null,
+      causeCode: null,
+      causeTxt: null,
+      taskCode: null,
+      taskTxt: null,
+      actCode: null,
+      actTxt: null,
+      creatBy: null,
+      createOn: null,
+      changeBy: null,
+      changeOn: null,
+      isActive: true,
+    },];
   }
 
   closeDetail() {
@@ -229,17 +280,24 @@ export class IncidentCloseComponent implements OnInit {
   }
 
   updateDetail() {
+    console.log(this.lstNotiCatalog);
     this._sNoti.update(this.model).subscribe({
       next: () => {
-          this.processFiles();
+        this.processFiles();
       },
       error: (err) => {
         console.error('Update error:', err);
         this.message.error('Cập nhật thất bại');
       },
     });
+    this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
-
 
   search() {
     this._sNoti.searchClose(this.filter).subscribe({
@@ -286,7 +344,7 @@ export class IncidentCloseComponent implements OnInit {
       cancelButtonText: 'Huỷ',
     }).then((result) => {
       if (result.isConfirmed) {
-         data.statAct = status;
+        data.statAct = status;
         this._sNoti.update(data).subscribe({
           next: () => {
             this.search();

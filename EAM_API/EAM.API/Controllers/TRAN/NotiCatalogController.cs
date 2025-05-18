@@ -6,6 +6,7 @@ using EAM.BUSINESS.Dtos.TRAN;
 using EAM.BUSINESS.Filter.MD;
 using EAM.BUSINESS.Services.MD;
 using EAM.BUSINESS.Services.TRAN;
+using EAM.CORE.Entities.TRAN;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -89,10 +90,10 @@ namespace EAM.API.Controllers.TRAN
             return Ok(transferObject);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] NotiCatalogDto time)
+        public async Task<IActionResult> Update([FromBody] List<TblTranNotiCatalog> time)
         {
             var transferObject = new TransferObject();
-            await _service.Update(time);
+            await _service.UpdateCatalog(time);
             if (_service.Status)
             {
                 transferObject.Status = true;

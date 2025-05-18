@@ -553,8 +553,8 @@ export class IncidentListComponent implements OnInit {
   }
   createOrder() {
     const orderData = {
-    auart: this.model.auart || 'PM02', 
-    ktext: this.model.qmtxt || '', 
+    auart: this.model.auart || 'PM02',
+    ktext: this.model.qmtxt || '',
     qmnum: this.model.qmnum || '',
     iwerk: this.model.iwerk || '',
     tplnr: this.model.tplnr || '',

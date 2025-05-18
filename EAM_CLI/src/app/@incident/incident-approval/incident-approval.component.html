@@ -479,22 +479,51 @@
           </div>
         </div>
       </nz-tab>
-      <nz-tab nzTitle="Phân tích sự cố">
+       <nz-tab nzTitle="Phân tích sự cố">
         <div class="">
-          <nz-table #docTable [nzShowPagination]="false" nzSize="small" >
+          <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="lstNotiCatalog">
             <thead>
               <tr>
-                <th>STT</th>
-                <th>Thành phần hư hỏng</th>
-                <th>Loại sự cố</th>
-                <th>Chi tiết loại sự cố</th>
-                <th nzAlign="center">Nguyên nhân</th>
-                <th nzAlign="center">Hành động khắc phục</th>
-                <th nzAlign="center">Biện pháp phòng ngừa</th>
-                <th nzWidth="100px" nzAlign="center">Thao tác</th>
+                <th style="width: 20%;">Thành phần hư hỏng</th>
+                <th style="width: 20%;">Loại sự cố</th>
+                <th style="width: 20%;">Nguyên nhân</th>
+                <th style="width: 20%;">Hành động khắc phục</th>
+                <th style="width: 20%;">Biện pháp phòng ngừa</th>
               </tr>
             </thead>
             <tbody>
+              <tr *ngFor="let data of catalogTable.data; let i = index">
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.objpart">
+                    <nz-option *ngFor="let item of lstCatalogTypeB" [nzValue]="item.id"
+                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.typeCode">
+                    <nz-option *ngFor="let item of lstCatalogTypeC" [nzValue]="item.id"
+                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.causeCode">
+                    <nz-option *ngFor="let item of lstCatalogType5" [nzValue]="item.id"
+                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.taskCode">
+                    <nz-option *ngFor="let item of lstCatalogType2" [nzValue]="item.id"
+                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.actCode">
+                    <nz-option *ngFor="let item of lstCatalogTypeA" [nzValue]="item.id"
+                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                  </nz-select>
+                </td>
+              </tr>
 
             </tbody>
           </nz-table>

@@ -2,6 +2,7 @@
 using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
+using EAM.BUSINESS.Filter.MD;
 using EAM.BUSINESS.Services.MD;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace EAM.API.Controllers.MD
         public readonly ICatalogService _service = service;
 
         [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        public async Task<IActionResult> Search([FromQuery] CatalogFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.Search(filter);
