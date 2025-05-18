@@ -40,3 +40,13 @@ export const LVTSD = [
   { name: 'Mua ngoài', value: '03' },
   { name: 'Vật tư trong kho + mua ngoài', value: '04' },
 ];
+
+export const ILART = [
+  { name: 'Sửa chữa bất thường', value: 'ZP1' },
+  { name: 'Bảo hành', value: 'ZP2' },
+  { name: 'Bảo dưỡng', value: 'ZP3' },
+  { name: 'Nâng cấp', value: 'ZP4' },
+  { name: 'Kiểm định', value: 'ZP5' },
+  { name: 'Xây mới', value: 'ZP6' },
+  { name: 'Hiệu chuẩn', value: 'ZP7' },
+];
