@@ -665,3 +665,15 @@
   &nbsp;
   <button nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>
 </ng-template>
+
+<!-- Tạo lệnh -->
+<nz-modal [(nzVisible)]="isVisibleAddOrder" nzTitle="TẠO LỆNH" (nzOnCancel)="orderCancel()" (nzOnOk)="createOrder()"
+  nzCancelText="Hủy" nzOkText="Tạo lệnh">
+  <ng-container *nzModalContent>
+    <label>Chọn loại bảo trì</label>
+    <nz-select nzShowSearch nzAllowClear [(ngModel)]="order.auart">
+      <nz-option *ngFor="let item of lstOrderType" [nzValue]="item.code"
+        [nzLabel]="item.code + ' - ' + item.name"></nz-option>
+    </nz-select>
+  </ng-container>
+</nz-modal>

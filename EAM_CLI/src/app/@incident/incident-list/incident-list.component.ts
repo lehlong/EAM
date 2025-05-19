@@ -23,6 +23,8 @@ import { AccountTypeService } from '../../service/master-data/account-type.servi
 import { CatalogService } from '../../service/master-data/catalog.service';
 import { OrganizeService } from '../../service/system-manager/organize.service';
 import Swal from 'sweetalert2';
+import { OrderTypeService } from '../../service/master-data/order-type.service';
+import { OrderService } from '../../service/tran/order.service';
 
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
@@ -55,6 +57,7 @@ export class IncidentListComponent implements OnInit {
   lstPlant: any[] = [];
   lstPlgrp: any[] = [];
   lstAccountType: any[] = [];
+  lstOrderType: any[] = [];
 
   lstPriorityLevel = PriorityLevel;
   lstLvtsd = LVTSD;
@@ -108,6 +111,94 @@ export class IncidentListComponent implements OnInit {
     ntDvthCd: null,
   };
 
+  order: any = {
+    iwerk: '',
+    aufnr: '',
+    auart: 'PM02',
+    ktext: '',
+    ilart: '',
+    artpr: '',
+    priok: '',
+    equnr: '',
+    tplnr: '',
+    oblty: '',
+    eqart: '',
+    eqartError: '',
+    ingpr: '',
+    warpl: '',
+    abnum: null,
+    nplda: null,
+    addat: null,
+    qmnum: '',
+    obknr: null,
+    gewrk: '',
+    eqartSub: '',
+    objnr: '',
+    aufpl: '',
+    rsnum: '',
+    accFlg: '',
+    ftrms: null,
+    gstri: null,
+    gltri: null,
+    gstrp: null,
+    gltrp: null,
+    gstrs: null,
+    gltrs: null,
+    getri: null,
+    ftrmi: null,
+    ftrmp: null,
+    bukrs: '',
+    arbpl: '',
+    werks: '',
+    kostv: '',
+    stort: '',
+    iphas: '',
+    phas0: '',
+    phas1: '',
+    phas2: '',
+    phas3: '',
+    pdat1: null,
+    pdat2: null,
+    pdat3: null,
+    idat3: null,
+    htBtbd: '',
+    staffPl: '',
+    staff: '',
+    loaivtSd: '',
+    staffSc: '',
+    staffKt: '',
+    ausvn: null,
+    ausbs: null,
+    lockFlg: '',
+    lockDate: null,
+    delFlg: '',
+    delDate: null,
+    status: '',
+    stat: '',
+    statT: '',
+    lifnr: '',
+    budat: null,
+    bldat: null,
+    hkont: '',
+    dmbtr: null,
+    waers: '',
+    rootF: '',
+    statMo: '',
+    statTd: '',
+    statKt: '',
+    cfFlg: '',
+    kqFlg: '',
+    groupidPm: '',
+    pmvtid: '',
+    ernam: '',
+    erdat: null,
+    aenam: '',
+    aedat: null,
+    needup: '',
+    belnr: '',
+    gjahr: null,
+  };
+
   constructor(
     private _sNoti: NotiService,
     private globalService: GlobalService,
@@ -126,7 +217,9 @@ export class IncidentListComponent implements OnInit {
     private _sEqGroup: EqGroupService,
     private _sNotiTp: NotiTypeService,
     private _sOrg: OrganizeService,
-    private _sNotiCatalog: NotiCatalogService
+    private _sNotiCatalog: NotiCatalogService,
+    private _sOrderType: OrderTypeService,
+    private _sOrder : OrderService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -146,8 +239,31 @@ export class IncidentListComponent implements OnInit {
     this.getMasterData();
   }
 
-  openAddOrder(data : any){
+  isVisibleAddOrder = false;
+  openAddOrder(data: any) {
+    const commonKeys = Object.keys(data).filter((key) => key in this.order);
+    commonKeys.forEach((key) => {
+      this.order[key] = data[key];
+    });
+    this.order.ktext = data.qmtxt;
+    this.order.htBtbd = data.htbtbd;
+    this.order.loaivtSd = data.lvtsd;
+    this.isVisibleAddOrder = true;
+  }
+  createOrder(): void {
+    this._sOrder.create(this.order).subscribe({
+      next: (data) => {
+        this.isVisibleAddOrder = false;
+        this.search();
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
 
+  orderCancel(): void {
+    this.isVisibleAddOrder = false;
   }
 
   getMasterData() {
@@ -158,6 +274,10 @@ export class IncidentListComponent implements OnInit {
     });
     this._sPlgrp.getAll().subscribe({
       next: (data: any) => (this.lstPlgrp = data),
+      error: (err) => console.log(err),
+    });
+    this._sOrderType.getAll().subscribe({
+      next: (data: any) => (this.lstOrderType = data),
       error: (err) => console.log(err),
     });
     this._sWc.getAll().subscribe({
@@ -250,24 +370,27 @@ export class IncidentListComponent implements OnInit {
     this.loadAttachments(data.qmnum);
   }
   addCatalogItem() {
-     this.lstNotiCatalog = [...this.lstNotiCatalog, {
-      id: 'A',
-      qmnum: this.model.qmnum,
-      objpart: null,
-      typeCode: null,
-      typeTxt: null,
-      causeCode: null,
-      causeTxt: null,
-      taskCode: null,
-      taskTxt: null,
-      actCode: null,
-      actTxt: null,
-      creatBy: null,
-      createOn: null,
-      changeBy: null,
-      changeOn: null,
-      isActive: true,
-    },];
+    this.lstNotiCatalog = [
+      ...this.lstNotiCatalog,
+      {
+        id: 'A',
+        qmnum: this.model.qmnum,
+        objpart: null,
+        typeCode: null,
+        typeTxt: null,
+        causeCode: null,
+        causeTxt: null,
+        taskCode: null,
+        taskTxt: null,
+        actCode: null,
+        actTxt: null,
+        creatBy: null,
+        createOn: null,
+        changeBy: null,
+        changeOn: null,
+        isActive: true,
+      },
+    ];
   }
 
   closeDetail() {
@@ -291,8 +414,7 @@ export class IncidentListComponent implements OnInit {
       },
     });
     this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
-      next: () => {
-      },
+      next: () => {},
       error: (err) => {
         console.error(err);
       },

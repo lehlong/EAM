@@ -14,13 +14,15 @@ import { WcService } from '../../service/master-data/wc.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { NotiService } from '../../service/tran/noti.service';
 import { OrderService } from '../../service/tran/order.service';
-import { PriorityLevel } from '../../shared/constants/select.constants';
+import { HTBTBD, ILART, LVTSD, PriorityLevel } from '../../shared/constants/select.constants';
+import { NotiCatalogService } from '../../service/tran/not-catalog.service';
+import { CatalogService } from '../../service/master-data/catalog.service';
 
 @Component({
   selector: 'app-incident-correct',
   imports: [ShareModule],
   templateUrl: './incident-correct.component.html',
-  styleUrl: './incident-correct.component.scss'
+  styleUrl: './incident-correct.component.scss',
 })
 export class IncidentCorrectComponent implements OnInit {
   checked: boolean = false;
@@ -37,31 +39,114 @@ export class IncidentCorrectComponent implements OnInit {
   lstPriorityLevel = PriorityLevel;
   lstNotiTp: any[] = [];
   lstOrderType: any[] = [];
+  lstHTBTBD = HTBTBD;
+  lstLVTSD = LVTSD;
+  lstILART = ILART;
 
-  model: any = {
-    arbpl: '',
-    qmnum: '',
-    tplnr: '',
-    eqart: '',
-    equnr: '',
-    priok: '',
-    qmtxt: '',
-    qmdetail: '',
-    qmart: 'N2',
+   lstNotiCatalog: any[] = [];
+  lstCatalogTypeA: any[] = [];
+  lstCatalogTypeB: any[] = [];
+  lstCatalogTypeC: any[] = [];
+  lstCatalogType2: any[] = [];
+  lstCatalogType5: any[] = [];
+
+  model: any =  {
     iwerk: '',
-    qmnam: '',
-    ingrp: '',
+    aufnr: '',
+    auart: '',
+    ktext: '',
+    ilart: '',
+    artpr: '',
+    priok: '',
+    equnr: '',
+    tplnr: '',
+    oblty: '',
+    eqart: '',
+    eqartError: '',
+    ingpr: '',
+    warpl: '',
+    abnum: null,
+    nplda: null,
+    addat: null,
+    qmnum: '',
+    obknr: null,
+    gewrk: '',
+    eqartSub: '',
+    objnr: '',
+    aufpl: '',
+    rsnum: '',
+    accFlg: '',
+    ftrms: null,
+    gstri: null,
+    gltri: null,
+    gstrp: null,
+    gltrp: null,
+    gstrs: null,
+    gltrs: null,
+    getri: null,
+    ftrmi: null,
+    ftrmp: null,
+    bukrs: '',
+    arbpl: '',
+    werks: '',
+    kostv: '',
+    stort: '',
+    iphas: '',
+    phas0: '',
+    phas1: '',
+    phas2: '',
+    phas3: '',
+    pdat1: null,
+    pdat2: null,
+    pdat3: null,
+    idat3: null,
+    htBtbd: '',
+    staffPl: '',
+    staff: '',
+    loaivtSd: '',
     staffSc: '',
-    ltrmn: new Date(),
-    qmdat: new Date(),
-    isActive: true,
+    staffKt: '',
+    ausvn: null,
+    ausbs: null,
+    lockFlg: '',
+    lockDate: null,
+    delFlg: '',
+    delDate: null,
+    status: '',
+    stat: '',
+    statT: '',
+    lifnr: '',
+    budat: null,
+    bldat: null,
+    hkont: '',
+    dmbtr: null,
+    waers: '',
+    rootF: '',
+    statMo: '',
+    statTd: '',
+    statKt: '',
+    cfFlg: '',
+    kqFlg: '',
+    groupidPm: '',
+    pmvtid: '',
+    ernam: '',
+    erdat: null,
+    aenam: '',
+    aedat: null,
+    needup: '',
+    belnr: '',
+    gjahr: null,
+    equipName: '',
+    flocName: '',
   };
 
   constructor(
+    private _sNotiCatalog : NotiCatalogService,
     private _sOrder: OrderService,
     private _sOrderType: OrderTypeService,
     private _sNotiTp: NotiTypeService,
     private _sPlant: PlantService,
+    private _sCatalog: CatalogService,
     private _sNoti: NotiService,
     private _sWc: WcService,
     private _sEquip: EquipService,
@@ -87,15 +172,7 @@ export class IncidentCorrectComponent implements OnInit {
   }
   ngOnInit(): void {
     this.search();
-    this.getAllFloc();
-    this.getAllUser();
-    this.getAllWc();
-    this.getAllEquip();
-    this.getAllEgGroup();
-    this.getAllPlgrp();
-    this.getAllPlant();
-    this.getAllNotiTp();
-    this.getAllOrderType();
+    this.getMasterData();
   }
   search() {
     this._sOrder.search(this.filter).subscribe({
@@ -108,19 +185,91 @@ export class IncidentCorrectComponent implements OnInit {
     });
   }
 
-  visibleOrder: boolean = false;
-  openAddOrder(data: any) {
-    this.model = data;
-    this.model.auart = 'PM02';
-    this.visibleOrder = true;
+  addCatalogItem() {
+     this.lstNotiCatalog = [...this.lstNotiCatalog, {
+      id: 'A',
+      qmnum: this.model.qmnum,
+      objpart: null,
+      typeCode: null,
+      typeTxt: null,
+      causeCode: null,
+      causeTxt: null,
+      taskCode: null,
+      taskTxt: null,
+      actCode: null,
+      actTxt: null,
+      creatBy: null,
+      createOn: null,
+      changeBy: null,
+      changeOn: null,
+      isActive: true,
+    },];
   }
-  closeOrder() {
-    this.visibleOrder = false;
-  }
-  createOrder() {
-    this._sOrder.create(this.model).subscribe({
+
+  getMasterData() {
+    this._sPlant.getAll().subscribe({
       next: (data) => {
-        this.search();
+        this.lstPlant = data;
+      },
+    });
+    this._sOrderType.getAll().subscribe({
+      next: (data) => {
+        this.lstOrderType = data;
+      },
+    });
+    this._sNotiTp.getAll().subscribe({
+      next: (data) => {
+        this.lstNotiTp = data;
+      },
+    });
+    this._sPlgrp.getAll().subscribe({
+      next: (data) => {
+        this.lstPlgrp = data;
+      },
+    });
+    this._sEqGroup.getAll().subscribe({
+      next: (data) => {
+        this.lstEqGroup = data;
+      },
+    });
+    this._sAccount.getListUser().subscribe({
+      next: (data) => {
+        this.lstUser = data;
+      },
+    });
+    this._sWc.getAll().subscribe({
+      next: (data) => {
+        this.lstWc = data;
+      },
+    });
+    this._sEquip.getAll().subscribe({
+      next: (data) => {
+        this.lstEquip = data;
+      },
+    });
+    this._sFloc.getAll().subscribe({
+      next: (data) => {
+        this.lstFloc = data;
+      },
+    });
+
+    this._sCatalog.getAll().subscribe({
+      next: (data: any) => {
+        this.lstCatalogTypeA = data.filter(
+          (x: { catType: string }) => x.catType === 'A'
+        );
+        this.lstCatalogTypeB = data.filter(
+          (x: { catType: string }) => x.catType === 'B'
+        );
+        this.lstCatalogTypeC = data.filter(
+          (x: { catType: string }) => x.catType === 'C'
+        );
+        this.lstCatalogType2 = data.filter(
+          (x: { catType: string }) => x.catType === '2'
+        );
+        this.lstCatalogType5 = data.filter(
+          (x: { catType: string }) => x.catType === '5'
+        );
       },
       error: (err) => {
         console.log(err);
@@ -128,119 +277,59 @@ export class IncidentCorrectComponent implements OnInit {
     });
   }
 
-  getAllPlant() {
-    this._sPlant.getAll().subscribe({
+  visibleOrder: boolean = false;
+  openEditOrder(data: any) {
+    this.model = data;
+    this.model.equipName = this.getNameEquip(data.equnr);
+    this.model.flocName = this.getFlocName(data.tplnr);
+    this._sNotiCatalog.getByQmnum(data.qmnum).subscribe({
       next: (data) => {
-        this.lstPlant = data;
+        this.lstNotiCatalog = data;
       },
+      error: (err) => {},
     });
+    this.visibleOrder = true;
+    console.log(this.model);
   }
-
-  getAllOrderType() {
-    this._sOrderType.getAll().subscribe({
+  closeOrder() {
+    this.visibleOrder = false;
+  }
+  updateOrder() {
+    this._sOrder.update(this.model).subscribe({
       next: (data) => {
-        this.lstOrderType = data;
-      },
-    });
-  }
-
-  getAllNotiTp() {
-    this._sNotiTp.getAll().subscribe({
-      next: (data) => {
-        this.lstNotiTp = data;
-      },
-    });
-  }
-
-  getAllPlgrp() {
-    this._sPlgrp.getAll().subscribe({
-      next: (data) => {
-        this.lstPlgrp = data;
-      },
-    });
-  }
-
-  getAllEgGroup() {
-    this._sEqGroup.getAll().subscribe({
-      next: (data) => {
-        this.lstEqGroup = data;
-      },
-    });
-  }
-
-  getAllUser() {
-    this._sAccount.getListUser().subscribe({
-      next: (data) => {
-        this.lstUser = data;
-      },
-    });
-  }
-
-  getAllWc() {
-    this._sWc.getAll().subscribe({
-      next: (data) => {
-        this.lstWc = data;
-      },
-    });
-  }
-
-  getAllEquip() {
-    this._sEquip.getAll().subscribe({
-      next: (data) => {
-        this.lstEquip = data;
-      },
-    });
-  }
-
-  updateStatusNoti(data: any, status: string) {
-    data.statAct = status;
-    this._sNoti.update(data).subscribe({
-      next: () => {
         this.search();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+
+    this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.error(err);
       },
     });
   }
 
   getFullNameUser(username: any) {
-    return this.lstUser.find(
-      (x: { userName: string }) => x.userName == username
-    )?.fullName;
+    return this.globalService.getFullNameUser(this.lstUser, username);
   }
   getNameWc(code: any) {
-    return this.lstWc.find((x) => x.arbpl == code)?.arbplTxt;
+    return this.globalService.getNameWc(this.lstWc, code);
   }
 
   getNameEquip(code: any) {
-    return this.lstEquip.find((x) => x.equnr == code)?.eqktx;
+    return this.globalService.getNameEquip(this.lstEquip, code);
   }
 
-  getAllFloc() {
-    this._sFloc.getAll().subscribe({
-      next: (data) => {
-        this.lstFloc = data;
-      },
-    });
-  }
   getFlocName(code: any) {
-    return this.lstFloc.find((x: { tplnr: string }) => x.tplnr == code)
-      ?.descript;
+    return this.globalService.getNameFloc(this.lstFloc, code);
   }
 
-  getPriorityText(priok: string): string {
-    switch (priok) {
-      case '1':
-        return 'Rất Cao';
-      case '2':
-        return 'Cao';
-      case '3':
-        return 'Trung Bình';
-      case '4':
-        return 'Thấp';
-      case '5':
-        return 'Rất Thấp';
-      default:
-        return priok || '';
-    }
+  getPriorityText(priok: string) {
+    return this.globalService.getPriorityText(priok);
   }
   reset() {
     this.filter = new BaseFilter();
@@ -258,4 +347,3 @@ export class IncidentCorrectComponent implements OnInit {
     this.search();
   }
 }
-
