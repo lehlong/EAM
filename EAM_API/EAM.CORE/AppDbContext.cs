@@ -128,6 +128,7 @@ namespace EAM.CORE
 
         #region Master Data
         public DbSet<TblMdPlgrp> TblMdPlgrp { get; set; }
+        public DbSet<TblMdUnit> TblMdUnit { get; set; }
         public DbSet<TblMdUsageStatus> TblMdUsageStatus { get; set; }
         public DbSet<TblMdActiveStatus> TblMdActiveStatus { get; set; }
         public DbSet<TblMdCataType> TblMdCataType { get; set; }
