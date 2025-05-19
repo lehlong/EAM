@@ -167,6 +167,9 @@ namespace EAM.CORE
 
         #region Warehouse
         public DbSet<TblMdWH> TblMdWH { get; set; }
+        public DbSet<TblMdItem> TblMdItem { get; set; }
+        public DbSet<TblMdMType> TblMdMtype { get; set; }
+        public DbSet<TblMdMtgrp> TblMdMtgrp { get; set; }
         #endregion
 
         #region Planning Data

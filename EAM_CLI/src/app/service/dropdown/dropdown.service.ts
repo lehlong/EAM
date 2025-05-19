@@ -143,4 +143,17 @@ export class DropdownService {
       IsActive,
     })
   }
+ getAllMtgrp(params: any = {}, IsActive: boolean = true): Observable<any> {
+    return this.commonService.get('Mtgrp/GetAll', {
+      ...params,
+      IsActive,
+    })
+  }
+  
+ getAllMtype(params: any = {}, IsActive: boolean = true): Observable<any> {
+    return this.commonService.get('Mtype/GetAll', {
+      ...params,
+      IsActive,
+    })
+  }
 }
