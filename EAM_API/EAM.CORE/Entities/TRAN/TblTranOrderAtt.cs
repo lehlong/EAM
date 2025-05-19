@@ -9,6 +9,8 @@ namespace EAM.CORE.Entities.TRAN
     public class TblTranOrderAtt : SoftDeleteEntity
     {
         [Key]
+        [Column("ID")]
+        public string Id { get; set; } = null!;
         [Column("AUFNR")]
         public string Aufnr { get; set; } = null!;
 

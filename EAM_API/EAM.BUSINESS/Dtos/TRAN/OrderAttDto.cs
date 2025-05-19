@@ -8,6 +8,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
     public class OrderAttDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
+        public string Id { get; set; }
         public string Aufnr { get; set; }
         public string FileType { get; set; }
         public int? FileSize { get; set; }

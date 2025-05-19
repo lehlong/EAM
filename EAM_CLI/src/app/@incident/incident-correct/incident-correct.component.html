@@ -356,7 +356,60 @@
       </nz-tab>
       <nz-tab nzTitle="Vật tư sử dụng">Content of Tab Pane 3</nz-tab>
       <nz-tab nzTitle="Mua ngoài/ thuê ngoài">Content of Tab Pane 3</nz-tab>
-      <nz-tab nzTitle="File đính kèm">Content of Tab Pane 3</nz-tab>
+      <nz-tab nzTitle="File đính kèm">
+        <div class="">
+          <div nz-row [nzGutter]="16">
+            <div nz-col class="gutter-row" [nzSpan]="24">
+              <nz-upload nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 8"
+                [nzPreview]="handlePreview" [nzRemove]="handleRemove" [nzCustomRequest]="customUploadRequest">
+                <div>
+                  <nz-icon nzType="plus"></nz-icon>
+                  <div style="margin-top: 8px">Chọn file</div>
+                </div>
+              </nz-upload>
+
+              <nz-modal [nzVisible]="previewVisible" [nzTitle]="previewTitle" [nzContent]="modalContent"
+                [nzFooter]="null" (nzOnCancel)="previewVisible = false">
+                <ng-template #modalContent>
+                  <img [src]="previewImage" style="width: 100%" />
+                </ng-template>
+              </nz-modal>
+              <div class="document-list" *ngIf="fileListTable && fileListTable.length > 0">
+                <h3 class="mt-4 mb-2">Danh sách file đính kèm</h3>
+                <nz-table #docTable [nzData]="fileListTable" [nzShowPagination]="false" nzSize="small">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Tên tài liệu</th>
+                      <th>Loại</th>
+                      <th>Kích thước</th>
+                      <th>Ngày tải lên</th>
+                      <th nzWidth="100px" nzAlign="center">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let doc of docTable.data; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>
+                        <a [href]="doc.url" target="_blank">{{ doc.name }}</a>
+                      </td>
+                      <td>{{ doc.fileType || 'N/A' }}</td>
+                      <td>{{ doc.fileSize | number }} KB</td>
+                      <td>{{ doc.createDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+                      <td nzAlign="center">
+                        <a nz-tooltip nzTooltipTitle="Xóa" nz-button nzType="link" nzDanger
+                          (click)="deleteDocument(doc)">
+                          <span nz-icon nzType="delete" nzTheme="outline"></span>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </nz-table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
     </nz-tabset>
 
   </ng-container>

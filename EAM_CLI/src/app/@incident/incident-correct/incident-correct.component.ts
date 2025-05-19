@@ -17,7 +17,18 @@ import { OrderService } from '../../service/tran/order.service';
 import { HTBTBD, ILART, LVTSD, PriorityLevel } from '../../shared/constants/select.constants';
 import { NotiCatalogService } from '../../service/tran/not-catalog.service';
 import { CatalogService } from '../../service/master-data/catalog.service';
-
+import { OrderAttService } from '../../service/tran/order-att.service';
+import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { firstValueFrom, Observable, Observer, Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment';
+const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
 @Component({
   selector: 'app-incident-correct',
   imports: [ShareModule],
@@ -49,6 +60,14 @@ export class IncidentCorrectComponent implements OnInit {
   lstCatalogTypeC: any[] = [];
   lstCatalogType2: any[] = [];
   lstCatalogType5: any[] = [];
+
+  pendingFileList: File[] = [];
+  fileList: NzUploadFile[] = [];
+  removedFiles: NzUploadFile[] = [];
+  fileListTable: any[] = [];
+  previewImage: string | undefined = '';
+  previewTitle: string | undefined = '';
+  previewVisible = false;
 
   model: any =  {
     iwerk: '',
@@ -155,7 +174,9 @@ export class IncidentCorrectComponent implements OnInit {
     private _sFloc: FlocService,
     private _sAccount: AccountService,
     private _sEqGroup: EqGroupService,
-    private _sPlgrp: PlgrpService
+    private _sPlgrp: PlgrpService,
+    private _sOrderAtt: OrderAttService,
+    private modal: NzModalService,
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -289,7 +310,7 @@ export class IncidentCorrectComponent implements OnInit {
       error: (err) => {},
     });
     this.visibleOrder = true;
-    console.log(this.model);
+    this.loadAttachments(data.aufnr);
   }
   closeOrder() {
     this.visibleOrder = false;
@@ -297,6 +318,7 @@ export class IncidentCorrectComponent implements OnInit {
   updateOrder() {
     this._sOrder.update(this.model).subscribe({
       next: (data) => {
+        this.processFiles();
         this.search();
       },
       error: (err) => {
@@ -346,4 +368,186 @@ export class IncidentCorrectComponent implements OnInit {
     this.filter.currentPage = 1;
     this.search();
   }
+  loadAttachments(aufnr: string) {
+      this._sOrderAtt.GetByAufnr(aufnr).subscribe({
+        next: (result) => {
+          const attachmentData = Array.isArray(result)
+            ? result
+            : result && result.data
+            ? result.data
+            : [];
+  
+          const uniqueAttachments = Array.from(
+            new Map(
+              attachmentData.map((item: { path: any }) => [item.path, item])
+            ).values()
+          );
+  
+          if (uniqueAttachments && uniqueAttachments.length > 0) {
+            this.fileList = uniqueAttachments.map((item: any) => {
+              const fileUrl = `${environment.urlFiles}/${item.path}`;
+              const mimeType = this.getMimeType(item.fileType);
+  
+              const uploadFile: NzUploadFile = {
+                uid: item.id,
+                name: item.path.split('/').pop() || 'file',
+                status: 'done',
+                url: fileUrl,
+                size: item.fileSize,
+                type: mimeType,
+              };
+  
+              if (this.isImageType(item.fileType)) {
+                uploadFile.thumbUrl = fileUrl;
+              }
+  
+              return uploadFile;
+            });
+  
+            this.fileListTable = uniqueAttachments.map((item: any) => {
+              return {
+                path: item.path,
+                url: `${environment.urlFiles}/${item.path}`,
+                name: item.path.split('/').pop() || 'file',
+                fileType: item.fileType,
+                fileSize: item.fileSize / 1024,
+                createDate: item.createDate || new Date(),
+              };
+            });
+          } else {
+            console.log('No attachments found or invalid response');
+            this.fileList = [];
+          }
+        },
+        error: (err) => {
+          console.error('Error loading attachments:', err);
+          this.message.error('Không thể tải danh sách file đính kèm');
+          this.fileList = [];
+        },
+      });
+    }
+    async processFiles(): Promise<void> {
+      try {
+        if (this.pendingFileList.length > 0) {
+          for (const file of this.pendingFileList) {
+            const formData = new FormData();
+            formData.append('file', file);
+  
+            const response = await this._sOrderAtt.uploadFile(
+              formData,
+              this.model.aufnr
+            );
+            if (!response || !response.status) {
+              console.error('Upload failed:', file.name);
+              this.message.warning(`Tải file ${file.name} thất bại`);
+            }
+          }
+          this.pendingFileList = [];
+        }
+        for (const file of this.removedFiles) {
+          const fileName = file.uid ? file.uid.split('/').pop() || '' : '';
+          if (fileName) {
+            try {
+              const response = await firstValueFrom(
+                this._sOrderAtt.delete(fileName)
+              );
+              this.message.success(`Xóa file ${file.name} thành công`);
+            } catch (error) {
+              console.error('Error deleting file:', fileName, error);
+              this.message.warning(`Xóa file ${file.name} thất bại`);
+            }
+          }
+        }
+  
+        this.loadAttachments(this.model.aufnr);
+        return Promise.resolve();
+      } catch (error) {
+        console.error('Process files error:', error);
+        return Promise.reject(error);
+      }
+    }
+  
+    isImageType(fileType: string): boolean {
+      return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(
+        fileType.toLowerCase()
+      );
+    }
+    getMimeType(fileType: string): string {
+      const lowerType = fileType.toLowerCase();
+      if (['jpg', 'jpeg'].includes(lowerType)) return 'image/jpeg';
+      if (lowerType === 'png') return 'image/png';
+      if (lowerType === 'gif') return 'image/gif';
+      if (lowerType === 'bmp') return 'image/bmp';
+      if (lowerType === 'txt') return 'text/plain';
+      if (lowerType === 'pdf') return 'application/pdf';
+      if (['doc', 'docx'].includes(lowerType)) return 'application/msword';
+      if (['xls', 'xlsx'].includes(lowerType)) return 'application/vnd.ms-excel';
+      return 'application/octet-stream';
+    }
+  
+    customUploadRequest = (item: NzUploadXHRArgs): Subscription => {
+      if (item.file instanceof File) {
+        this.pendingFileList.push(item.file);
+      }
+      setTimeout(() => {
+        item.onSuccess!('OK', item.file, {} as any);
+      }, 0);
+  
+      return new Subscription();
+    };
+    handlePreview = async (file: NzUploadFile) => {
+      if (!file.url && !file['preview']) {
+        file['preview'] = await getBase64(file.originFileObj!);
+      }
+      this.previewImage = file.url || file['preview'];
+      this.previewVisible = true;
+      this.previewTitle = file.name || '';
+    };
+  
+    handleRemove = (file: NzUploadFile): boolean | Observable<boolean> => {
+      if (file.originFileObj) {
+        this.pendingFileList = this.pendingFileList.filter(
+          (pendingFile) => pendingFile !== file.originFileObj
+        );
+        return true;
+      }
+      return new Observable((observer: Observer<boolean>) => {
+        this.modal.confirm({
+          nzTitle: 'Xác nhận xóa',
+          nzContent: `Bạn có chắc muốn xóa file ${file.name}?`,
+          nzOkText: 'Xóa',
+          nzOkType: 'primary',
+          nzOkDanger: true,
+          nzOnOk: () => {
+            this.removedFiles.push(file);
+            observer.next(true);
+            observer.complete();
+          },
+          nzCancelText: 'Hủy',
+          nzOnCancel: () => {
+            observer.next(false);
+            observer.complete();
+          },
+        });
+      });
+    };
+    deleteDocument(doc: any) {
+      this.modal.confirm({
+        nzTitle: 'Xác nhận xóa',
+        nzContent: `Bạn có chắc muốn xóa file ${doc.name}?`,
+        nzOkText: 'Xóa',
+        nzOkType: 'primary',
+        nzOkDanger: true,
+        nzOnOk: () => {
+          const fileInUploadList = this.fileList.find((f) => f.url === doc.url);
+          if (fileInUploadList) {
+            this.removedFiles.push(fileInUploadList);
+            this.fileList = this.fileList.filter((f) => f.url !== doc.url);
+            this.fileListTable = this.fileListTable.filter(
+              (f) => f.url !== doc.url
+            );
+          }
+        },
+      });
+    }
 }
