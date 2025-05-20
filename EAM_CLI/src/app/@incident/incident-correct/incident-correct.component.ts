@@ -26,8 +26,6 @@ import { EqCatService } from '../../service/master-data/eq-cat.service';
 import { UsageStatusService } from '../../service/master-data/usage-status.service';
 import { ActiveStatusService } from '../../service/master-data/active-status.service';
 import { OrderEqService } from '../../service/tran/orderEq.service';
-import { OrderVtService } from '../../service/tran/ordervt.service';
-import { ItemService } from '../../service/warehouse/item.service';
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -46,7 +44,6 @@ export class IncidentCorrectComponent implements OnInit {
   filter = new BaseFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
-  lstItem: any[] = [];
   lstFloc: any = [];
   lstUser: any = [];
   lstWc: any[] = [];
@@ -73,7 +70,6 @@ export class IncidentCorrectComponent implements OnInit {
   lstOrderEq: any[] = [];
   lstEqCat: any = [];
   lstEquipOrder: any[] = [];
-  lstItemOrder: any[] = [];
 
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];
@@ -195,8 +191,6 @@ export class IncidentCorrectComponent implements OnInit {
     private _sUsage: UsageStatusService,
     private _sActive: ActiveStatusService,
     private _sOrderEq: OrderEqService,
-    private _sOrderVt: OrderVtService,
-    private _sItem: ItemService,
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -258,29 +252,6 @@ export class IncidentCorrectComponent implements OnInit {
     },];
   }
 
-  addOrderItem() {
-    this.lstItemOrder = [...this.lstItemOrder, {
-      id: 'A',
-      aufnr: this.model.aufnr,
-      category: 'S',
-      matnr: null,
-      marktxt: null,
-      werks: null,
-      budat: null,
-      isActive: true,
-      menge: 0,
-      meins: null,
-      category2: null,
-      lgort: null,
-      charg: null,
-      price: 0,
-      dmbtr: 0,
-      waers: null,
-      uname: null,
-      udat: null,
-    },];
-  }
-
   getMasterData() {
     this._sPlant.getAll().subscribe({
       next: (data) => {
@@ -335,14 +306,6 @@ export class IncidentCorrectComponent implements OnInit {
     this._sActive.getAll().subscribe({
       next: (data) => {
         this.lstActiveStatus = data;
-      },
-    });
-    this._sItem.getAll().subscribe({
-      next: (data) => {
-        this.lstItem = data;
-      },
-      error: (err) => {
-        console.log(err);
       },
     });
 
@@ -410,16 +373,7 @@ export class IncidentCorrectComponent implements OnInit {
         console.log(err);
       },
     });
-    this._sOrderVt.getByAufnrAndType(data.aufnr, 'S').subscribe({
-      next: (data) => {
-        this.lstItemOrder = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
     this.visibleOrder = true;
-
     this.loadAttachments(data.aufnr);
   }
   closeOrder() {
@@ -468,17 +422,6 @@ export class IncidentCorrectComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-      },
-    });
-    const lstItemOrderSend = this.lstItemOrder.map(item => ({
-      ...item,
-      budat: item.budat ? this.formatDate(item.budat) : null,
-    }));
-    this._sOrderVt.saveOrderVt(lstItemOrderSend).subscribe({
-      next: () => {
-      },
-      error: (err) => {
-        console.error(err);
       },
     });
 
