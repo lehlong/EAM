@@ -31,7 +31,13 @@ namespace EAM.BUSINESS.Services.PLAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                return await Paging(query, filter);
+                var data = await Paging(query, filter);
+                foreach (var i in data.Data as IEnumerable<PlanHDto>)
+                {
+                    i.lstEquip = _dbContext.TblPlanD.Where(x => x.Warpl == i.Warpl).ToList();
+                    i.lstPlanOrder = _dbContext.TblPlanOrder.Where(x => x.Warpl == i.Warpl).ToList();
+                }
+                return data;
             }
             catch (Exception ex)
             {
@@ -52,9 +58,22 @@ namespace EAM.BUSINESS.Services.PLAN
                     _dbContext.TblPlanD.Add(new TblPlanD
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Warpl = i.Warpl,
+                        Warpl = entity.Warpl,
                         Equnr = i.Equnr,
+                        Eqart = i.Eqart,
                     });
+                }
+                foreach(var i in dto.lstPlanOrder)
+                {
+                    _dbContext.TblPlanOrder.Add(new TblPlanOrder
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = entity.Wptxt,
+                        Warpl = entity.Warpl,
+                        Schstart = i.Schstart,
+                        Iscompled = false
+                    });
+
                 }
                 await _dbContext.SaveChangesAsync();
             }

@@ -1,1 +1,290 @@
-<p>plan-manager works!</p>
+<nz-page-header nzBackIcon>
+  <nz-page-header-title>DANH SÁCH KẾ HOẠCH</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách kế hoạch</nz-page-header-subtitle>
+  <nz-page-header-extra>
+    <div class="flex-grow-2 flex">
+      <nz-space>
+        <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()" [(value)]="filter.keyWord"></app-input-clear>
+        <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+          nzType="default">
+          <span nz-icon nzType="search"></span>
+        </button>
+        <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+          nzType="default">
+          <span nz-icon nzType="redo"></span>
+        </button>
+      </nz-space>
+
+      <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
+        <span nz-icon nzType="file-excel"></span>Xuất Excel
+      </button>
+    </div>
+  </nz-page-header-extra>
+  <nz-page-header-content class="main-content">
+    <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
+      <thead>
+        <tr>
+          <th nzWidth="60px">STT</th>
+          <th>Mã kế hoạch</th>
+          <th>Tên kế hoạch</th>
+          <th colSpan="2">Loại kế hoạch</th>
+          <th>Khu vực chức năng</th>
+          <th>Bộ phận lập kế hoạch</th>
+          <th>Bộ phận thực hiện</th>
+          <th>Loại lệnh</th>
+           <th>Thời gian bắt đầu</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
+          <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
+          </td>
+          <td> <a (click)="openEdit(data)">{{ data.warpl }}</a></td>
+          <td>{{ data.wptxt }}</td>
+          <td>{{ data.mptyp == '1' ? 'Kế hoạch đơn' : 'Kế hoạch cấp độ'}}</td>
+          <td>{{getNameMpgrp(data.mpgrp)}}</td>
+          <td>{{getNameFloc(data.tplnr)}}</td>
+          <td>{{getNamePlgrp(data.ingrp)}}</td>
+          <td>{{getNameWc(data.arbpl)}}</td>
+          <td>{{getNameOrderType(data.auart)}}</td>
+          <td>{{ data.stdate | date: 'dd/MM/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-page-header-content>
+  <nz-page-header-content class="footer-content">
+    <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+      <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+        [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+        (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+    </div>
+  </nz-page-header-content>
+</nz-page-header>
+
+
+<nz-drawer nzWidth="80%"  [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+  [nzTitle]="edit ? ' CHI TIẾT KẾ HOẠCH  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+  <ng-container *nzDrawerContent>
+    <div nz-row [nzGutter]="16" style="margin: 0;">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Mã kế hoạch</label>
+          <input nz-input [(ngModel)]="model.warpl" [disabled]="true">
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Tên kế hoạch</label>
+          <input nz-input [(ngModel)]="model.wptxt" [disabled]="true">
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Loại kế hoạch</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.mpgrp" [disabled]="true">
+            <nz-option *ngFor="let item of lstMpgrp" [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Kiểu lập</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.cyctype" [disabled]="true">
+            <nz-option *ngFor="let item of lstCyctype" [nzLabel]="item.value + ' - ' + item.name"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" [disabled]="true">
+            <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Đơn vị đo</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.cycunit" [disabled]="true">
+            <nz-option *ngFor="let item of lstCycunit" [nzLabel]="item.value + ' - ' + item.name"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="2">
+        <div class="inner-box">
+          <label>Tần suất</label>
+          <input nz-input type="number" [(ngModel)]="model.cycle" [disabled]="true">
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="4">
+        <div class="inner-box">
+          <label>Thời gian hiệu lực (năm)</label>
+          <input nz-input type="number" [(ngModel)]="model.cycef" [disabled]="true">
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Ngày bắt đầu kế hoạch</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate"></nz-date-picker>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Chỉ số hoạt động</label>
+          <input nz-input type="number" [disabled]="true">
+        </div>
+      </div>
+
+
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Mã check list</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.plnnr" [disabled]="true">
+            <nz-option *ngFor="let item of lstChecklist" [nzLabel]="item.plnnr + ' - ' + item.ktext"
+              [nzValue]="item.plnnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Bộ phận lập kế hoạch</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ingrp" [disabled]="true">
+            <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt"
+              [nzValue]="item.ingrp">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Bộ phận thực hiện</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl" [disabled]="true">
+            <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Loại lệnh</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.auart" [disabled]="true">
+            <nz-option *ngFor="let item of lstOrderType" [nzLabel]="item.code + ' - ' + item.name"
+              [nzValue]="item.code">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label nz-checkbox>Kế hoạch kết hợp</label>
+        </div>
+      </div>
+    </div>
+    <nz-tabset>
+      <nz-tab nzTitle="Thiết bị lập kế hoạch">
+        <nz-table nzBordered [nzSize]="'middle'" #equipTable [nzData]="model.lstEquip" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th style="width: 30%;">Chọn thiết bị (Mã - Tên)</th>
+              <th>Khu vực chức năng</th>
+              <th>Nhóm thiết bị</th>
+              <th>Bộ phận phụ trách</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of equipTable.data; let i = index">
+              <td>
+               {{ data.equnr }} - {{ getNameEquip(data.equnr) }}
+              </td>
+              <td>{{getNameFloc(model.tplnr)}}</td>
+              <td>{{getNameEqGroup(data.eqart)}}</td>
+              <td>{{getNamePlgrp(model.ingrp)}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-tab>
+      <nz-tab nzTitle="Tác vụ thực hiện">
+        <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Mã bước</th>
+              <th>Thứ tự</th>
+              <th>Tên tác vụ</th>
+              <th>Bộ phận thực hiện</th>
+              <th>Thời gian thực hiện</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of checklistTable.data; let i = index">
+              <td>{{ data.vornr }}</td>
+              <td>{{ i + 1 }}</td>
+              <td>{{ data.ltxa1 }}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+      </nz-tab>
+      <nz-tab nzTitle="Kế hoạch dự kiến">
+        <nz-table nzBordered [nzSize]="'middle'" #plandTable [nzData]="model.lstPlanOrder" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Mã kế hoạch</th>
+              <th>Tên kế hoạch</th>
+              <th>Khu vực chức năng</th>
+              <th>Ngày dự kiến</th>
+              <th>Số lệnh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of plandTable.data; let i = index">
+              <td>{{ data.warpl}}</td>
+              <td>{{ data.name }}</td>
+              <td>{{getNameFloc(model.tplnr)}}</td>
+              <td>{{ data.schstart | date: 'dd/MM/yyyy' }}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-tab>
+    </nz-tabset>
+  </ng-container>
+</nz-drawer>
+<ng-template #extra>
+  <nz-space>
+    <ng-container *ngIf="edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Cập nhật
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Cập nhật
+      </button>
+    </ng-container>
+    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+      (click)="close()">
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
+  </nz-space>
+</ng-template>

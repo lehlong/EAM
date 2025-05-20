@@ -176,6 +176,7 @@ namespace EAM.CORE
         #region Planning Data
         public DbSet<TblPlanH> TblPlanH { get; set; }
         public DbSet<TblPlanD> TblPlanD { get; set; }
+        public DbSet<TblPlanOrder> TblPlanOrder { get; set; }
         #endregion
 
     }

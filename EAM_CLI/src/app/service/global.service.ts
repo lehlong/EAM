@@ -173,6 +173,22 @@ export class GlobalService {
     return data.find((item) => item.eqart === code)?.eqartTxt;
   }
 
+  getNamePlgrp(
+    data: { ingrp: string; ingrpTxt: string }[] = [],
+    code: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !code) return undefined;
+    return data.find((item) => item.ingrp === code)?.ingrpTxt;
+  }
+
+  getNameOrderType(
+    data: { code: string; name: string }[] = [],
+    code: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !code) return undefined;
+    return data.find((item) => item.code === code)?.name;
+  }
+
 getFullNameUser(
   data: { userName: string; fullName: string }[] = [],
   username: string | null | undefined

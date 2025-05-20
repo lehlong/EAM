@@ -96,9 +96,10 @@ export class SingleMaintenanceComponent implements OnInit {
     auart: null,
     isActive: true,
     lstEquip: [],
+    lstPlanOrder: [],
   };
   constructor(
-    private _sPlanH : PlanHService,
+    private _sPlanH: PlanHService,
     private _sEqGroup: EqGroupService,
     private _sEquip: EquipService,
     private _sPlgrp: PlgrpService,
@@ -117,19 +118,32 @@ export class SingleMaintenanceComponent implements OnInit {
     this.getAllEqGroup();
   }
 
-  onCreate(){
+  onCreate() {
     this.lstEquipPlan.forEach((i) => {
       this.model.lstEquip.push({
         id: 'A',
         warpl: this.model.warpl,
         equnr: i.equnr,
+        eqart: i.eqart,
       });
-    })
-    this._sPlanH.create(this.model).subscribe({
-      next: (data) => {
+    });
 
-      }
-    })
+    this.lstPlan.forEach((i) => {
+      this.model.lstPlanOrder.push({
+        id: 'A',
+        warpl: this.model.warpl,
+        schstart: this.convertToIsoDateString(i.schstart),
+      });
+    });
+
+    this._sPlanH.create(this.model).subscribe({
+      next: (data) => {},
+    });
+  }
+
+  convertToIsoDateString(dateStr: string): string {
+    const [dd, mm, yyyy] = dateStr.split('/');
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   changeEquip(selectedValue: any, rowData: any): void {
@@ -143,8 +157,8 @@ export class SingleMaintenanceComponent implements OnInit {
     }
   }
 
-  getNamePlgrp(code : any){
-    return this.lstPlgrp.find(x => x.ingrp == code)?.ingrpTxt
+  getNamePlgrp(code: any) {
+    return this.lstPlgrp.find((x) => x.ingrp == code)?.ingrpTxt;
   }
 
   OnChangeCheckList(e: any) {

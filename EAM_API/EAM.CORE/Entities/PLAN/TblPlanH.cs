@@ -10,10 +10,10 @@ namespace EAM.CORE.Entities.PLAN
     {
         [Key]
         [Column("WARPL")]
-        public string Warpl { get; set; } = null!;
+        public string Warpl { get; set; }
 
         [Column("IWERK")]
-        public string Iwerk { get; set; } = null!;
+        public string? Iwerk { get; set; }
 
         [Column("WPTXT")]
         public string? Wptxt { get; set; }
