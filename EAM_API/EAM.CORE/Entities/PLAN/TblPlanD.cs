@@ -9,11 +9,13 @@ namespace EAM.CORE.Entities.PLAN
     public class TblPlanD : SoftDeleteEntity
     {
         [Key]
+        [Column("ID")]
+        public string Id { get; set; }
         [Column("PLITEM")]
-        public string Plitem { get; set; } = null!;
+        public string? Plitem { get; set; }
 
         [Column("WARPL")]
-        public string Warpl { get; set; } = null!;
+        public string? Warpl { get; set; }
 
         [Column("EQUNR")]
         public string? Equnr { get; set; }

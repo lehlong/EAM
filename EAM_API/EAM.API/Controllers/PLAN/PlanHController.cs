@@ -53,10 +53,9 @@ namespace EAM.API.Controllers.PLAN
         public async Task<IActionResult> Insert([FromBody] PlanHDto time)
         {
             var transferObject = new TransferObject();
-            var result = await _service.Add(time);
+             await _service.Create(time);
             if (_service.Status)
             {
-                transferObject.Data = result;
                 transferObject.Status = true;
                 transferObject.MessageObject.MessageType = MessageType.Success;
                 transferObject.GetMessage("0100", _service);

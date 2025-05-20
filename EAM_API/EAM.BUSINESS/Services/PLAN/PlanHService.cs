@@ -6,12 +6,14 @@ using EAM.BUSINESS.Dtos.PLAN;
 using EAM.CORE;
 using EAM.CORE.Entities.MD;
 using EAM.CORE.Entities.PLAN;
+using MathNet.Numerics.Statistics.Mcmc;
 
 namespace EAM.BUSINESS.Services.PLAN
 {
     public interface IPlanHService : IGenericService<TblPlanH, PlanHDto>
     {
         Task<byte[]> Export(BaseMdFilter filter);
+        Task Create(PlanHDto dto);
     }
 
     public class PlanHService(AppDbContext dbContext, IMapper mapper) : GenericService<TblPlanH, PlanHDto>(dbContext, mapper), IPlanHService
@@ -36,6 +38,30 @@ namespace EAM.BUSINESS.Services.PLAN
                 Status = false;
                 Exception = ex;
                 return null;
+            }
+        }
+
+        public async Task Create(PlanHDto dto)
+        {
+            try
+            {
+                var entity = _mapper.Map<TblPlanH>(dto);
+                _dbContext.TblPlanH.Add(entity);
+                foreach(var i in dto.lstEquip)
+                {
+                    _dbContext.TblPlanD.Add(new TblPlanD
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Warpl = i.Warpl,
+                        Equnr = i.Equnr,
+                    });
+                }
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
             }
         }
         public async Task<byte[]> Export(BaseMdFilter filter)

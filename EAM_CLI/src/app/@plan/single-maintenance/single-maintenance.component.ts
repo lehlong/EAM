@@ -95,6 +95,7 @@ export class SingleMaintenanceComponent implements OnInit {
     arbpl: null,
     auart: null,
     isActive: true,
+    lstEquip: [],
   };
   constructor(
     private _sPlanH : PlanHService,
@@ -117,7 +118,13 @@ export class SingleMaintenanceComponent implements OnInit {
   }
 
   onCreate(){
-    console.log(this.model)
+    this.lstEquipPlan.forEach((i) => {
+      this.model.lstEquip.push({
+        id: 'A',
+        warpl: this.model.warpl,
+        equnr: i.equnr,
+      });
+    })
     this._sPlanH.create(this.model).subscribe({
       next: (data) => {
 

@@ -284,7 +284,6 @@ export class IncidentApprovalComponent implements OnInit {
   }
 
   updateDetail() {
-    console.log(this.lstNotiCatalog);
     this._sNoti.update(this.model).subscribe({
       next: () => {
         this.processFiles();

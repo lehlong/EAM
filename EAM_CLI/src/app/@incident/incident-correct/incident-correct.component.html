@@ -93,7 +93,7 @@
           <td>{{ getNameWc(data.arbpl) }}</td>
           <td>{{ getFullNameUser(data.ernam) }}</td>
           <td>{{ getFullNameUser(data.staffSc) }}</td>
-          <td>{{ getFlocName(data.tplnr) }}</td>
+          <td>{{ getNameFloc(data.tplnr) }}</td>
           <td>{{ getNameEquip(data.equnr) }}</td>
           <td>{{ getPriorityText(data.priok) }}</td>
           <td>
@@ -123,7 +123,7 @@
 
 
 <!-- Chi tiết lệnh -->
-<nz-drawer nzWidth="80%" [nzVisible]="visibleOrder" nzPlacement="right"
+<nz-drawer nzWidth="100%" [nzVisible]="visibleOrder" nzPlacement="right"
   [nzTitle]="`CHI TIẾT LỆNH ${model.aufnr} - ${model.ktext}`" [nzExtra]="extra" (nzOnClose)="closeOrder()">
   <ng-container *nzDrawerContent>
 
@@ -306,11 +306,7 @@
                 <th>Tên thiết bị</th>
                 <th>Số serial</th>
                 <th>Ngày thực hiện</th>
-                <th>Giờ thực hiện</th>
                 <th>Ngày hoàn thành</th>
-                <th>Giờ hoàn thành</th>
-                <th>Mã khu vực chức năng</th>
-                <th>Tên khu vực chức năng</th>
                 <th>Trạng thái thiết bị</th>
                 <th>Trạng thái hoạt động</th>
                 <th>Trạng thái thực hiện</th>
@@ -324,19 +320,13 @@
                 <td>{{getEquipmentCategoryName(data.equnr)}}</td>
                 <td></td>
                 <td>
-                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab"></nz-date-picker>
+                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab" [nzShowTime]="true"></nz-date-picker>
                 </td>
+
                 <td>
-                  <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.timeF"></nz-time-picker>
+                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datbi"  [nzShowTime]="true"></nz-date-picker>
                 </td>
-                <td>
-                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datbi"></nz-date-picker>
-                </td>
-                <td>
-                  <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.timeT"></nz-time-picker>
-                </td>
-                <td>{{getFloc(data.equnr)}}</td>
-                <td>{{getFlocName(data.equnr)}}</td>
+
                 <td>
                   <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.status">
                     <nz-option *ngFor="let item of lstUsageStatus" [nzValue]="item.code"

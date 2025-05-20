@@ -36,6 +36,8 @@ namespace EAM.BUSINESS.Dtos.PLAN
         public string? Ingrp { get; set; }
         public string? Arbpl { get; set; }
         public string? Auart { get; set; }
+        public List<TblPlanD>? lstEquip { get; set; }
+
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
 

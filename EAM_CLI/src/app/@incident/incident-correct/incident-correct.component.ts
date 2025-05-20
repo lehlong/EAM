@@ -352,7 +352,7 @@ export class IncidentCorrectComponent implements OnInit {
   openEditOrder(data: any) {
     this.model = data;
     this.model.equipName = this.getNameEquip(data.equnr);
-    this.model.flocName = this.getFlocName(data.tplnr);
+    this.model.flocName = this.getNameFloc(data.tplnr);
     this._sNotiCatalog.getByQmnum(data.qmnum).subscribe({
       next: (data) => {
         this.lstNotiCatalog = data;
@@ -449,6 +449,10 @@ export class IncidentCorrectComponent implements OnInit {
   getFlocName(code: any) {
     const tplnrF = this.lstEquip.find((x: { equnr: string }) => x.equnr == code)?.tplnr;
     return this.globalService.getNameFloc(this.lstFloc, tplnrF);
+  }
+
+  getNameFloc(code: any) {
+    return this.globalService.getNameFloc(this.lstFloc, code);
   }
 
   getPriorityText(priok: string) {
