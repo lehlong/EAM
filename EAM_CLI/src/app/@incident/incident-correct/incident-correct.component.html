@@ -298,7 +298,76 @@
 
         </div>
       </nz-tab>
-      <nz-tab nzTitle="Danh sách thiết bị">Content of Tab Pane 2</nz-tab>
+      <nz-tab nzTitle="Danh sách thiết bị">
+        <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEquipOrder">
+            <thead>
+              <tr>
+                <th>Mã thiết bị</th>
+                <th>Tên thiết bị</th>
+                <th>Số serial</th>
+                <th>Ngày thực hiện</th>
+                <th>Giờ thực hiện</th>
+                <th>Ngày hoàn thành</th>
+                <th>Giờ hoàn thành</th>
+                <th>Mã khu vực chức năng</th>
+                <th>Tên khu vực chức năng</th>
+                <th>Trạng thái thiết bị</th>
+                <th>Trạng thái hoạt động</th>
+                <th>Trạng thái thực hiện</th>
+                <th>Người thực hiện</th>
+                <th>Nội dung xác nhận</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of catalogTable.data; let i = index">
+                <td>{{data.equnr}}</td>
+                <td>{{getEquipmentCategoryName(data.equnr)}}</td>
+                <td></td>
+                <td>
+                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab"></nz-date-picker>
+                </td>
+                <td>
+                  <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.timeF"></nz-time-picker>
+                </td>
+                <td>
+                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datbi"></nz-date-picker>
+                </td>
+                <td>
+                  <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.timeT"></nz-time-picker>
+                </td>
+                <td>{{getFloc(data.equnr)}}</td>
+                <td>{{getFlocName(data.equnr)}}</td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.status">
+                    <nz-option *ngFor="let item of lstUsageStatus" [nzValue]="item.code"
+                      [nzLabel]="item.name"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.statusTb">
+                    <nz-option *ngFor="let item of lstActiveStatus" [nzValue]="item.code"
+                      [nzLabel]="item.name"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.statusTh">
+                    <nz-option *ngFor="let item of lstTTTH" [nzValue]="item.value"
+                      [nzLabel]="item.name"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.staffTh">
+                    <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
+                      [nzLabel]="item.fullName"></nz-option>
+                  </nz-select>
+                </td>
+                <td>
+                  <input type="text" nz-input [(ngModel)]="data.note" />
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+      </nz-tab>
       <nz-tab nzTitle="Tác vụ theo lệnh">Content of Tab Pane 3</nz-tab>
       <nz-tab nzTitle="Phân tích sự cố">
         <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="lstNotiCatalog">

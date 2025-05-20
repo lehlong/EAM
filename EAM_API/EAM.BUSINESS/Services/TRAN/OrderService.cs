@@ -57,6 +57,14 @@ namespace EAM.BUSINESS.Services.TRAN
                 noti.StatAct = "07";
                 noti.Aufnr = code.ToString();
                 _dbContext.TblTranNoti.Update(noti);
+                var newOrderEq = new TblTranOrderEq
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Aufnr = data.Aufnr,
+                    Equnr = data.Equnr,
+                    IsActive = true,
+                };
+                await _dbContext.TblTranOrderEq.AddAsync(newOrderEq);
 
                 await _dbContext.SaveChangesAsync();
 

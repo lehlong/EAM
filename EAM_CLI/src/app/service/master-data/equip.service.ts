@@ -11,7 +11,9 @@ export class EquipService {
   search(params: any): Observable<any> {
     return this.commonService.get('Equip/Search', params)
   }
-
+  getByEqunr(equnr: string): Observable<any> {
+    return this.commonService.get(`Equip/GetByEqunr/${equnr}`)
+  }
   getAll(): Observable<any> {
     return this.commonService.get('Equip/GetAll')
   }

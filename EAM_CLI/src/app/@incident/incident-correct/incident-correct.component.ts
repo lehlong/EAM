@@ -14,7 +14,7 @@ import { WcService } from '../../service/master-data/wc.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { NotiService } from '../../service/tran/noti.service';
 import { OrderService } from '../../service/tran/order.service';
-import { HTBTBD, ILART, LVTSD, PriorityLevel } from '../../shared/constants/select.constants';
+import { HTBTBD, ILART, LVTSD, PriorityLevel, TTTH } from '../../shared/constants/select.constants';
 import { NotiCatalogService } from '../../service/tran/not-catalog.service';
 import { CatalogService } from '../../service/master-data/catalog.service';
 import { OrderAttService } from '../../service/tran/order-att.service';
@@ -22,6 +22,10 @@ import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { firstValueFrom, Observable, Observer, Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { EqCatService } from '../../service/master-data/eq-cat.service';
+import { UsageStatusService } from '../../service/master-data/usage-status.service';
+import { ActiveStatusService } from '../../service/master-data/active-status.service';
+import { OrderEqService } from '../../service/tran/orderEq.service';
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -47,19 +51,25 @@ export class IncidentCorrectComponent implements OnInit {
   lstEqGroup: any[] = [];
   lstPlgrp: any[] = [];
   lstPlant: any[] = [];
+  lstUsageStatus: any[] = [];
+  lstActiveStatus: any[] = [];
   lstPriorityLevel = PriorityLevel;
   lstNotiTp: any[] = [];
   lstOrderType: any[] = [];
   lstHTBTBD = HTBTBD;
   lstLVTSD = LVTSD;
   lstILART = ILART;
+  lstTTTH = TTTH;
 
-   lstNotiCatalog: any[] = [];
+  lstNotiCatalog: any[] = [];
   lstCatalogTypeA: any[] = [];
   lstCatalogTypeB: any[] = [];
   lstCatalogTypeC: any[] = [];
   lstCatalogType2: any[] = [];
   lstCatalogType5: any[] = [];
+  lstOrderEq: any[] = [];
+  lstEqCat: any = [];
+  lstEquipOrder: any[] = [];
 
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];
@@ -69,7 +79,7 @@ export class IncidentCorrectComponent implements OnInit {
   previewTitle: string | undefined = '';
   previewVisible = false;
 
-  model: any =  {
+  model: any = {
     iwerk: '',
     aufnr: '',
     auart: '',
@@ -160,7 +170,7 @@ export class IncidentCorrectComponent implements OnInit {
   };
 
   constructor(
-    private _sNotiCatalog : NotiCatalogService,
+    private _sNotiCatalog: NotiCatalogService,
     private _sOrder: OrderService,
     private _sOrderType: OrderTypeService,
     private _sNotiTp: NotiTypeService,
@@ -177,6 +187,10 @@ export class IncidentCorrectComponent implements OnInit {
     private _sPlgrp: PlgrpService,
     private _sOrderAtt: OrderAttService,
     private modal: NzModalService,
+    private _serviceCat: EqCatService,
+    private _sUsage: UsageStatusService,
+    private _sActive: ActiveStatusService,
+    private _sOrderEq: OrderEqService,
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -194,6 +208,7 @@ export class IncidentCorrectComponent implements OnInit {
   ngOnInit(): void {
     this.search();
     this.getMasterData();
+    this.searchCat();
   }
   search() {
     this._sOrder.search(this.filter).subscribe({
@@ -205,9 +220,19 @@ export class IncidentCorrectComponent implements OnInit {
       },
     });
   }
+  searchCat() {
+    this._serviceCat.getAll().subscribe({
+      next: (data) => {
+        this.lstEqCat = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
 
   addCatalogItem() {
-     this.lstNotiCatalog = [...this.lstNotiCatalog, {
+    this.lstNotiCatalog = [...this.lstNotiCatalog, {
       id: 'A',
       qmnum: this.model.qmnum,
       objpart: null,
@@ -273,6 +298,16 @@ export class IncidentCorrectComponent implements OnInit {
         this.lstFloc = data;
       },
     });
+    this._sUsage.getAll().subscribe({
+      next: (data) => {
+        this.lstUsageStatus = data;
+      },
+    });
+    this._sActive.getAll().subscribe({
+      next: (data) => {
+        this.lstActiveStatus = data;
+      },
+    });
 
     this._sCatalog.getAll().subscribe({
       next: (data: any) => {
@@ -297,6 +332,21 @@ export class IncidentCorrectComponent implements OnInit {
       },
     });
   }
+  parseTimeStringToDate(timeStr: string): Date | null {
+    if (!timeStr) return null;
+    const [h, m, s] = timeStr.split(':').map(Number);
+    const d = new Date();
+    d.setHours(h, m, s || 0, 0);
+    return d;
+  }
+  getEquipmentCategoryName(code: string) {
+    const eqtypF = this.lstEquip.find((x: { equnr: string }) => x.equnr == code)?.eqtyp;
+    return this.lstEqCat.find((x: { eqtyp: string }) => x.eqtyp == eqtypF)
+      ?.eqtypTxt;
+  }
+  getFloc(code: string) {
+    return this.lstEquip.find((x: { equnr: string }) => x.equnr == code)?.tplnr;
+  }
 
   visibleOrder: boolean = false;
   openEditOrder(data: any) {
@@ -307,7 +357,21 @@ export class IncidentCorrectComponent implements OnInit {
       next: (data) => {
         this.lstNotiCatalog = data;
       },
-      error: (err) => {},
+      error: (err) => { },
+    });
+    this._sOrderEq.GetByAufnr(data.aufnr).subscribe({
+      next: (data) => {
+        this.lstEquipOrder = (data || []).map((item: { datab: string | number | Date; datbi: string | number | Date; timeF: string; timeT: string; }) => ({
+          ...item,
+          datab: item.datab ? new Date(item.datab) : null,
+          datbi: item.datbi ? new Date(item.datbi) : null,
+          timeF: item.timeF ? this.parseTimeStringToDate(item.timeF) : null,
+          timeT: item.timeT ? this.parseTimeStringToDate(item.timeT) : null,
+        }));
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
     this.visibleOrder = true;
     this.loadAttachments(data.aufnr);
@@ -315,7 +379,42 @@ export class IncidentCorrectComponent implements OnInit {
   closeOrder() {
     this.visibleOrder = false;
   }
+  formatDate(date: any): string {
+
+    if (typeof date.format === 'function') {
+      return date.format('YYYY-MM-DDTHH:mm:ss');
+    }
+    if (date instanceof Date) {
+      return date.toISOString();
+    }
+    return date;
+  }
+  formatTime(time: any): string {
+
+    if (typeof time.format === 'function') {
+      return time.format('HH:mm:ss');
+    }
+    if (time instanceof Date) {
+      return time.toTimeString().slice(0, 8);
+    }
+    return time;
+  }
   updateOrder() {
+    const lstEquipOrderToSend = this.lstEquipOrder.map(item => ({
+      ...item,
+      datab: item.datab ? this.formatDate(item.datab) : null,
+      datbi: item.datbi ? this.formatDate(item.datbi) : null,
+      timeF: item.timeF ? this.formatTime(item.timeF) : null,
+      timeT: item.timeT ? this.formatTime(item.timeT) : null,
+
+    }));
+    this._sOrderEq.update(lstEquipOrderToSend[0]).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
     this._sOrder.update(this.model).subscribe({
       next: (data) => {
         this.processFiles();
@@ -333,6 +432,7 @@ export class IncidentCorrectComponent implements OnInit {
         console.error(err);
       },
     });
+
   }
 
   getFullNameUser(username: any) {
@@ -347,7 +447,8 @@ export class IncidentCorrectComponent implements OnInit {
   }
 
   getFlocName(code: any) {
-    return this.globalService.getNameFloc(this.lstFloc, code);
+    const tplnrF = this.lstEquip.find((x: { equnr: string }) => x.equnr == code)?.tplnr;
+    return this.globalService.getNameFloc(this.lstFloc, tplnrF);
   }
 
   getPriorityText(priok: string) {
@@ -369,185 +470,186 @@ export class IncidentCorrectComponent implements OnInit {
     this.search();
   }
   loadAttachments(aufnr: string) {
-      this._sOrderAtt.GetByAufnr(aufnr).subscribe({
-        next: (result) => {
-          const attachmentData = Array.isArray(result)
-            ? result
-            : result && result.data
+    this._sOrderAtt.GetByAufnr(aufnr).subscribe({
+      next: (result) => {
+        const attachmentData = Array.isArray(result)
+          ? result
+          : result && result.data
             ? result.data
             : [];
-  
-          const uniqueAttachments = Array.from(
-            new Map(
-              attachmentData.map((item: { path: any }) => [item.path, item])
-            ).values()
-          );
-  
-          if (uniqueAttachments && uniqueAttachments.length > 0) {
-            this.fileList = uniqueAttachments.map((item: any) => {
-              const fileUrl = `${environment.urlFiles}/${item.path}`;
-              const mimeType = this.getMimeType(item.fileType);
-  
-              const uploadFile: NzUploadFile = {
-                uid: item.id,
-                name: item.path.split('/').pop() || 'file',
-                status: 'done',
-                url: fileUrl,
-                size: item.fileSize,
-                type: mimeType,
-              };
-  
-              if (this.isImageType(item.fileType)) {
-                uploadFile.thumbUrl = fileUrl;
-              }
-  
-              return uploadFile;
-            });
-  
-            this.fileListTable = uniqueAttachments.map((item: any) => {
-              return {
-                path: item.path,
-                url: `${environment.urlFiles}/${item.path}`,
-                name: item.path.split('/').pop() || 'file',
-                fileType: item.fileType,
-                fileSize: item.fileSize / 1024,
-                createDate: item.createDate || new Date(),
-              };
-            });
-          } else {
-            console.log('No attachments found or invalid response');
-            this.fileList = [];
-          }
-        },
-        error: (err) => {
-          console.error('Error loading attachments:', err);
-          this.message.error('Không thể tải danh sách file đính kèm');
-          this.fileList = [];
-        },
-      });
-    }
-    async processFiles(): Promise<void> {
-      try {
-        if (this.pendingFileList.length > 0) {
-          for (const file of this.pendingFileList) {
-            const formData = new FormData();
-            formData.append('file', file);
-  
-            const response = await this._sOrderAtt.uploadFile(
-              formData,
-              this.model.aufnr
-            );
-            if (!response || !response.status) {
-              console.error('Upload failed:', file.name);
-              this.message.warning(`Tải file ${file.name} thất bại`);
-            }
-          }
-          this.pendingFileList = [];
-        }
-        for (const file of this.removedFiles) {
-          const fileName = file.uid ? file.uid.split('/').pop() || '' : '';
-          if (fileName) {
-            try {
-              const response = await firstValueFrom(
-                this._sOrderAtt.delete(fileName)
-              );
-              this.message.success(`Xóa file ${file.name} thành công`);
-            } catch (error) {
-              console.error('Error deleting file:', fileName, error);
-              this.message.warning(`Xóa file ${file.name} thất bại`);
-            }
-          }
-        }
-  
-        this.loadAttachments(this.model.aufnr);
-        return Promise.resolve();
-      } catch (error) {
-        console.error('Process files error:', error);
-        return Promise.reject(error);
-      }
-    }
-  
-    isImageType(fileType: string): boolean {
-      return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(
-        fileType.toLowerCase()
-      );
-    }
-    getMimeType(fileType: string): string {
-      const lowerType = fileType.toLowerCase();
-      if (['jpg', 'jpeg'].includes(lowerType)) return 'image/jpeg';
-      if (lowerType === 'png') return 'image/png';
-      if (lowerType === 'gif') return 'image/gif';
-      if (lowerType === 'bmp') return 'image/bmp';
-      if (lowerType === 'txt') return 'text/plain';
-      if (lowerType === 'pdf') return 'application/pdf';
-      if (['doc', 'docx'].includes(lowerType)) return 'application/msword';
-      if (['xls', 'xlsx'].includes(lowerType)) return 'application/vnd.ms-excel';
-      return 'application/octet-stream';
-    }
-  
-    customUploadRequest = (item: NzUploadXHRArgs): Subscription => {
-      if (item.file instanceof File) {
-        this.pendingFileList.push(item.file);
-      }
-      setTimeout(() => {
-        item.onSuccess!('OK', item.file, {} as any);
-      }, 0);
-  
-      return new Subscription();
-    };
-    handlePreview = async (file: NzUploadFile) => {
-      if (!file.url && !file['preview']) {
-        file['preview'] = await getBase64(file.originFileObj!);
-      }
-      this.previewImage = file.url || file['preview'];
-      this.previewVisible = true;
-      this.previewTitle = file.name || '';
-    };
-  
-    handleRemove = (file: NzUploadFile): boolean | Observable<boolean> => {
-      if (file.originFileObj) {
-        this.pendingFileList = this.pendingFileList.filter(
-          (pendingFile) => pendingFile !== file.originFileObj
+
+        const uniqueAttachments = Array.from(
+          new Map(
+            attachmentData.map((item: { path: any }) => [item.path, item])
+          ).values()
         );
-        return true;
+
+        if (uniqueAttachments && uniqueAttachments.length > 0) {
+          this.fileList = uniqueAttachments.map((item: any) => {
+            const fileUrl = `${environment.urlFiles}/${item.path}`;
+            const mimeType = this.getMimeType(item.fileType);
+
+            const uploadFile: NzUploadFile = {
+              uid: item.id,
+              name: item.path.split('/').pop() || 'file',
+              status: 'done',
+              url: fileUrl,
+              size: item.fileSize,
+              type: mimeType,
+            };
+
+            if (this.isImageType(item.fileType)) {
+              uploadFile.thumbUrl = fileUrl;
+            }
+
+            return uploadFile;
+          });
+
+          this.fileListTable = uniqueAttachments.map((item: any) => {
+            return {
+              path: item.path,
+              url: `${environment.urlFiles}/${item.path}`,
+              name: item.path.split('/').pop() || 'file',
+              fileType: item.fileType,
+              fileSize: item.fileSize / 1024,
+              createDate: item.createDate || new Date(),
+            };
+          });
+        } else {
+          console.log('No attachments found or invalid response');
+          this.fileList = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error loading attachments:', err);
+        this.message.error('Không thể tải danh sách file đính kèm');
+        this.fileList = [];
+      },
+    });
+  }
+  async processFiles(): Promise<void> {
+    try {
+      if (this.pendingFileList.length > 0) {
+        for (const file of this.pendingFileList) {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          const response = await this._sOrderAtt.uploadFile(
+            formData,
+            this.model.aufnr
+          );
+          if (!response || !response.status) {
+            console.error('Upload failed:', file.name);
+            this.message.warning(`Tải file ${file.name} thất bại`);
+          }
+        }
+        this.pendingFileList = [];
       }
-      return new Observable((observer: Observer<boolean>) => {
-        this.modal.confirm({
-          nzTitle: 'Xác nhận xóa',
-          nzContent: `Bạn có chắc muốn xóa file ${file.name}?`,
-          nzOkText: 'Xóa',
-          nzOkType: 'primary',
-          nzOkDanger: true,
-          nzOnOk: () => {
-            this.removedFiles.push(file);
-            observer.next(true);
-            observer.complete();
-          },
-          nzCancelText: 'Hủy',
-          nzOnCancel: () => {
-            observer.next(false);
-            observer.complete();
-          },
-        });
-      });
-    };
-    deleteDocument(doc: any) {
+      for (const file of this.removedFiles) {
+        const fileName = file.uid ? file.uid.split('/').pop() || '' : '';
+        if (fileName) {
+          try {
+            const response = await firstValueFrom(
+              this._sOrderAtt.delete(fileName)
+            );
+            this.message.success(`Xóa file ${file.name} thành công`);
+          } catch (error) {
+            console.error('Error deleting file:', fileName, error);
+            this.message.warning(`Xóa file ${file.name} thất bại`);
+          }
+        }
+      }
+
+      this.loadAttachments(this.model.aufnr);
+      return Promise.resolve();
+    } catch (error) {
+      console.error('Process files error:', error);
+      return Promise.reject(error);
+    }
+  }
+
+  isImageType(fileType: string): boolean {
+    return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(
+      fileType.toLowerCase()
+    );
+  }
+  getMimeType(fileType: string): string {
+    const lowerType = fileType.toLowerCase();
+    if (['jpg', 'jpeg'].includes(lowerType)) return 'image/jpeg';
+    if (lowerType === 'png') return 'image/png';
+    if (lowerType === 'gif') return 'image/gif';
+    if (lowerType === 'bmp') return 'image/bmp';
+    if (lowerType === 'txt') return 'text/plain';
+    if (lowerType === 'pdf') return 'application/pdf';
+    if (['doc', 'docx'].includes(lowerType)) return 'application/msword';
+    if (['xls', 'xlsx'].includes(lowerType)) return 'application/vnd.ms-excel';
+    return 'application/octet-stream';
+  }
+
+  customUploadRequest = (item: NzUploadXHRArgs): Subscription => {
+    if (item.file instanceof File) {
+      this.pendingFileList.push(item.file);
+    }
+    setTimeout(() => {
+      item.onSuccess!('OK', item.file, {} as any);
+    }, 0);
+
+    return new Subscription();
+  };
+  handlePreview = async (file: NzUploadFile) => {
+    if (!file.url && !file['preview']) {
+      file['preview'] = await getBase64(file.originFileObj!);
+    }
+    this.previewImage = file.url || file['preview'];
+    this.previewVisible = true;
+    this.previewTitle = file.name || '';
+  };
+
+  handleRemove = (file: NzUploadFile): boolean | Observable<boolean> => {
+    if (file.originFileObj) {
+      this.pendingFileList = this.pendingFileList.filter(
+        (pendingFile) => pendingFile !== file.originFileObj
+      );
+      return true;
+    }
+    return new Observable((observer: Observer<boolean>) => {
       this.modal.confirm({
         nzTitle: 'Xác nhận xóa',
-        nzContent: `Bạn có chắc muốn xóa file ${doc.name}?`,
+        nzContent: `Bạn có chắc muốn xóa file ${file.name}?`,
         nzOkText: 'Xóa',
         nzOkType: 'primary',
         nzOkDanger: true,
         nzOnOk: () => {
-          const fileInUploadList = this.fileList.find((f) => f.url === doc.url);
-          if (fileInUploadList) {
-            this.removedFiles.push(fileInUploadList);
-            this.fileList = this.fileList.filter((f) => f.url !== doc.url);
-            this.fileListTable = this.fileListTable.filter(
-              (f) => f.url !== doc.url
-            );
-          }
+          this.removedFiles.push(file);
+          observer.next(true);
+          observer.complete();
+        },
+        nzCancelText: 'Hủy',
+        nzOnCancel: () => {
+          observer.next(false);
+          observer.complete();
         },
       });
-    }
+    });
+  };
+  deleteDocument(doc: any) {
+    this.modal.confirm({
+      nzTitle: 'Xác nhận xóa',
+      nzContent: `Bạn có chắc muốn xóa file ${doc.name}?`,
+      nzOkText: 'Xóa',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        const fileInUploadList = this.fileList.find((f) => f.url === doc.url);
+        if (fileInUploadList) {
+          this.removedFiles.push(fileInUploadList);
+          this.fileList = this.fileList.filter((f) => f.url !== doc.url);
+          this.fileListTable = this.fileListTable.filter(
+            (f) => f.url !== doc.url
+          );
+        }
+      },
+    });
+  }
+
 }

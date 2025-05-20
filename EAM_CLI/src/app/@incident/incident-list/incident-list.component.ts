@@ -25,6 +25,7 @@ import { OrganizeService } from '../../service/system-manager/organize.service';
 import Swal from 'sweetalert2';
 import { OrderTypeService } from '../../service/master-data/order-type.service';
 import { OrderService } from '../../service/tran/order.service';
+import { OrderEqService } from '../../service/tran/orderEq.service';
 
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
@@ -219,7 +220,8 @@ export class IncidentListComponent implements OnInit {
     private _sOrg: OrganizeService,
     private _sNotiCatalog: NotiCatalogService,
     private _sOrderType: OrderTypeService,
-    private _sOrder : OrderService
+    private _sOrder : OrderService, 
+    private _sOrderEq: OrderEqService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -250,6 +252,7 @@ export class IncidentListComponent implements OnInit {
     this.order.loaivtSd = data.lvtsd;
     this.isVisibleAddOrder = true;
   }
+  
   createOrder(): void {
     this._sOrder.create(this.order).subscribe({
       next: (data) => {

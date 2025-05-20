@@ -50,3 +50,13 @@ export const ILART = [
   { name: 'Xây mới', value: 'ZP6' },
   { name: 'Hiệu chuẩn', value: 'ZP7' },
 ];
+
+export const TTTH = [
+  { name: 'Khởi tạo', value: '01' },
+  { name: 'Đang thực hiện', value: '02' },
+  { name: 'Hoàn thành', value: '03' },
+  { name: 'Hoàn thành có lỗi', value: '04' },
+  { name: 'Không thực hiện', value: '05' },
+  { name: 'Dời lịch', value: '06' },
+  { name: 'Đã đóng', value: '07' },
+];

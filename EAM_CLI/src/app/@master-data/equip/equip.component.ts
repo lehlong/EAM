@@ -252,6 +252,14 @@ export class EquipComponent {
       },
     });
   }
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Retrieves a list of equipment categories from the service and updates the
+ * `lstEqCat` property with the retrieved data. Resets the `isSubmit` flag to false.
+ * Logs any error responses received during the data retrieval process.
+ */
+
+/*******  8d15dc4e-0540-4331-9832-af3a2506f521  *******/
   searchCat() {
     this.isSubmit = false;
     this._serviceCat.getAll().subscribe({

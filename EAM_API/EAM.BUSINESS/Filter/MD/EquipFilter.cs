@@ -9,6 +9,7 @@ namespace EAM.BUSINESS.Filter.MD
 {
     public class EquipFilter : BaseFilter
     {
+        public string? Equnr { get; set; }
         public string? Tplnr { get; set; }    
         public string? Eqart { get; set; }       
         //public string? EqartSub { get; set; }   

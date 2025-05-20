@@ -32,6 +32,27 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
+
+        [HttpGet("GetByEqunr/{equnr}")]
+        public async Task<IActionResult> GetByEqunr([FromRoute] string equnr)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetByEqunr(equnr);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+                transferObject.Status = true;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

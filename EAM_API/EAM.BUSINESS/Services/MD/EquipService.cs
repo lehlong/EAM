@@ -5,6 +5,7 @@ using EAM.BUSINESS.Dtos.MD;
 using EAM.BUSINESS.Filter.MD;
 using EAM.CORE;
 using EAM.CORE.Entities.MD;
+using Microsoft.EntityFrameworkCore;
 
 namespace EAM.BUSINESS.Services.MD
 {
@@ -12,6 +13,7 @@ namespace EAM.BUSINESS.Services.MD
     {
         Task<PagedResponseDto> Search(EquipFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
+        Task<List<EquipDto>> GetByEqunr(string equnr);
     }
     public class EquipService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdEquip, EquipDto>(dbContext, mapper), IEquipService
     {
@@ -24,7 +26,10 @@ namespace EAM.BUSINESS.Services.MD
                 {
                     query = query.Where(x => x.Eqktx.ToString().Contains(filter.KeyWord));
                 }
-
+                if (!string.IsNullOrWhiteSpace(filter.Equnr))
+                {
+                    query = query.Where(x => x.EqUnr == filter.Equnr);
+                }
                 if (!string.IsNullOrWhiteSpace(filter.Tplnr))
                 {
                     query = query.Where(x => x.Tplnr == filter.Tplnr);
@@ -77,5 +82,28 @@ namespace EAM.BUSINESS.Services.MD
                 return null;
             }
         }
+
+        public async Task<List<EquipDto>> GetByEqunr(string equnr)
+        {
+            try
+            {
+                var entity = await _dbContext.TblMdEquip.Where(x => x.EqUnr == equnr).ToListAsync();
+                if (entity == null)
+                {
+                    Status = false;
+                    return null;
+                }
+
+                return _mapper.Map<List<EquipDto>>(entity);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+
     }
 }
