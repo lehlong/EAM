@@ -63,6 +63,8 @@ export class IncidentCorrectComponent implements OnInit {
   lstLVTSD = LVTSD;
   lstILART = ILART;
   lstTTTH = TTTH;
+  lstItemOrderS: any[] = [];
+lstItemOrderM: any[] = [];
 
   lstNotiCatalog: any[] = [];
   lstCatalogTypeA: any[] = [];
@@ -259,10 +261,32 @@ export class IncidentCorrectComponent implements OnInit {
   }
 
   addOrderItem() {
-    this.lstItemOrder = [...this.lstItemOrder, {
+    this.lstItemOrderS = [...this.lstItemOrderS, {
       id: 'A',
       aufnr: this.model.aufnr,
       category: 'S',
+      matnr: null,
+      marktxt: null,
+      werks: null,
+      budat: null,
+      isActive: true,
+      menge: 0,
+      meins: null,
+      category2: null,
+      lgort: null,
+      charg: null,
+      price: 0,
+      dmbtr: 0,
+      waers: null,
+      uname: null,
+      udat: null,
+    },];
+  }
+   addOrderItemM() {
+    this.lstItemOrderM = [...this.lstItemOrderM, {
+      id: 'A',
+      aufnr: this.model.aufnr,
+      category: 'M',
       matnr: null,
       marktxt: null,
       werks: null,
@@ -410,7 +434,7 @@ export class IncidentCorrectComponent implements OnInit {
         console.log(err);
       },
     });
-    this._sOrderVt.getByAufnrAndType(data.aufnr, 'S').subscribe({
+    this._sOrderVt.getByAufnr(data.aufnr).subscribe({
       next: (data) => {
         this.lstItemOrder = data;
       },
@@ -418,10 +442,19 @@ export class IncidentCorrectComponent implements OnInit {
         console.log(err);
       },
     });
+    this.loadOrderItems();
     this.visibleOrder = true;
-
     this.loadAttachments(data.aufnr);
   }
+  loadOrderItems(): void {
+  if (this.lstItemOrder && this.lstItemOrder.length > 0) {
+    this.lstItemOrderS = this.lstItemOrder.filter(item => item.category === 'S');
+    this.lstItemOrderM = this.lstItemOrder.filter(item => item.category === 'M');
+  } else {
+    this.lstItemOrderS = [];
+    this.lstItemOrderM = [];
+  }
+}
   closeOrder() {
     this.visibleOrder = false;
   }
@@ -470,6 +503,7 @@ export class IncidentCorrectComponent implements OnInit {
         console.log(err);
       },
     });
+    this.lstItemOrder = [...this.lstItemOrderS, ...this.lstItemOrderM];
     const lstItemOrderSend = this.lstItemOrder.map(item => ({
       ...item,
       budat: item.budat ? this.formatDate(item.budat) : null,
@@ -490,6 +524,21 @@ export class IncidentCorrectComponent implements OnInit {
       },
     });
 
+  }
+  onMaterialChange(materialCode: string, itemData: any): void {
+    const selectedItem = this.lstItem.find(item => item.matnr === materialCode);
+    if (selectedItem) {
+      itemData.meins = selectedItem.meins;
+      itemData.maktx = selectedItem.maktx;
+    } else {
+      itemData.meins = '';
+    }
+  }
+  calculateTotal(itemData: any): void {
+    const quantity = parseFloat(itemData.menge) || 0;
+    const price = parseFloat(itemData.price) || 0;
+    const total = quantity * price;
+    itemData.dmbtr = total.toLocaleString('vi-VN');
   }
 
   getFullNameUser(username: any) {
@@ -712,5 +761,17 @@ export class IncidentCorrectComponent implements OnInit {
       },
     });
   }
-
+removeOrderItemM(index: number): void {
+  this.modal.confirm({
+    nzTitle: 'Bạn có chắc chắn muốn xóa vật tư này?',
+    nzContent: 'Hành động này không thể hoàn tác.',
+    nzOkText: 'Xác nhận',
+    nzOkType: 'primary',
+    nzOkDanger: true,
+    nzOnOk: () => {
+      this.lstItemOrderM = this.lstItemOrderM.filter((_, i) => i !== index);
+    },
+    nzCancelText: 'Hủy',
+  });
+}
 }

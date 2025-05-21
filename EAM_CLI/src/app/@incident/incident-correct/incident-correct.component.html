@@ -142,19 +142,19 @@
               <app-input-clear [value]="model.ktext" [(ngModel)]="model.ktext" [disabled]="true"></app-input-clear>
             </div>
           </div>
-           <div nz-col class="gutter-row" [nzSpan]="12">
+          <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Mã lệnh</label>
               <app-input-clear [value]="model.aufnr" [(ngModel)]="model.aufnr" [disabled]="true"></app-input-clear>
             </div>
           </div>
-           <div nz-col class="gutter-row" [nzSpan]="12">
+          <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Nội dung thực hiện</label>
               <app-input-clear [value]="model.ktext" [(ngModel)]="model.ktext" [disabled]="true"></app-input-clear>
             </div>
           </div>
-           <div nz-col class="gutter-row" [nzSpan]="12">
+          <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Mã thiết bị</label>
               <app-input-clear [value]="model.equnr" [(ngModel)]="model.equnr" [disabled]="true"></app-input-clear>
@@ -163,10 +163,11 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Tên thiết bị</label>
-              <app-input-clear [value]="model.equipName" [(ngModel)]="model.equipName" [disabled]="true"></app-input-clear>
+              <app-input-clear [value]="model.equipName" [(ngModel)]="model.equipName"
+                [disabled]="true"></app-input-clear>
             </div>
           </div>
-           <div nz-col class="gutter-row" [nzSpan]="12">
+          <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Khu vực chức năng</label>
               <app-input-clear [value]="model.tplnr" [(ngModel)]="model.tplnr" [disabled]="true"></app-input-clear>
@@ -175,10 +176,11 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Tên Khu vực chức năng</label>
-              <app-input-clear [value]="model.flocName" [(ngModel)]="model.flocName" [disabled]="true"></app-input-clear>
+              <app-input-clear [value]="model.flocName" [(ngModel)]="model.flocName"
+                [disabled]="true"></app-input-clear>
             </div>
           </div>
-           <div nz-col class="gutter-row" [nzSpan]="12">
+          <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Mã tài sản</label>
               <app-input-clear [disabled]="true"></app-input-clear>
@@ -187,275 +189,336 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Tên tài sản</label>
-              <app-input-clear  [disabled]="true"></app-input-clear>
+              <app-input-clear [disabled]="true"></app-input-clear>
             </div>
           </div>
 
-           <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Ngày kế hoạch bắt đầu</label>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="model.gstrs"></nz-date-picker>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Ngày kế hoạch bắt đầu</label>
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"
+                [(ngModel)]="model.gstrs"></nz-date-picker>
             </div>
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Ngày kế hoạch kết thúc</label>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"  [(ngModel)]="model.gltrs"></nz-date-picker>
-              </div>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Ngày kế hoạch kết thúc</label>
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"
+                [(ngModel)]="model.gltrs"></nz-date-picker>
             </div>
+          </div>
 
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Ngày thực tế bắt đầu</label>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [nzDisabled]="true"></nz-date-picker>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Ngày thực tế bắt đầu</label>
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"
+                [nzDisabled]="true"></nz-date-picker>
             </div>
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Ngày thực tế kết thúc</label>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [nzDisabled]="true"></nz-date-picker>
-              </div>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Ngày thực tế kết thúc</label>
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"
+                [nzDisabled]="true"></nz-date-picker>
             </div>
+          </div>
 
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Trạng thái lệnh</label>
-                <input nz-input [disabled]="true">
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Trạng thái lệnh</label>
+              <input nz-input [disabled]="true">
             </div>
+          </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Hình thức thực hiện</label>
-                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.htBtbd">
-                  <nz-option *ngFor="let item of lstHTBTBD" [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
-                  </nz-option>
-                </nz-select>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Hình thức thực hiện</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.htBtbd">
+                <nz-option *ngFor="let item of lstHTBTBD" [nzLabel]="item.value + ' - ' + item.name"
+                  [nzValue]="item.value">
+                </nz-option>
+              </nz-select>
             </div>
+          </div>
 
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Người thực hiện</label>
-                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.staffSc">
-                  <nz-option *ngFor="let item of lstUser" [nzLabel]="item.userName + ' - ' + item.fullName" [nzValue]="item.userName">
-                  </nz-option>
-                </nz-select>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Người thực hiện</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.staffSc">
+                <nz-option *ngFor="let item of lstUser" [nzLabel]="item.userName + ' - ' + item.fullName"
+                  [nzValue]="item.userName">
+                </nz-option>
+              </nz-select>
             </div>
+          </div>
 
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Đơn vị thực hiện</label>
-                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
-                  <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
-                  </nz-option>
-                </nz-select>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Đơn vị thực hiện</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
+                <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt"
+                  [nzValue]="item.arbpl">
+                </nz-option>
+              </nz-select>
             </div>
+          </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Đơn vị quản lý</label>
-                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ingpr">
-                  <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt" [nzValue]="item.ingrp">
-                  </nz-option>
-                </nz-select>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Đơn vị quản lý</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ingpr">
+                <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt"
+                  [nzValue]="item.ingrp">
+                </nz-option>
+              </nz-select>
             </div>
+          </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Đơn vị sử dụng</label>
-                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
-                  <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
-                  </nz-option>
-                </nz-select>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Đơn vị sử dụng</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
+                <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt"
+                  [nzValue]="item.arbpl">
+                </nz-option>
+              </nz-select>
             </div>
+          </div>
 
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Loại vật tư, chi phí sử dụng</label>
-                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.loaivtSd">
-                  <nz-option *ngFor="let item of lstLVTSD" [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
-                  </nz-option>
-                </nz-select>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Loại vật tư, chi phí sử dụng</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.loaivtSd">
+                <nz-option *ngFor="let item of lstLVTSD" [nzLabel]="item.value + ' - ' + item.name"
+                  [nzValue]="item.value">
+                </nz-option>
+              </nz-select>
             </div>
+          </div>
 
-             <div nz-col class="gutter-row" [nzSpan]="12">
-              <div class="inner-box">
-                <label>Loại hoạt động bảo trì</label>
-                <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ilart">
-                  <nz-option *ngFor="let item of lstILART" [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
-                  </nz-option>
-                </nz-select>
-              </div>
+          <div nz-col class="gutter-row" [nzSpan]="12">
+            <div class="inner-box">
+              <label>Loại hoạt động bảo trì</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ilart">
+                <nz-option *ngFor="let item of lstILART" [nzLabel]="item.value + ' - ' + item.name"
+                  [nzValue]="item.value">
+                </nz-option>
+              </nz-select>
             </div>
+          </div>
 
 
 
         </div>
       </nz-tab>
       <nz-tab nzTitle="Danh sách thiết bị">
-        <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEquipOrder">
-            <thead>
-              <tr>
-                <th>Mã thiết bị</th>
-                <th>Tên thiết bị</th>
-                <th>Số serial</th>
-                <th>Ngày thực hiện</th>
-                <th>Ngày hoàn thành</th>
-                <th>Trạng thái thiết bị</th>
-                <th>Trạng thái hoạt động</th>
-                <th>Trạng thái thực hiện</th>
-                <th>Người thực hiện</th>
-                <th>Nội dung xác nhận</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of catalogTable.data; let i = index">
-                <td>{{data.equnr}}</td>
-                <td>{{getEquipmentCategoryName(data.equnr)}}</td>
-                <td></td>
-                <td>
-                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab" [nzShowTime]="true"></nz-date-picker>
-                </td>
+        <nz-table #EquiqTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEquipOrder">
+          <thead>
+            <tr>
+              <th>Mã thiết bị</th>
+              <th>Tên thiết bị</th>
+              <th>Số serial</th>
+              <th>Ngày thực hiện</th>
+              <th>Ngày hoàn thành</th>
+              <th>Trạng thái thiết bị</th>
+              <th>Trạng thái hoạt động</th>
+              <th>Trạng thái thực hiện</th>
+              <th>Người thực hiện</th>
+              <th>Nội dung xác nhận</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of EquiqTable.data; let i = index">
+              <td>{{data.equnr}}</td>
+              <td>{{getEquipmentCategoryName(data.equnr)}}</td>
+              <td></td>
+              <td>
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab"
+                  [nzShowTime]="true"></nz-date-picker>
+              </td>
 
-                <td>
-                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datbi"  [nzShowTime]="true"></nz-date-picker>
-                </td>
+              <td>
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datbi"
+                  [nzShowTime]="true"></nz-date-picker>
+              </td>
 
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.status">
-                    <nz-option *ngFor="let item of lstUsageStatus" [nzValue]="item.code"
-                      [nzLabel]="item.name"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.statusTb">
-                    <nz-option *ngFor="let item of lstActiveStatus" [nzValue]="item.code"
-                      [nzLabel]="item.name"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.statusTh">
-                    <nz-option *ngFor="let item of lstTTTH" [nzValue]="item.value"
-                      [nzLabel]="item.name"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.staffTh">
-                    <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
-                      [nzLabel]="item.fullName"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <input type="text" nz-input [(ngModel)]="data.note" />
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.status">
+                  <nz-option *ngFor="let item of lstUsageStatus" [nzValue]="item.code"
+                    [nzLabel]="item.name"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.statusTb">
+                  <nz-option *ngFor="let item of lstActiveStatus" [nzValue]="item.code"
+                    [nzLabel]="item.name"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.statusTh">
+                  <nz-option *ngFor="let item of lstTTTH" [nzValue]="item.value" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.staffTh">
+                  <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
+                    [nzLabel]="item.fullName"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <input type="text" nz-input [(ngModel)]="data.note" />
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
       </nz-tab>
       <nz-tab nzTitle="Tác vụ theo lệnh">Content of Tab Pane 3</nz-tab>
       <nz-tab nzTitle="Phân tích sự cố">
         <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="lstNotiCatalog">
-            <thead>
-              <tr>
-                <th style="width: 20%;">Thành phần hư hỏng</th>
-                <th style="width: 20%;">Loại sự cố</th>
-                <th style="width: 20%;">Nguyên nhân</th>
-                <th style="width: 20%;">Hành động khắc phục</th>
-                <th style="width: 20%;">Biện pháp phòng ngừa</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of catalogTable.data; let i = index">
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.objpart">
-                    <nz-option *ngFor="let item of lstCatalogTypeB" [nzValue]="item.id"
-                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.typeCode">
-                    <nz-option *ngFor="let item of lstCatalogTypeC" [nzValue]="item.id"
-                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.causeCode">
-                    <nz-option *ngFor="let item of lstCatalogType5" [nzValue]="item.id"
-                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.taskCode">
-                    <nz-option *ngFor="let item of lstCatalogType2" [nzValue]="item.id"
-                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.actCode">
-                    <nz-option *ngFor="let item of lstCatalogTypeA" [nzValue]="item.id"
-                      [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
-                  </nz-select>
-                </td>
-              </tr>
+          <thead>
+            <tr>
+              <th style="width: 20%;">Thành phần hư hỏng</th>
+              <th style="width: 20%;">Loại sự cố</th>
+              <th style="width: 20%;">Nguyên nhân</th>
+              <th style="width: 20%;">Hành động khắc phục</th>
+              <th style="width: 20%;">Biện pháp phòng ngừa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of catalogTable.data; let i = index">
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.objpart">
+                  <nz-option *ngFor="let item of lstCatalogTypeB" [nzValue]="item.id"
+                    [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.typeCode">
+                  <nz-option *ngFor="let item of lstCatalogTypeC" [nzValue]="item.id"
+                    [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.causeCode">
+                  <nz-option *ngFor="let item of lstCatalogType5" [nzValue]="item.id"
+                    [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.taskCode">
+                  <nz-option *ngFor="let item of lstCatalogType2" [nzValue]="item.id"
+                    [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.actCode">
+                  <nz-option *ngFor="let item of lstCatalogTypeA" [nzValue]="item.id"
+                    [nzLabel]="item.code + ' - ' + item.codeDes"></nz-option>
+                </nz-select>
+              </td>
+            </tr>
 
-            </tbody>
-          </nz-table>
-          <div style="display: flex; justify-content: center; margin-top: 20px;">
-            <button nz-button nzType="dashed" (click)="addCatalogItem()">
-              <nz-icon nzType="plus" />
-              Thêm thành phần
-            </button>
-          </div>
+          </tbody>
+        </nz-table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button nz-button nzType="dashed" (click)="addCatalogItem()">
+            <nz-icon nzType="plus" />
+            Thêm thành phần
+          </button>
+        </div>
       </nz-tab>
       <nz-tab nzTitle="Vật tư sử dụng">
-         <nz-table #itemTable [nzShowPagination]="false" nzSize="small" [nzData]="lstItemOrder">
-            <thead>
-              <tr>
-                <th>Ngày xuất</th>
-                <th style="width: 20%;">Tên vật tư</th>
-                <th>Số lượng</th>
-                <th>Đơn vị tính</th>
-                <th>Nguồn</th>
-                <th>Đơn giá</th>
-                <th style="width: 20%;">Thành Tiền</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of itemTable.data; let i = index">
-                <td><nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"  [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.budat" [nzShowTime]="true"></nz-date-picker></td>
-                <td>
-                  <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.maktx">
-                    <nz-option *ngFor="let item of lstItem" [nzValue]="item.matnr"
-                      [nzLabel]="item.matnr + ' - ' + item.maktx"></nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <input type="text" nz-input [(ngModel)]="data.menge" />
-                </td>
-                <td></td>
-                <td><input type="text" nz-input [(ngModel)]="data.lgort" /></td>
-                <td><input type="text" nz-input [(ngModel)]="data.price" /></td>
-                <td>
-                  
-                </td>
-              </tr>
-
-            </tbody>
-          </nz-table>
-          <div style="display: flex; justify-content: center; margin-top: 20px;">
-            <button nz-button nzType="dashed" (click)="addOrderItem()">
-              <nz-icon nzType="plus" />
-              Thêm vật tư
-            </button>
-          </div>
+        <nz-table #itemTableS [nzShowPagination]="false" nzSize="small" [nzData]="lstItemOrderS">
+          <thead>
+            <tr>
+              <th>Ngày xuất</th>
+              <th style="width: 20%;">Tên vật tư</th>
+              <th>Số lượng</th>
+              <th>Đơn vị tính</th>
+              <th>Nguồn</th>
+              <th>Đơn giá</th>
+              <th>Thành Tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of itemTableS.data; let i = index">
+              <td><nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.budat"
+                  [nzShowTime]="true"></nz-date-picker></td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.matnr"
+                  (ngModelChange)="onMaterialChange($event, data)">
+                  <nz-option *ngFor="let item of lstItem" [nzValue]="item.matnr"
+                    [nzLabel]="item.matnr + ' - ' + item.maktx"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <input type="text" nz-input [(ngModel)]="data.menge" (ngModelChange)="calculateTotal(data)" />
+              </td>
+              <td><input type="text" nz-input [(ngModel)]="data.meins" [disabled]="true" /></td>
+              <td><input type="text" nz-input [(ngModel)]="data.lgort" /></td>
+              <td><input type="text" nz-input [(ngModel)]="data.price" (ngModelChange)="calculateTotal(data)" /></td>
+              <td>
+                <input type="text" nz-input [(ngModel)]="data.dmbtr" [disabled]="true" />
+              </td>
+            
+            </tr>
+          </tbody>
+        </nz-table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button nz-button nzType="dashed" (click)="addOrderItem()">
+            <nz-icon nzType="plus" />
+            Thêm vật tư
+          </button>
+        </div>
       </nz-tab>
-      <nz-tab nzTitle="Mua ngoài/ thuê ngoài">Content of Tab Pane 3</nz-tab>
+      <nz-tab nzTitle="Mua ngoài/ thuê ngoài">
+        <nz-table #itemTableM [nzShowPagination]="false" nzSize="small" [nzData]="lstItemOrderM">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Tên vật tư</th>
+              <th>Số lượng</th>
+              <th>Đơn vị tính</th>
+              <th>Đơn giá</th>
+              <th style="width: 20%;">Thành Tiền</th>
+              <th>Nước sản xuất</th>
+              <th>Chất lượng</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of itemTableM.data; let i = index">
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.matnr"
+                  (ngModelChange)="onMaterialChange($event, data)">
+                  <nz-option *ngFor="let item of lstItem" [nzValue]="item.matnr"
+                    [nzLabel]="item.matnr + ' - ' + item.maktx"></nz-option>
+                </nz-select>
+              </td>
+              <td>
+                <input type="text" nz-input [(ngModel)]="data.menge" (ngModelChange)="calculateTotal(data)" />
+              </td>
+              <td><input type="text" nz-input [(ngModel)]="data.meins" [disabled]="true" /></td>
+              <td><input type="text" nz-input [(ngModel)]="data.price" (ngModelChange)="calculateTotal(data)" /></td>
+              <td>
+                <input type="text" nz-input [(ngModel)]="data.dmbtr" [disabled]="true" />
+              </td>
+              <td><input type="text" nz-input [(ngModel)]="data.lgort" /></td>
+              <td><input type="text" nz-input [(ngModel)]="data.uname" /></td>
+              <td>
+                <a nz-tooltip nzTooltipTitle="Xóa" nz-button nzType="link" nzDanger (click)="removeOrderItemM(i)">
+                  <span nz-icon nzType="delete" nzTheme="outline"></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button nz-button nzType="dashed" (click)="addOrderItemM()">
+            <nz-icon nzType="plus" />
+            Thêm vật tư
+          </button>
+        </div>
+      </nz-tab>
       <nz-tab nzTitle="File đính kèm">
         <div class="">
           <div nz-row [nzGutter]="16">
