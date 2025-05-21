@@ -3,7 +3,8 @@
   <nz-page-header-subtitle>Tạo mới thông tin kế hoạch theo cấp độ</nz-page-header-subtitle>
   <nz-page-header-extra>
     <nz-space>
-      <button *nzSpaceItem nz-button nzType="primary"><nz-icon nzType="save" nzTheme="outline" /> Lưu dữ liệu</button>
+      <button *nzSpaceItem nz-button nzType="primary" (click)="onCreate()"><nz-icon nzType="save" nzTheme="outline" />
+        Lưu dữ liệu</button>
     </nz-space>
   </nz-page-header-extra>
   <nz-page-header-content class="content">
@@ -11,13 +12,13 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Mã kế hoạch</label>
-          <app-input-clear nz-input></app-input-clear>
+          <input nz-input [(ngModel)]="model.warpl">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Tên kế hoạch</label>
-          <app-input-clear nz-input></app-input-clear>
+          <input nz-input [(ngModel)]="model.wptxt">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
@@ -54,15 +55,8 @@
 
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
-          <label>Thời gian hiệu lực (năm)</label>
-          <app-input-clear nz-input type="number"></app-input-clear>
-        </div>
-      </div>
-
-      <div nz-col class="gutter-row" [nzSpan]="6">
-        <div class="inner-box">
           <label>Ngày bắt đầu kế hoạch</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate"></nz-date-picker>
         </div>
       </div>
 
@@ -70,7 +64,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr" (ngModelChange)="onChangeFloc($event)">
             <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
               [nzValue]="item.tplnr">
             </nz-option>
@@ -81,8 +75,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Mã thiết bị</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.plnnr" (ngModelChange)="OnChangeCheckList($event)">
-            <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx"
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.equnr" (ngModelChange)="onChangeEquip($event)">
+            <nz-option *ngFor="let item of lstEquipSelect" [nzLabel]="item.equnr + ' - ' + item.eqktx"
               [nzValue]="item.equnr">
             </nz-option>
           </nz-select>
@@ -92,7 +86,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Bộ phận lập kế hoạch</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.ingrp">
             <nz-option *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp + ' - ' + item.ingrpTxt"
               [nzValue]="item.ingrp">
             </nz-option>
@@ -103,7 +97,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Bộ phận thực hiện</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.arbpl">
             <nz-option *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
             </nz-option>
           </nz-select>
@@ -113,7 +107,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Loại lệnh</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.tplnr">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.auart">
             <nz-option *ngFor="let item of lstOrderType" [nzLabel]="item.code + ' - ' + item.name"
               [nzValue]="item.code">
             </nz-option>

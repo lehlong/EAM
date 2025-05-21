@@ -31,11 +31,11 @@ namespace EAM.BUSINESS.Services.PLAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                var data = await Paging(query, filter);
+                var data = await Paging(query.OrderByDescending(x => x.CreateDate), filter);
                 foreach (var i in data.Data as IEnumerable<PlanHDto>)
                 {
                     i.lstEquip = _dbContext.TblPlanD.Where(x => x.Warpl == i.Warpl).ToList();
-                    i.lstPlanOrder = _dbContext.TblPlanOrder.Where(x => x.Warpl == i.Warpl).ToList();
+                    i.lstPlanOrder = _dbContext.TblPlanOrder.Where(x => x.Warpl == i.Warpl).OrderByDescending(x => x.Schstart).ToList();
                 }
                 return data;
             }
@@ -53,7 +53,7 @@ namespace EAM.BUSINESS.Services.PLAN
             {
                 var entity = _mapper.Map<TblPlanH>(dto);
                 _dbContext.TblPlanH.Add(entity);
-                foreach(var i in dto.lstEquip)
+                foreach (var i in dto.lstEquip)
                 {
                     _dbContext.TblPlanD.Add(new TblPlanD
                     {
@@ -63,7 +63,7 @@ namespace EAM.BUSINESS.Services.PLAN
                         Eqart = i.Eqart,
                     });
                 }
-                foreach(var i in dto.lstPlanOrder)
+                foreach (var i in dto.lstPlanOrder)
                 {
                     _dbContext.TblPlanOrder.Add(new TblPlanOrder
                     {

@@ -11,7 +11,6 @@ import { TasklistService } from '../../service/master-data/task-list.service';
 import { PlgrpService } from '../../service/master-data/plgrp.service';
 import { WcService } from '../../service/master-data/wc.service';
 import { OrderTypeService } from '../../service/master-data/order-type.service';
-import { EquipDocService } from '../../service/master-data/equip-doc.service';
 import { EquipService } from '../../service/master-data/equip.service';
 import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { EquipPlanModel } from '../../models/plan/equip-plan.model';
@@ -44,7 +43,7 @@ export class SingleMaintenanceComponent implements OnInit {
   model: any = new PlanHModel();
 
   constructor(
-    public _global : GlobalService,
+    public _global: GlobalService,
     private _sPlanH: PlanHService,
     private _sEqGroup: EqGroupService,
     private _sEquip: EquipService,
@@ -55,13 +54,25 @@ export class SingleMaintenanceComponent implements OnInit {
     private _sOrderType: OrderTypeService
   ) {}
   ngOnInit(): void {
-    this.getAllFloc();
-    this.getAllTasklist();
-    this.getAllPlgrp();
-    this.getAllWc();
-    this.getAllOrderType();
-    this.getAllEquip();
-    this.getAllEqGroup();
+    this.getMasterData();
+  }
+
+  getMasterData() {
+    this._sEqGroup.getAll().subscribe((data: any) => (this.lstEqGroup = data));
+    this._sEquip.getAll().subscribe((data: any) => {
+      this.lstEquip = data;
+      this.lstEquipSelect = data;
+    });
+    this._sOrderType
+      .getAll()
+      .subscribe((data: any) => (this.lstOrderType = data));
+    this._sWc.getAll().subscribe((data: any) => (this.lstWc = data));
+    this._sFloc.getAll().subscribe((data: any) => (this.lstFloc = data));
+    this._sPlgrp.getAll().subscribe((data: any) => (this.lstPlgrp = data));
+    this._sTasklist.getAll().subscribe((data: any) => {
+      this.lstTasklist = data;
+      this.lstChecklist = this.getUniqueByPlnnrAndKtext(data);
+    });
   }
 
   onCreate() {
@@ -83,7 +94,12 @@ export class SingleMaintenanceComponent implements OnInit {
     });
 
     this._sPlanH.create(this.model).subscribe({
-      next: (data) => {},
+      next: (data) => {
+        this.model = new PlanHModel();
+        this.lstEquipPlan = [];
+        this.lstPlan = [];
+        this.lstTask = [];
+      },
     });
   }
 
@@ -102,68 +118,6 @@ export class SingleMaintenanceComponent implements OnInit {
     this.lstTask = this.lstTasklist
       .filter((x) => x.plnnr == e)
       .sort((a, b) => a.vornr.localeCompare(b.vornr));
-  }
-
-  getAllEqGroup() {
-    this._sEqGroup.getAll().subscribe({
-      next: (data) => {
-        this.lstEqGroup = data;
-      },
-    });
-  }
-
-  getNameEqGroup(code: any) {
-    return this.lstEqGroup.find((x) => x.eqart == code)?.eqartTxt;
-  }
-
-  getAllEquip() {
-    this._sEquip.getAll().subscribe({
-      next: (data) => {
-        this.lstEquip = data;
-        this.lstEquipSelect = data;
-      },
-    });
-  }
-
-  getAllOrderType() {
-    this._sOrderType.getAll().subscribe({
-      next: (data) => {
-        this.lstOrderType = data;
-      },
-    });
-  }
-
-  getAllWc() {
-    this._sWc.getAll().subscribe({
-      next: (data) => {
-        this.lstWc = data;
-      },
-    });
-  }
-
-  getAllFloc() {
-    this._sFloc.getAll().subscribe({
-      next: (data) => {
-        this.lstFloc = data;
-      },
-    });
-  }
-
-  getAllPlgrp() {
-    this._sPlgrp.getAll().subscribe({
-      next: (data) => {
-        this.lstPlgrp = data;
-      },
-    });
-  }
-
-  getAllTasklist() {
-    this._sTasklist.getAll().subscribe({
-      next: (data) => {
-        this.lstTasklist = data;
-        this.lstChecklist = this.getUniqueByPlnnrAndKtext(data);
-      },
-    });
   }
 
   getUniqueByPlnnrAndKtext(items: any[]): any[] {
@@ -188,7 +142,7 @@ export class SingleMaintenanceComponent implements OnInit {
         this.model.cycunit,
         this.model.cycle,
         this.model.cycef,
-        this._global.formatDate(this.model.stdate)
+        this._global.formatDatePlan(this.model.stdate)
       );
 
       var lstTemp: any = [];
@@ -202,10 +156,6 @@ export class SingleMaintenanceComponent implements OnInit {
       });
       this.lstPlan = lstTemp;
     }
-  }
-
-  getNameFloc(code: any) {
-    return this.lstFloc.find((x) => x.tplnr == code)?.descript;
   }
 
   onChangeFloc(e: any) {
@@ -233,6 +183,4 @@ export class SingleMaintenanceComponent implements OnInit {
     const newEquip = new EquipPlanModel();
     this.lstEquipPlan = [...this.lstEquipPlan, newEquip];
   }
-
-
 }
