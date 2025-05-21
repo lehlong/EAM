@@ -36,6 +36,7 @@ import { ItemService } from '../../service/warehouse/item.service';
 import { OrderModel } from '../../models/tran/order.model';
 import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
 import { ItemOrder } from '../../models/tran/item-order.model';
+import { UnitService } from '../../service/master-data/unit.service';
 
 @Component({
   selector: 'app-incident-correct',
@@ -52,6 +53,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   lstFloc: any = [];
   lstUser: any = [];
   lstWc: any[] = [];
+  lstUnit: any[] = [];
   lstEquip: any[] = [];
   lstEqGroup: any[] = [];
   lstPlgrp: any[] = [];
@@ -67,6 +69,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   lstTTTH = TTTH;
   lstItemOrderS: any[] = [];
   lstItemOrderM: any[] = [];
+  deletedItemIds: string[] = [];
 
   lstNotiCatalog: any[] = [];
   lstCatalog: any[] = [];
@@ -115,7 +118,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     private _sActive: ActiveStatusService,
     private _sOrderEq: OrderEqService,
     private _sOrderVt: OrderVtService,
-    private _sItem: ItemService
+    private _sItem: ItemService,
+    private _sUnit: UnitService
   ) {
     this._global.setBreadcrumb([
       {
@@ -186,7 +190,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       this._sActive.getAll().subscribe((data: any) => (this.lstActiveStatus = data)),
       this._sItem.getAll().subscribe((data: any) => (this.lstItem = data)),
       this._serviceCat.getAll().subscribe((data: any) => (this.lstEqCat = data)),
-      this._sCatalog.getAll().subscribe((data: any) => (this.lstCatalog = data))
+      this._sCatalog.getAll().subscribe((data: any) => (this.lstCatalog = data)),
+      this._sUnit.getAll().subscribe((data: any) => (this.lstUnit = data)),
     );
   }
 
@@ -237,13 +242,14 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       this._sOrderVt.getByAufnr(data.aufnr).subscribe({
         next: (data) => {
           this.lstItemOrder = data;
+          this.loadOrderItems();
         },
         error: (err) => {
           console.error(err);
         },
       })
     );
-    this.loadOrderItems();
+
     this.visibleOrder = true;
     this.loadAttachments(data.aufnr);
   }
@@ -279,6 +285,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     this.fileListTable = [];
     this.pendingFileList = [];
     this.removedFiles = [];
+    this.deletedItemIds = [];
 
     this.model = new OrderModel();
   }
@@ -291,10 +298,10 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       timeF: item.timeF ? this._global.formatTime(item.timeF) : null,
       timeT: item.timeT ? this._global.formatTime(item.timeT) : null,
     }));
-    
+
     this.subscriptions.push(
       this._sOrderEq.update(lstEquipOrderToSend[0]).subscribe({
-        next: () => {},
+        next: () => { },
         error: (err) => {
           console.error(err);
         },
@@ -310,22 +317,40 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
         },
       })
     );
-    
+
     this.lstItemOrder = [...this.lstItemOrderS, ...this.lstItemOrderM];
     const lstItemOrderSend = this.lstItemOrder.map((item) => ({
       ...item,
       budat: item.budat ? this._global.formatDate(item.budat) : null,
     }));
+    if (this.deletedItemIds.length > 0) {
+      // Xóa từng ID một
+      this.deletedItemIds.forEach(id => {
+        this.subscriptions.push(
+          this._sOrderVt.delete(id).subscribe({
+            next: () => {
+              this.message.success('Đã xóa vật tư mua ngoài thành công');
+            },
+            error: (err) => {
+              console.error('Lỗi khi xóa vật tư:', err);
+              this.message.error(`Xóa vật tư với ID ${id} thất bại`);
+            }
+          })
+        );
+      });
+      // Reset mảng sau khi đã xử lý
+      this.deletedItemIds = [];
+    }
 
     this.subscriptions.push(
       this._sOrderVt.saveOrderVt(lstItemOrderSend).subscribe({
-        next: () => {},
+        next: () => { },
         error: (err) => {
           console.error(err);
         },
       }),
       this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
-        next: () => {},
+        next: () => { },
         error: (err) => {
           console.error(err);
         },
@@ -372,8 +397,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
           const attachmentData = Array.isArray(result)
             ? result
             : result && result.data
-            ? result.data
-            : [];
+              ? result.data
+              : [];
 
           const uniqueAttachments = Array.from(
             new Map(
@@ -540,9 +565,14 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       nzOkType: 'primary',
       nzOkDanger: true,
       nzOnOk: () => {
+        const removedItem = this.lstItemOrderM[index];
+        if (removedItem.id && removedItem.id !== 'A') {
+          this.deletedItemIds.push(removedItem.id);
+        }
         this.lstItemOrderM = this.lstItemOrderM.filter((_, i) => i !== index);
       },
       nzCancelText: 'Hủy',
     });
   }
+
 }
