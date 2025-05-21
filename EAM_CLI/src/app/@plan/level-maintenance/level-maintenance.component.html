@@ -144,29 +144,6 @@
           </tbody>
         </nz-table>
       </nz-tab>
-      <nz-tab nzTitle="Tác vụ thực hiện">
-        <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
-          <thead>
-            <tr>
-              <th>Mã bước</th>
-              <th>Thứ tự</th>
-              <th>Tên tác vụ</th>
-              <th>Bộ phận thực hiện</th>
-              <th>Thời gian thực hiện</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of checklistTable.data; let i = index">
-              <td>{{ data.vornr }}</td>
-              <td>{{ i + 1 }}</td>
-              <td>{{ data.ltxa1 }}</td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </nz-table>
-
-      </nz-tab>
       <nz-tab nzTitle="Kế hoạch dự kiến">Kế hoạch dự kiến</nz-tab>
     </nz-tabset>
   </nz-page-header-content>

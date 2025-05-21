@@ -14,6 +14,9 @@ import { OrderTypeService } from '../../service/master-data/order-type.service';
 import { EquipDocService } from '../../service/master-data/equip-doc.service';
 import { EquipService } from '../../service/master-data/equip.service';
 import { EqGroupService } from '../../service/master-data/eq-group.service';
+import { EquipPlanModel } from '../../models/plan/equip-plan.model';
+import { GlobalService } from '../../service/global.service';
+import { PlanHModel } from '../../models/plan/plan-h.model';
 
 @Component({
   selector: 'app-single-maintenance',
@@ -37,68 +40,11 @@ export class SingleMaintenanceComponent implements OnInit {
   lstPlan: any[] = [];
   lstEqGroup: any[] = [];
 
-  lstEquipPlan: any[] = [
-    {
-      anlnr: null,
-      anlun: null,
-      arbpl: null,
-      auspFlg: null,
-      beber: null,
-      childCnt: null,
-      class: null,
-      datab: null,
-      datbi: null,
-      delDate: null,
-      delFlg: null,
-      eqart: null,
-      eqartSub: null,
-      eqartTp: null,
-      eqktx: null,
-      eqtyp: null,
-      equnr: null,
-      hequi: null,
-      inactDate: null,
-      inactFlg: null,
-      inbdt: null,
-      ingrp: null,
-      isActive: null,
-      iwerk: null,
-      klart: null,
-      kostl: null,
-      parentFlg: null,
-      statAct: null,
-      statActT: null,
-      state: null,
-      statusTh: null,
-      tplnr: null,
-    },
-  ];
+  lstEquipPlan: any[] = [];
+  model: any = new PlanHModel();
 
-  model: any = {
-    iwerk: null,
-    warpl: null,
-    wptxt: null,
-    mptyp: '1',
-    mpgrp: null,
-    cyctype: null,
-    cycunit: null,
-    cycle: null,
-    cycef: null,
-    stdate: null,
-    measure: null,
-    measvalue: 0,
-    mix: null,
-    tplnr: null,
-    equnr: null,
-    plnnr: null,
-    ingrp: null,
-    arbpl: null,
-    auart: null,
-    isActive: true,
-    lstEquip: [],
-    lstPlanOrder: [],
-  };
   constructor(
+    public _global : GlobalService,
     private _sPlanH: PlanHService,
     private _sEqGroup: EqGroupService,
     private _sEquip: EquipService,
@@ -132,18 +78,13 @@ export class SingleMaintenanceComponent implements OnInit {
       this.model.lstPlanOrder.push({
         id: 'A',
         warpl: this.model.warpl,
-        schstart: this.convertToIsoDateString(i.schstart),
+        schstart: this._global.convertToIsoDateString(i.schstart),
       });
     });
 
     this._sPlanH.create(this.model).subscribe({
       next: (data) => {},
     });
-  }
-
-  convertToIsoDateString(dateStr: string): string {
-    const [dd, mm, yyyy] = dateStr.split('/');
-    return `${yyyy}-${mm}-${dd}`;
   }
 
   changeEquip(selectedValue: any, rowData: any): void {
@@ -155,10 +96,6 @@ export class SingleMaintenanceComponent implements OnInit {
       rowData.eqart = selectedEquip.eqart;
       rowData.ingrp = selectedEquip.ingrp;
     }
-  }
-
-  getNamePlgrp(code: any) {
-    return this.lstPlgrp.find((x) => x.ingrp == code)?.ingrpTxt;
   }
 
   OnChangeCheckList(e: any) {
@@ -247,11 +184,11 @@ export class SingleMaintenanceComponent implements OnInit {
       this.model.cycef != null &&
       this.model.stdate != null
     ) {
-      var lstDate = this.generateDateList(
+      var lstDate = this._global.generateDateList(
         this.model.cycunit,
         this.model.cycle,
         this.model.cycef,
-        this.formatDate(this.model.stdate)
+        this._global.formatDate(this.model.stdate)
       );
 
       var lstTemp: any = [];
@@ -293,90 +230,9 @@ export class SingleMaintenanceComponent implements OnInit {
   }
 
   addEquip() {
-    const newEquip = {
-      anlnr: null,
-      anlun: null,
-      arbpl: null,
-      auspFlg: null,
-      beber: null,
-      childCnt: null,
-      class: null,
-      datab: null,
-      datbi: null,
-      delDate: null,
-      delFlg: null,
-      eqart: null,
-      eqartSub: null,
-      eqartTp: null,
-      eqktx: null,
-      eqtyp: null,
-      equnr: null,
-      hequi: null,
-      inactDate: null,
-      inactFlg: null,
-      inbdt: null,
-      ingrp: null,
-      isActive: null,
-      iwerk: null,
-      klart: null,
-      kostl: null,
-      parentFlg: null,
-      statAct: null,
-      statActT: null,
-      state: null,
-      statusTh: null,
-      tplnr: null,
-    };
-
+    const newEquip = new EquipPlanModel();
     this.lstEquipPlan = [...this.lstEquipPlan, newEquip];
   }
 
-  generateDateList(
-    unit: 'D' | 'W' | 'M',
-    frequency: number,
-    durationInYears: number,
-    startDate: string
-  ): string[] {
-    const result: string[] = [];
-    const [day, month, year] = startDate.split('/').map(Number);
-    const start = new Date(year, month - 1, day);
 
-    const totalIterations = (() => {
-      switch (unit) {
-        case 'D':
-          return Math.ceil((365 * durationInYears) / frequency);
-        case 'W':
-          return Math.ceil((52 * durationInYears) / frequency);
-        case 'M':
-          return Math.ceil((12 * durationInYears) / frequency);
-        default:
-          return 0;
-      }
-    })();
-
-    for (let i = 0; i < totalIterations; i++) {
-      const date = new Date(start.getTime());
-      switch (unit) {
-        case 'D':
-          date.setDate(start.getDate() + i * frequency);
-          break;
-        case 'W':
-          date.setDate(start.getDate() + i * frequency * 7);
-          break;
-        case 'M':
-          date.setMonth(start.getMonth() + i * frequency);
-          break;
-      }
-      result.push(this.formatDate(date));
-    }
-
-    return result;
-  }
-
-  formatDate(date: Date): string {
-    const day = `${date.getDate()}`.padStart(2, '0');
-    const month = `${date.getMonth() + 1}`.padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
 }

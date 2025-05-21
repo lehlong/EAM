@@ -3,7 +3,8 @@
   <nz-page-header-subtitle>Tạo mới thông tin kế hoạch bảo trì đơn</nz-page-header-subtitle>
   <nz-page-header-extra>
     <nz-space>
-      <button *nzSpaceItem nz-button nzType="primary" (click)="onCreate()"><nz-icon nzType="save" nzTheme="outline"/> Lưu dữ liệu</button>
+      <button *nzSpaceItem nz-button nzType="primary" (click)="onCreate()"><nz-icon nzType="save" nzTheme="outline" />
+        Lưu dữ liệu</button>
     </nz-space>
   </nz-page-header-extra>
   <nz-page-header-content class="content">
@@ -162,9 +163,9 @@
                   </nz-option>
                 </nz-select>
               </td>
-              <td>{{getNameFloc(data.tplnr)}}</td>
-              <td>{{getNameEqGroup(data.eqart)}}</td>
-              <td>{{getNamePlgrp(data.ingrp)}}</td>
+              <td>{{_global.getNameFloc(lstFloc, data.tplnr)}}</td>
+              <td>{{_global.getNameEqGroup(lstEqGroup, data.eqart)}}</td>
+              <td>{{ _global.getNamePlgrp(lstPlgrp, data.ingrp)}}</td>
             </tr>
           </tbody>
         </nz-table>

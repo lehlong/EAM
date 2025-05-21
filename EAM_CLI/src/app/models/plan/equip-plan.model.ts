@@ -1,0 +1,34 @@
+export class EquipPlanModel {
+  anlnr: string | null = null;
+  anlun: string | null = null;
+  arbpl: string | null = null;
+  auspFlg: string | null = null;
+  beber: string | null = null;
+  childCnt: number | null = null;
+  class: string | null = null;
+  datab: Date | null = null;
+  datbi: Date | null = null;
+  delDate: Date | null = null;
+  delFlg: string | null = null;
+  eqart: string | null = null;
+  eqartSub: string | null = null;
+  eqartTp: string | null = null;
+  eqktx: string | null = null;
+  eqtyp: string | null = null;
+  equnr: string | null = null;
+  hequi: string | null = null;
+  inactDate: Date | null = null;
+  inactFlg: string | null = null;
+  inbdt: Date | null = null;
+  ingrp: string | null = null;
+  isActive: boolean | null = null;
+  iwerk: string | null = null;
+  klart: string | null = null;
+  kostl: string | null = null;
+  parentFlg: string | null = null;
+  statAct: string | null = null;
+  statActT: string | null = null;
+  state: string | null = null;
+  statusTh: string | null = null;
+  tplnr: string | null = null;
+}

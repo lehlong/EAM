@@ -268,4 +268,58 @@ export class GlobalService {
     d.setHours(h, m, s || 0, 0);
     return d;
   }
+
+  generateDateList(
+    unit: 'D' | 'W' | 'M',
+    frequency: number,
+    durationInYears: number,
+    startDate: string
+  ): string[] {
+    const result: string[] = [];
+    const [day, month, year] = startDate.split('/').map(Number);
+    const start = new Date(year, month - 1, day);
+
+    const totalIterations = (() => {
+      switch (unit) {
+        case 'D':
+          return Math.ceil((365 * durationInYears) / frequency);
+        case 'W':
+          return Math.ceil((52 * durationInYears) / frequency);
+        case 'M':
+          return Math.ceil((12 * durationInYears) / frequency);
+        default:
+          return 0;
+      }
+    })();
+
+    for (let i = 0; i < totalIterations; i++) {
+      const date = new Date(start.getTime());
+      switch (unit) {
+        case 'D':
+          date.setDate(start.getDate() + i * frequency);
+          break;
+        case 'W':
+          date.setDate(start.getDate() + i * frequency * 7);
+          break;
+        case 'M':
+          date.setMonth(start.getMonth() + i * frequency);
+          break;
+      }
+      result.push(this.formatDatePlan(date));
+    }
+
+    return result;
+  }
+
+  formatDatePlan(date: Date): string {
+    const day = `${date.getDate()}`.padStart(2, '0');
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  convertToIsoDateString(dateStr: string): string {
+    const [dd, mm, yyyy] = dateStr.split('/');
+    return `${yyyy}-${mm}-${dd}`;
+  }
 }
