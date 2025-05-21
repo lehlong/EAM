@@ -5,7 +5,7 @@
     justify-content: center;
 }
 .login-form{
-    padding: 12%;
+   padding: 12px 12%;
 }
 .btn-login{
     width: 100%;
@@ -23,4 +23,16 @@ nz-input-group{
     background-position: center;
     background-repeat: no-repeat;
     width: 100%;
+}
+
+.hn-mt{
+  font-size: 32px;
+  font-weight: bold;
+  color: #075296;
+  text-align: center;
+}
+
+.title{
+  font-weight: bold;
+  text-align: center;
 }

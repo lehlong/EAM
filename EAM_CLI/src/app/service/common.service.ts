@@ -118,6 +118,24 @@ export class CommonService {
     )
   }
 
+  putWithoutNoti<T>(
+    endpoint: string,
+    data: any,
+    showLoading: boolean = true,
+  ): Observable<T> {
+    if (showLoading) {
+      this.globalService.incrementApiCallCount() // Tăng bộ đếm
+    }
+    return this.http.put<any>(`${this.baseUrl}/${endpoint}`, data).pipe(
+      map(this.handleApiResponse),
+      tap(),
+      catchError((error) =>
+        this.handleError(error, () => this.put<T>(endpoint, data, showLoading)),
+      ),
+      finalize(() => this.globalService.decrementApiCallCount()), // Giảm bộ đếm khi hoàn thành
+    )
+  }
+
   delete<T>(
     endpoint: string,
     data: any = {},

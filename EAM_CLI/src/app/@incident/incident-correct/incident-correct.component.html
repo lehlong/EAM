@@ -90,12 +90,12 @@
           <td>{{ data.qmnum }}</td>
           <td>{{ data.erdat | date:'dd/MM/yyyy hh:mm' }}</td>
           <td>{{ data.gltri | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ getNameWc(data.arbpl) }}</td>
-          <td>{{ getFullNameUser(data.ernam) }}</td>
-          <td>{{ getFullNameUser(data.staffSc) }}</td>
-          <td>{{ getNameFloc(data.tplnr) }}</td>
-          <td>{{ getNameEquip(data.equnr) }}</td>
-          <td>{{ getPriorityText(data.priok) }}</td>
+          <td>{{ _global.getNameWc(lstWc, data.arbpl) }}</td>
+          <td>{{ _global.getFullNameUser(lstUser, data.ernam) }}</td>
+          <td>{{ _global.getFullNameUser(lstUser, data.staffSc) }}</td>
+          <td>{{ _global.getNameFloc(lstFloc,data.tplnr) }}</td>
+          <td>{{ _global.getNameEquip(lstEquip,data.equnr) }}</td>
+          <td>{{ _global.getPriorityText(data.priok) }}</td>
           <td>
             <nz-tag *ngIf="data.statAct == '01'" nzColor="processing">Chờ duyệt</nz-tag>
             <nz-tag *ngIf="data.statAct == '02'" nzColor="success">Phê duyệt</nz-tag>
@@ -317,7 +317,6 @@
             <tr>
               <th>Mã thiết bị</th>
               <th>Tên thiết bị</th>
-              <th>Số serial</th>
               <th>Ngày thực hiện</th>
               <th>Ngày hoàn thành</th>
               <th>Trạng thái thiết bị</th>
@@ -330,8 +329,7 @@
           <tbody>
             <tr *ngFor="let data of EquiqTable.data; let i = index">
               <td>{{data.equnr}}</td>
-              <td>{{getEquipmentCategoryName(data.equnr)}}</td>
-              <td></td>
+              <td>{{_global.getNameEquip(lstEquip, data.equnr)}}</td>
               <td>
                 <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab"
                   [nzShowTime]="true"></nz-date-picker>
@@ -460,7 +458,7 @@
               <td>
                 <input type="text" nz-input [(ngModel)]="data.dmbtr" [disabled]="true" />
               </td>
-            
+
             </tr>
           </tbody>
         </nz-table>

@@ -112,7 +112,7 @@ namespace EAM.API.Controllers.TRAN
         public async Task<IActionResult> Insert([FromBody] NotiDto noti)
         {
             var transferObject = new TransferObject();
-            var result = await _service.Add(noti);
+            var result = await _service.Create(noti);
             if (_service.Status)
             {
                 transferObject.Data = result;

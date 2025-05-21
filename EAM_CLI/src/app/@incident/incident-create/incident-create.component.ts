@@ -10,42 +10,24 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { environment } from '../../../environments/environment';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { NotiAttService } from '../../service/tran/noti-att.service';
-import { OrganizeService } from '../../service/system-manager/organize.service';
 import { PlantService } from '../../service/master-data/plant.service';
 import { GlobalService } from '../../service/global.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { WcService } from '../../service/master-data/wc.service';
 import { PlgrpService } from '../../service/master-data/plgrp.service';
+import { NotiModel } from '../../models/tran/noti.model';
 
 @Component({
   selector: 'app-incident-create',
   imports: [ShareModule],
   templateUrl: './incident-create.component.html',
-  styleUrl: './incident-create.component.scss',
+  styleUrls: ['./incident-create.component.scss'],
 })
 export class IncidentCreateComponent implements OnInit {
-  model: any = {
-    arbpl: '',
-    qmnum: '',
-    tplnr: '',
-    eqart: '',
-    equnr: '',
-    priok: '',
-    qmtxt: '',
-    qmdetail: '',
-    qmart: 'N2',
-    iwerk: '',
-    qmnam: '',
-    ingrp: '',
-    staffSc: '',
-    ltrmn: new Date(),
-    qmdat: new Date(),
-    isActive: true,
-  };
+  model = new NotiModel();
   loading = false;
   username = '';
   qmnum = '';
-  lstOrg: any[] = [];
   lstNotiTp: any[] = [];
   lstFloc: any[] = [];
   lstEqGroup: any[] = [];
@@ -71,18 +53,13 @@ export class IncidentCreateComponent implements OnInit {
     private _sNotiTp: NotiTypeService,
     private _sNoti: NotiService,
     private _sNotiAtt: NotiAttService,
-    private message: NzMessageService,
-    private _sOrg: OrganizeService,
-    private globalService: GlobalService
+    private message: NzMessageService
   ) {
     this.username = _global.getUserName();
-    this.model.qmnam = _global.getUserName();
-    this.globalService.setBreadcrumb([
-      { name: 'Tạo mới sự cố', path: 'incident/create' },
-    ]);
-    this.globalService
-      .getLoading()
-      .subscribe((value) => (this.loading = value));
+    this.model.qmnam = this.username;
+    this.model.qmdat = new Date();
+    this._global.setBreadcrumb([{ name: 'Tạo mới sự cố', path: 'incident/create' }]);
+    this._global.getLoading().subscribe((value) => (this.loading = value));
   }
 
   ngOnInit(): void {
@@ -90,66 +67,34 @@ export class IncidentCreateComponent implements OnInit {
   }
 
   getMasterData() {
-    this._sPlgrp.getAll().subscribe({
-      next: (data: any) => (this.lstPlgrp = data),
-      error: (err) => console.log(err),
+    this._sPlgrp.getAll().subscribe((data: any) => (this.lstPlgrp = data));
+    this._sWc.getAll().subscribe((data: any) => (this.lstWc = data));
+    this._sUser.getListUser().subscribe((data: any) => (this.lstUser = data));
+    this._sNotiTp.getAll().subscribe((data: any) => (this.lstNotiTp = data));
+    this._sFloc.getAll().subscribe((data: any) => (this.lstFloc = data));
+    this._sEqGroup.getAll().subscribe((data: any) => (this.lstEqGroup = data));
+    this._sEquip.getAll().subscribe((data: any) => {
+      this.lstEquip = data;
+      this.lstEquipSelect = data;
     });
-    this._sWc.getAll().subscribe({
-      next: (data: any) => (this.lstWc = data),
-      error: (err) => console.log(err),
-    });
-    this._sUser.getListUser().subscribe({
-      next: (data: any) => (this.lstUser = data),
-      error: (err) => console.log(err),
-    });
-    this._sOrg.getOrg().subscribe({
-      next: (data: any) => (this.lstOrg = data),
-      error: (err) => console.log(err),
-    });
-    this._sNotiTp.getAll().subscribe({
-      next: (data) => (this.lstNotiTp = data),
-      error: (err) => console.log(err),
-    });
-    this._sFloc.getAll().subscribe({
-      next: (data) => (this.lstFloc = data),
-      error: (err) => console.log(err),
-    });
-    this._sEqGroup.getAll().subscribe({
-      next: (data) => (this.lstEqGroup = data),
-      error: (err) => console.log(err),
-    });
-    this._sEquip.getAll().subscribe({
-      next: (data) => {
-        this.lstEquip = data;
-        this.lstEquipSelect = data;
-      },
-      error: (err) => console.log(err),
-    });
-    this._sPlant.getAll().subscribe({
-      next: (data) => (this.lstPlant = data),
-      error: (err) => console.log(err),
-    });
+    this._sPlant.getAll().subscribe((data: any) => (this.lstPlant = data));
   }
 
-  OnChangeEquip(data: any) {
+  OnChangeEquip(): void {
     this.model.equnr = '';
-    this.lstEquipSelect = this.lstEquip;
-    if (this.model.tplnr != null && this.model.tplnr != '') {
-      this.lstEquipSelect = this.lstEquipSelect.filter(
-        (x) => x.tplnr == this.model.tplnr
-      );
-    }
-    if (this.model.eqart != null && this.model.eqart != '') {
-      this.lstEquipSelect = this.lstEquipSelect.filter(
-        (x) => x.eqart == this.model.eqart
-      );
-    }
+    this.lstEquipSelect = this.lstEquip.filter(
+      (x) =>
+        (!this.model.tplnr || x.tplnr === this.model.tplnr) &&
+        (!this.model.eqart || x.eqart === this.model.eqart)
+    );
   }
 
-  changeEquip(data: any) {
-    const equip = this.lstEquip.find((x) => x.equnr == data);
-    this.model.eqart = equip.eqart;
-    this.model.tplnr = equip.tplnr;
+  changeEquip(equnr: any): void {
+    const equip = this.lstEquip.find((x) => x.equnr == equnr);
+    if (equip) {
+      this.model.eqart = equip.eqart;
+      this.model.tplnr = equip.tplnr;
+    }
   }
 
   handleChange(info: NzUploadChangeParam): void {
@@ -158,21 +103,25 @@ export class IncidentCreateComponent implements OnInit {
     }
   }
 
+  beforeUpload = (file: NzUploadFile): boolean => {
+    this.fileList = [...this.fileList, file];
+    return false;
+  };
+
   uploadFiles(): void {
     if (!this.qmnum || this.fileList.length === 0) return;
+
     this.fileList.forEach((file) => {
-      const fileObj = file instanceof File ? file : file.originFileObj;
+      const fileObj = file.originFileObj || (file as any as File);
       if (fileObj) {
         const formData = new FormData();
         formData.append('file', fileObj);
         formData.append('qmnum', this.qmnum);
-        this._sNotiAtt
-          .uploadFile(formData, this.qmnum)
+
+        this._sNotiAtt.uploadFile(formData, this.qmnum)
           .then((res) => {
             if (res && res.status) {
-              this.message.success(
-                `Tệp ${fileObj.name} đã được tải lên thành công`
-              );
+              this.message.success(`Tệp ${fileObj.name} đã được tải lên thành công`);
             } else {
               this.message.error(`Tải lên tệp ${fileObj.name} thất bại`);
             }
@@ -185,12 +134,7 @@ export class IncidentCreateComponent implements OnInit {
     });
   }
 
-  beforeUpload = (file: NzUploadFile): boolean => {
-    this.fileList = [...this.fileList, file];
-    return false;
-  };
-
-  onCreate() {
+  onCreate(): void {
     this._sNoti.create(this.model).subscribe({
       next: (data) => {
         if (data && data.qmnum) {
@@ -209,18 +153,7 @@ export class IncidentCreateComponent implements OnInit {
     });
   }
 
-  resetForm() {
-    this.model = {
-      qmnum: '',
-      tplnr: '',
-      eqart: '',
-      equnr: '',
-      priok: '',
-      qmtxt: '',
-      qmart: '',
-      iwerk: '',
-      qmdat: null,
-      qmdetail: '',
-    };
+  resetForm(): void {
+    this.model = new NotiModel();
   }
 }

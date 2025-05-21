@@ -1,18 +1,18 @@
 export class NotiCatalogModel {
-  id: string = '';
-  qmnum: string = ''; 
-  objpart?: string = ''; 
-  typeCode?: string = ''; 
-  typeTxt?: string = ''; 
-  causeCode?: string = ''; 
-  causeTxt?: string = ''; 
-  taskCode?: string = ''; 
-  taskTxt?: string = ''; 
-  actCode?: string = ''; 
-  actTxt?: string = ''; 
-  creatBy?: string = ''; 
-  createOn?: Date | null = null; 
-  changeBy?: string = ''; 
-  changeOn?: Date | null = null; 
+  id: string = 'A';
+  qmnum: string | null = null;
+  objpart: string | null = null;
+  typeCode: string | null = null;
+  typeTxt: string | null = null;
+  causeCode: string | null = null;
+  causeTxt: string | null = null;
+  taskCode: string | null = null;
+  taskTxt: string | null = null;
+  actCode: string | null = null;
+  actTxt: string | null = null;
+  creatBy: string | null = null;
+  createOn: Date | null = null;
+  changeBy: string | null = null;
+  changeOn: Date | null = null;
   isActive: boolean = true;
 }

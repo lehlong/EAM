@@ -16,7 +16,7 @@
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
                 <label>Khu vực chức năng</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" (ngModelChange)="OnChangeEquip($event)">
+                <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" (ngModelChange)="OnChangeEquip()">
                   <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript" [nzValue]="item.tplnr"></nz-option>
                 </nz-select>
               </div>
@@ -24,7 +24,7 @@
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
                 <label>Nhóm thiết bị</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" [(ngModel)]="model.eqart" (ngModelChange)="OnChangeEquip($event)">
+                <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" [(ngModel)]="model.eqart" (ngModelChange)="OnChangeEquip()">
                   <nz-option *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart + ' - ' + item.eqartTxt" [nzValue]="item.eqart"></nz-option>
                 </nz-select>
               </div>

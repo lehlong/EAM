@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ShareModule } from '../../shared/share-module';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { BaseFilter, PaginationResult } from '../../models/base.model';
@@ -12,9 +12,14 @@ import { PlantService } from '../../service/master-data/plant.service';
 import { PlgrpService } from '../../service/master-data/plgrp.service';
 import { WcService } from '../../service/master-data/wc.service';
 import { AccountService } from '../../service/system-manager/account.service';
-import { NotiService } from '../../service/tran/noti.service';
 import { OrderService } from '../../service/tran/order.service';
-import { HTBTBD, ILART, LVTSD, PriorityLevel, TTTH } from '../../shared/constants/select.constants';
+import {
+  HTBTBD,
+  ILART,
+  LVTSD,
+  PriorityLevel,
+  TTTH,
+} from '../../shared/constants/select.constants';
 import { NotiCatalogService } from '../../service/tran/not-catalog.service';
 import { CatalogService } from '../../service/master-data/catalog.service';
 import { OrderAttService } from '../../service/tran/order-att.service';
@@ -28,20 +33,17 @@ import { ActiveStatusService } from '../../service/master-data/active-status.ser
 import { OrderEqService } from '../../service/tran/orderEq.service';
 import { OrderVtService } from '../../service/tran/ordervt.service';
 import { ItemService } from '../../service/warehouse/item.service';
-const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+import { OrderModel } from '../../models/tran/order.model';
+import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
+import { ItemOrder } from '../../models/tran/item-order.model';
+
 @Component({
   selector: 'app-incident-correct',
   imports: [ShareModule],
   templateUrl: './incident-correct.component.html',
   styleUrl: './incident-correct.component.scss',
 })
-export class IncidentCorrectComponent implements OnInit {
+export class IncidentCorrectComponent implements OnInit, OnDestroy {
   checked: boolean = false;
   filter = new BaseFilter();
   loading: boolean = false;
@@ -64,9 +66,10 @@ export class IncidentCorrectComponent implements OnInit {
   lstILART = ILART;
   lstTTTH = TTTH;
   lstItemOrderS: any[] = [];
-lstItemOrderM: any[] = [];
+  lstItemOrderM: any[] = [];
 
   lstNotiCatalog: any[] = [];
+  lstCatalog: any[] = [];
   lstCatalogTypeA: any[] = [];
   lstCatalogTypeB: any[] = [];
   lstCatalogTypeC: any[] = [];
@@ -84,96 +87,11 @@ lstItemOrderM: any[] = [];
   previewImage: string | undefined = '';
   previewTitle: string | undefined = '';
   previewVisible = false;
+  visibleOrder: boolean = false;
 
-  model: any = {
-    iwerk: '',
-    aufnr: '',
-    auart: '',
-    ktext: '',
-    ilart: '',
-    artpr: '',
-    priok: '',
-    equnr: '',
-    tplnr: '',
-    oblty: '',
-    eqart: '',
-    eqartError: '',
-    ingpr: '',
-    warpl: '',
-    abnum: null,
-    nplda: null,
-    addat: null,
-    qmnum: '',
-    obknr: null,
-    gewrk: '',
-    eqartSub: '',
-    objnr: '',
-    aufpl: '',
-    rsnum: '',
-    accFlg: '',
-    ftrms: null,
-    gstri: null,
-    gltri: null,
-    gstrp: null,
-    gltrp: null,
-    gstrs: null,
-    gltrs: null,
-    getri: null,
-    ftrmi: null,
-    ftrmp: null,
-    bukrs: '',
-    arbpl: '',
-    werks: '',
-    kostv: '',
-    stort: '',
-    iphas: '',
-    phas0: '',
-    phas1: '',
-    phas2: '',
-    phas3: '',
-    pdat1: null,
-    pdat2: null,
-    pdat3: null,
-    idat3: null,
-    htBtbd: '',
-    staffPl: '',
-    staff: '',
-    loaivtSd: '',
-    staffSc: '',
-    staffKt: '',
-    ausvn: null,
-    ausbs: null,
-    lockFlg: '',
-    lockDate: null,
-    delFlg: '',
-    delDate: null,
-    status: '',
-    stat: '',
-    statT: '',
-    lifnr: '',
-    budat: null,
-    bldat: null,
-    hkont: '',
-    dmbtr: null,
-    waers: '',
-    rootF: '',
-    statMo: '',
-    statTd: '',
-    statKt: '',
-    cfFlg: '',
-    kqFlg: '',
-    groupidPm: '',
-    pmvtid: '',
-    ernam: '',
-    erdat: null,
-    aenam: '',
-    aedat: null,
-    needup: '',
-    belnr: '',
-    gjahr: null,
-    equipName: '',
-    flocName: '',
-  };
+  model: any = new OrderModel();
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private _sNotiCatalog: NotiCatalogService,
@@ -182,10 +100,9 @@ lstItemOrderM: any[] = [];
     private _sNotiTp: NotiTypeService,
     private _sPlant: PlantService,
     private _sCatalog: CatalogService,
-    private _sNoti: NotiService,
     private _sWc: WcService,
     private _sEquip: EquipService,
-    private globalService: GlobalService,
+    public _global: GlobalService,
     private message: NzMessageService,
     private _sFloc: FlocService,
     private _sAccount: AccountService,
@@ -198,335 +115,227 @@ lstItemOrderM: any[] = [];
     private _sActive: ActiveStatusService,
     private _sOrderEq: OrderEqService,
     private _sOrderVt: OrderVtService,
-    private _sItem: ItemService,
+    private _sItem: ItemService
   ) {
-    this.globalService.setBreadcrumb([
+    this._global.setBreadcrumb([
       {
         name: 'Danh sách lệnh',
         path: 'incident/correct',
       },
     ]);
-    this.globalService.getLoading().subscribe((value) => {
-      this.loading = value;
-    });
+    this.subscriptions.push(
+      this._global.getLoading().subscribe((value) => {
+        this.loading = value;
+      })
+    );
   }
   ngOnDestroy() {
-    this.globalService.setBreadcrumb([]);
+    this._global.setBreadcrumb([]);
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
     this.search();
     this.getMasterData();
-    this.searchCat();
   }
   search() {
-    this._sOrder.search(this.filter).subscribe({
-      next: (data) => {
-        this.paginationResult = data;
-      },
-      error: (response) => {
-        console.log(response);
-      },
-    });
-  }
-  searchCat() {
-    this._serviceCat.getAll().subscribe({
-      next: (data) => {
-        this.lstEqCat = data;
-      },
-      error: (response) => {
-        console.log(response);
-      },
-    });
+    this.subscriptions.push(
+      this._sOrder.search(this.filter).subscribe({
+        next: (data) => {
+          this.paginationResult = data;
+        },
+        error: (response) => {
+          console.log(response);
+        },
+      })
+    );
   }
 
   addCatalogItem() {
-    this.lstNotiCatalog = [...this.lstNotiCatalog, {
-      id: 'A',
-      qmnum: this.model.qmnum,
-      objpart: null,
-      typeCode: null,
-      typeTxt: null,
-      causeCode: null,
-      causeTxt: null,
-      taskCode: null,
-      taskTxt: null,
-      actCode: null,
-      actTxt: null,
-      creatBy: null,
-      createOn: null,
-      changeBy: null,
-      changeOn: null,
-      isActive: true,
-    },];
+    const notiCatalog = new NotiCatalogModel();
+    notiCatalog.qmnum = this.model.qmnum;
+    this.lstNotiCatalog = [...this.lstNotiCatalog, notiCatalog];
   }
 
   addOrderItem() {
-    this.lstItemOrderS = [...this.lstItemOrderS, {
-      id: 'A',
-      aufnr: this.model.aufnr,
-      category: 'S',
-      matnr: null,
-      marktxt: null,
-      werks: null,
-      budat: null,
-      isActive: true,
-      menge: 0,
-      meins: null,
-      category2: null,
-      lgort: null,
-      charg: null,
-      price: 0,
-      dmbtr: 0,
-      waers: null,
-      uname: null,
-      udat: null,
-    },];
+    const item = new ItemOrder();
+    item.id = 'A';
+    item.category = 'S';
+    item.aufnr = this.model.aufnr;
+    this.lstItemOrderS = [...this.lstItemOrderS, item];
   }
-   addOrderItemM() {
-    this.lstItemOrderM = [...this.lstItemOrderM, {
-      id: 'A',
-      aufnr: this.model.aufnr,
-      category: 'M',
-      matnr: null,
-      marktxt: null,
-      werks: null,
-      budat: null,
-      isActive: true,
-      menge: 0,
-      meins: null,
-      category2: null,
-      lgort: null,
-      charg: null,
-      price: 0,
-      dmbtr: 0,
-      waers: null,
-      uname: null,
-      udat: null,
-    },];
+  addOrderItemM() {
+    const item = new ItemOrder();
+    item.id = 'A';
+    item.category = 'M';
+    item.aufnr = this.model.aufnr;
+    this.lstItemOrderM = [...this.lstItemOrderM, item];
   }
 
   getMasterData() {
-    this._sPlant.getAll().subscribe({
-      next: (data) => {
-        this.lstPlant = data;
-      },
-    });
-    this._sOrderType.getAll().subscribe({
-      next: (data) => {
-        this.lstOrderType = data;
-      },
-    });
-    this._sNotiTp.getAll().subscribe({
-      next: (data) => {
-        this.lstNotiTp = data;
-      },
-    });
-    this._sPlgrp.getAll().subscribe({
-      next: (data) => {
-        this.lstPlgrp = data;
-      },
-    });
-    this._sEqGroup.getAll().subscribe({
-      next: (data) => {
-        this.lstEqGroup = data;
-      },
-    });
-    this._sAccount.getListUser().subscribe({
-      next: (data) => {
-        this.lstUser = data;
-      },
-    });
-    this._sWc.getAll().subscribe({
-      next: (data) => {
-        this.lstWc = data;
-      },
-    });
-    this._sEquip.getAll().subscribe({
-      next: (data) => {
-        this.lstEquip = data;
-      },
-    });
-    this._sFloc.getAll().subscribe({
-      next: (data) => {
-        this.lstFloc = data;
-      },
-    });
-    this._sUsage.getAll().subscribe({
-      next: (data) => {
-        this.lstUsageStatus = data;
-      },
-    });
-    this._sActive.getAll().subscribe({
-      next: (data) => {
-        this.lstActiveStatus = data;
-      },
-    });
-    this._sItem.getAll().subscribe({
-      next: (data) => {
-        this.lstItem = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-
-    this._sCatalog.getAll().subscribe({
-      next: (data: any) => {
-        this.lstCatalogTypeA = data.filter(
-          (x: { catType: string }) => x.catType === 'A'
-        );
-        this.lstCatalogTypeB = data.filter(
-          (x: { catType: string }) => x.catType === 'B'
-        );
-        this.lstCatalogTypeC = data.filter(
-          (x: { catType: string }) => x.catType === 'C'
-        );
-        this.lstCatalogType2 = data.filter(
-          (x: { catType: string }) => x.catType === '2'
-        );
-        this.lstCatalogType5 = data.filter(
-          (x: { catType: string }) => x.catType === '5'
-        );
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-  }
-  parseTimeStringToDate(timeStr: string): Date | null {
-    if (!timeStr) return null;
-    const [h, m, s] = timeStr.split(':').map(Number);
-    const d = new Date();
-    d.setHours(h, m, s || 0, 0);
-    return d;
-  }
-  getEquipmentCategoryName(code: string) {
-    const eqtypF = this.lstEquip.find((x: { equnr: string }) => x.equnr == code)?.eqtyp;
-    return this.lstEqCat.find((x: { eqtyp: string }) => x.eqtyp == eqtypF)
-      ?.eqtypTxt;
-  }
-  getFloc(code: string) {
-    return this.lstEquip.find((x: { equnr: string }) => x.equnr == code)?.tplnr;
+    this.subscriptions.push(
+      this._sPlant.getAll().subscribe((data: any) => (this.lstPlant = data)),
+      this._sOrderType.getAll().subscribe((data: any) => (this.lstOrderType = data)),
+      this._sNotiTp.getAll().subscribe((data: any) => (this.lstNotiTp = data)),
+      this._sPlgrp.getAll().subscribe((data: any) => (this.lstPlgrp = data)),
+      this._sEqGroup.getAll().subscribe((data: any) => (this.lstEqGroup = data)),
+      this._sAccount.getListUser().subscribe((data: any) => (this.lstUser = data)),
+      this._sWc.getAll().subscribe((data: any) => (this.lstWc = data)),
+      this._sEquip.getAll().subscribe((data: any) => (this.lstEquip = data)),
+      this._sFloc.getAll().subscribe((data: any) => (this.lstFloc = data)),
+      this._sUsage.getAll().subscribe((data: any) => (this.lstUsageStatus = data)),
+      this._sActive.getAll().subscribe((data: any) => (this.lstActiveStatus = data)),
+      this._sItem.getAll().subscribe((data: any) => (this.lstItem = data)),
+      this._serviceCat.getAll().subscribe((data: any) => (this.lstEqCat = data)),
+      this._sCatalog.getAll().subscribe((data: any) => (this.lstCatalog = data))
+    );
   }
 
-  visibleOrder: boolean = false;
   openEditOrder(data: any) {
     this.model = data;
-    this.model.equipName = this.getNameEquip(data.equnr);
-    this.model.flocName = this.getNameFloc(data.tplnr);
-    this._sNotiCatalog.getByQmnum(data.qmnum).subscribe({
-      next: (data) => {
-        this.lstNotiCatalog = data;
-      },
-      error: (err) => { },
-    });
-    this._sOrderEq.GetByAufnr(data.aufnr).subscribe({
-      next: (data) => {
-        this.lstEquipOrder = (data || []).map((item: { datab: string | number | Date; datbi: string | number | Date; timeF: string; timeT: string; }) => ({
-          ...item,
-          datab: item.datab ? new Date(item.datab) : null,
-          datbi: item.datbi ? new Date(item.datbi) : null,
-          timeF: item.timeF ? this.parseTimeStringToDate(item.timeF) : null,
-          timeT: item.timeT ? this.parseTimeStringToDate(item.timeT) : null,
-        }));
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-    this._sOrderVt.getByAufnr(data.aufnr).subscribe({
-      next: (data) => {
-        this.lstItemOrder = data;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.model.equipName = this._global.getNameEquip(this.lstEquip, data.equnr);
+    this.model.flocName = this._global.getNameFloc(this.lstFloc, data.tplnr);
+
+    const tempCatalog = this.lstCatalog.filter((x) => x.catCode == data.eqart);
+    this.lstCatalogTypeA = tempCatalog.filter((x) => x.catType === 'A');
+    this.lstCatalogTypeB = tempCatalog.filter((x) => x.catType === 'B');
+    this.lstCatalogTypeC = tempCatalog.filter((x) => x.catType === 'C');
+    this.lstCatalogType2 = tempCatalog.filter((x) => x.catType === '2');
+    this.lstCatalogType5 = tempCatalog.filter((x) => x.catType === '5');
+
+    this.subscriptions.push(
+      this._sNotiCatalog.getByQmnum(data.qmnum).subscribe({
+        next: (data) => {
+          this.lstNotiCatalog = data;
+        },
+        error: (err) => console.error(err),
+      }),
+      this._sOrderEq.GetByAufnr(data.aufnr).subscribe({
+        next: (data) => {
+          this.lstEquipOrder = (data || []).map(
+            (item: {
+              datab: string | number | Date;
+              datbi: string | number | Date;
+              timeF: string;
+              timeT: string;
+            }) => ({
+              ...item,
+              datab: item.datab ? new Date(item.datab) : null,
+              datbi: item.datbi ? new Date(item.datbi) : null,
+              timeF: item.timeF
+                ? this._global.parseTimeStringToDate(item.timeF)
+                : null,
+              timeT: item.timeT
+                ? this._global.parseTimeStringToDate(item.timeT)
+                : null,
+            })
+          );
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      }),
+      this._sOrderVt.getByAufnr(data.aufnr).subscribe({
+        next: (data) => {
+          this.lstItemOrder = data;
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      })
+    );
     this.loadOrderItems();
     this.visibleOrder = true;
     this.loadAttachments(data.aufnr);
   }
   loadOrderItems(): void {
-  if (this.lstItemOrder && this.lstItemOrder.length > 0) {
-    this.lstItemOrderS = this.lstItemOrder.filter(item => item.category === 'S');
-    this.lstItemOrderM = this.lstItemOrder.filter(item => item.category === 'M');
-  } else {
-    this.lstItemOrderS = [];
-    this.lstItemOrderM = [];
+    if (this.lstItemOrder && this.lstItemOrder.length > 0) {
+      this.lstItemOrderS = this.lstItemOrder.filter(
+        (item) => item.category === 'S'
+      );
+      this.lstItemOrderM = this.lstItemOrder.filter(
+        (item) => item.category === 'M'
+      );
+    } else {
+      this.lstItemOrderS = [];
+      this.lstItemOrderM = [];
+    }
   }
-}
   closeOrder() {
     this.visibleOrder = false;
-  }
-  formatDate(date: any): string {
 
-    if (typeof date.format === 'function') {
-      return date.format('YYYY-MM-DDTHH:mm:ss');
-    }
-    if (date instanceof Date) {
-      return date.toISOString();
-    }
-    return date;
-  }
-  formatTime(time: any): string {
+    this.lstItemOrderS = [];
+    this.lstItemOrderM = [];
+    this.lstItemOrder = [];
+    this.lstNotiCatalog = [];
+    this.lstEquipOrder = [];
 
-    if (typeof time.format === 'function') {
-      return time.format('HH:mm:ss');
-    }
-    if (time instanceof Date) {
-      return time.toTimeString().slice(0, 8);
-    }
-    return time;
+    this.lstCatalogTypeA = [];
+    this.lstCatalogTypeB = [];
+    this.lstCatalogTypeC = [];
+    this.lstCatalogType2 = [];
+    this.lstCatalogType5 = [];
+
+    this.fileList = [];
+    this.fileListTable = [];
+    this.pendingFileList = [];
+    this.removedFiles = [];
+
+    this.model = new OrderModel();
   }
+
   updateOrder() {
-    const lstEquipOrderToSend = this.lstEquipOrder.map(item => ({
+    const lstEquipOrderToSend = this.lstEquipOrder.map((item) => ({
       ...item,
-      datab: item.datab ? this.formatDate(item.datab) : null,
-      datbi: item.datbi ? this.formatDate(item.datbi) : null,
-      timeF: item.timeF ? this.formatTime(item.timeF) : null,
-      timeT: item.timeT ? this.formatTime(item.timeT) : null,
-
+      datab: item.datab ? this._global.formatDate(item.datab) : null,
+      datbi: item.datbi ? this._global.formatDate(item.datbi) : null,
+      timeF: item.timeF ? this._global.formatTime(item.timeF) : null,
+      timeT: item.timeT ? this._global.formatTime(item.timeT) : null,
     }));
-    this._sOrderEq.update(lstEquipOrderToSend[0]).subscribe({
-      next: () => {
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
-    this._sOrder.update(this.model).subscribe({
-      next: (data) => {
-        this.processFiles();
-        this.search();
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    
+    this.subscriptions.push(
+      this._sOrderEq.update(lstEquipOrderToSend[0]).subscribe({
+        next: () => {},
+        error: (err) => {
+          console.error(err);
+        },
+      }),
+      this._sOrder.update(this.model).subscribe({
+        next: () => {
+          this.processFiles();
+          this.search();
+        },
+        error: (err) => {
+          console.error(err);
+          this.message.error('Cập nhật thất bại');
+        },
+      })
+    );
+    
     this.lstItemOrder = [...this.lstItemOrderS, ...this.lstItemOrderM];
-    const lstItemOrderSend = this.lstItemOrder.map(item => ({
+    const lstItemOrderSend = this.lstItemOrder.map((item) => ({
       ...item,
-      budat: item.budat ? this.formatDate(item.budat) : null,
+      budat: item.budat ? this._global.formatDate(item.budat) : null,
     }));
-    this._sOrderVt.saveOrderVt(lstItemOrderSend).subscribe({
-      next: () => {
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
 
-    this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
-      next: () => {
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
-
+    this.subscriptions.push(
+      this._sOrderVt.saveOrderVt(lstItemOrderSend).subscribe({
+        next: () => {},
+        error: (err) => {
+          console.error(err);
+        },
+      }),
+      this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
+        next: () => {},
+        error: (err) => {
+          console.error(err);
+        },
+      })
+    );
   }
   onMaterialChange(materialCode: string, itemData: any): void {
-    const selectedItem = this.lstItem.find(item => item.matnr === materialCode);
+    const selectedItem = this.lstItem.find(
+      (item) => item.matnr === materialCode
+    );
     if (selectedItem) {
       itemData.meins = selectedItem.meins;
       itemData.maktx = selectedItem.maktx;
@@ -541,29 +350,6 @@ lstItemOrderM: any[] = [];
     itemData.dmbtr = total.toLocaleString('vi-VN');
   }
 
-  getFullNameUser(username: any) {
-    return this.globalService.getFullNameUser(this.lstUser, username);
-  }
-  getNameWc(code: any) {
-    return this.globalService.getNameWc(this.lstWc, code);
-  }
-
-  getNameEquip(code: any) {
-    return this.globalService.getNameEquip(this.lstEquip, code);
-  }
-
-  getFlocName(code: any) {
-    const tplnrF = this.lstEquip.find((x: { equnr: string }) => x.equnr == code)?.tplnr;
-    return this.globalService.getNameFloc(this.lstFloc, tplnrF);
-  }
-
-  getNameFloc(code: any) {
-    return this.globalService.getNameFloc(this.lstFloc, code);
-  }
-
-  getPriorityText(priok: string) {
-    return this.globalService.getPriorityText(priok);
-  }
   reset() {
     this.filter = new BaseFilter();
     this.search();
@@ -580,62 +366,65 @@ lstItemOrderM: any[] = [];
     this.search();
   }
   loadAttachments(aufnr: string) {
-    this._sOrderAtt.GetByAufnr(aufnr).subscribe({
-      next: (result) => {
-        const attachmentData = Array.isArray(result)
-          ? result
-          : result && result.data
+    this.subscriptions.push(
+      this._sOrderAtt.GetByAufnr(aufnr).subscribe({
+        next: (result) => {
+          const attachmentData = Array.isArray(result)
+            ? result
+            : result && result.data
             ? result.data
             : [];
 
-        const uniqueAttachments = Array.from(
-          new Map(
-            attachmentData.map((item: { path: any }) => [item.path, item])
-          ).values()
-        );
+          const uniqueAttachments = Array.from(
+            new Map(
+              attachmentData.map((item: { path: any }) => [item.path, item])
+            ).values()
+          );
 
-        if (uniqueAttachments && uniqueAttachments.length > 0) {
-          this.fileList = uniqueAttachments.map((item: any) => {
-            const fileUrl = `${environment.urlFiles}/${item.path}`;
-            const mimeType = this.getMimeType(item.fileType);
+          if (uniqueAttachments && uniqueAttachments.length > 0) {
+            this.fileList = uniqueAttachments.map((item: any) => {
+              const fileUrl = `${environment.urlFiles}/${item.path}`;
+              const mimeType = this._global.getMimeType(item.fileType);
 
-            const uploadFile: NzUploadFile = {
-              uid: item.id,
-              name: item.path.split('/').pop() || 'file',
-              status: 'done',
-              url: fileUrl,
-              size: item.fileSize,
-              type: mimeType,
-            };
+              const uploadFile: NzUploadFile = {
+                uid: item.id,
+                name: item.path.split('/').pop() || 'file',
+                status: 'done',
+                url: fileUrl,
+                size: item.fileSize,
+                type: mimeType,
+              };
 
-            if (this.isImageType(item.fileType)) {
-              uploadFile.thumbUrl = fileUrl;
-            }
+              if (this._global.isImageType(item.fileType)) {
+                uploadFile.thumbUrl = fileUrl;
+              }
 
-            return uploadFile;
-          });
+              return uploadFile;
+            });
 
-          this.fileListTable = uniqueAttachments.map((item: any) => {
-            return {
-              path: item.path,
-              url: `${environment.urlFiles}/${item.path}`,
-              name: item.path.split('/').pop() || 'file',
-              fileType: item.fileType,
-              fileSize: item.fileSize / 1024,
-              createDate: item.createDate || new Date(),
-            };
-          });
-        } else {
-          console.log('No attachments found or invalid response');
+            this.fileListTable = uniqueAttachments.map((item: any) => {
+              return {
+                path: item.path,
+                url: `${environment.urlFiles}/${item.path}`,
+                name: item.path.split('/').pop() || 'file',
+                fileType: item.fileType,
+                fileSize: item.fileSize / 1024,
+                createDate: item.createDate || new Date(),
+              };
+            });
+          } else {
+            console.log('No attachments found or invalid response');
+            this.fileList = [];
+          }
+        },
+        error: (err) => {
+          console.error('Error loading attachments:', err);
+          this.message.error('Không thể tải danh sách file đính kèm');
           this.fileList = [];
-        }
-      },
-      error: (err) => {
-        console.error('Error loading attachments:', err);
-        this.message.error('Không thể tải danh sách file đính kèm');
-        this.fileList = [];
-      },
-    });
+          this.fileListTable = [];
+        },
+      })
+    );
   }
   async processFiles(): Promise<void> {
     try {
@@ -678,24 +467,6 @@ lstItemOrderM: any[] = [];
     }
   }
 
-  isImageType(fileType: string): boolean {
-    return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(
-      fileType.toLowerCase()
-    );
-  }
-  getMimeType(fileType: string): string {
-    const lowerType = fileType.toLowerCase();
-    if (['jpg', 'jpeg'].includes(lowerType)) return 'image/jpeg';
-    if (lowerType === 'png') return 'image/png';
-    if (lowerType === 'gif') return 'image/gif';
-    if (lowerType === 'bmp') return 'image/bmp';
-    if (lowerType === 'txt') return 'text/plain';
-    if (lowerType === 'pdf') return 'application/pdf';
-    if (['doc', 'docx'].includes(lowerType)) return 'application/msword';
-    if (['xls', 'xlsx'].includes(lowerType)) return 'application/vnd.ms-excel';
-    return 'application/octet-stream';
-  }
-
   customUploadRequest = (item: NzUploadXHRArgs): Subscription => {
     if (item.file instanceof File) {
       this.pendingFileList.push(item.file);
@@ -708,7 +479,7 @@ lstItemOrderM: any[] = [];
   };
   handlePreview = async (file: NzUploadFile) => {
     if (!file.url && !file['preview']) {
-      file['preview'] = await getBase64(file.originFileObj!);
+      file['preview'] = await this._global.getBase64(file.originFileObj!);
     }
     this.previewImage = file.url || file['preview'];
     this.previewVisible = true;
@@ -761,17 +532,17 @@ lstItemOrderM: any[] = [];
       },
     });
   }
-removeOrderItemM(index: number): void {
-  this.modal.confirm({
-    nzTitle: 'Bạn có chắc chắn muốn xóa vật tư này?',
-    nzContent: 'Hành động này không thể hoàn tác.',
-    nzOkText: 'Xác nhận',
-    nzOkType: 'primary',
-    nzOkDanger: true,
-    nzOnOk: () => {
-      this.lstItemOrderM = this.lstItemOrderM.filter((_, i) => i !== index);
-    },
-    nzCancelText: 'Hủy',
-  });
-}
+  removeOrderItemM(index: number): void {
+    this.modal.confirm({
+      nzTitle: 'Bạn có chắc chắn muốn xóa vật tư này?',
+      nzContent: 'Hành động này không thể hoàn tác.',
+      nzOkText: 'Xác nhận',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.lstItemOrderM = this.lstItemOrderM.filter((_, i) => i !== index);
+      },
+      nzCancelText: 'Hủy',
+    });
+  }
 }

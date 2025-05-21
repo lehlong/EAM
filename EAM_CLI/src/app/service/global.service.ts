@@ -189,14 +189,13 @@ export class GlobalService {
     return data.find((item) => item.code === code)?.name;
   }
 
-getFullNameUser(
-  data: { userName: string; fullName: string }[] = [],
-  username: string | null | undefined
-): string | undefined {
-  if (!Array.isArray(data) || !username) return undefined;
-  return data.find(user => user.userName === username)?.fullName;
-}
-
+  getFullNameUser(
+    data: { userName: string; fullName: string }[] = [],
+    username: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !username) return undefined;
+    return data.find((user) => user.userName === username)?.fullName;
+  }
 
   getPriorityText(priok: string): string {
     switch (priok) {
@@ -213,5 +212,60 @@ getFullNameUser(
       default:
         return priok || '';
     }
+  }
+
+  getMimeType(fileType: string): string {
+    const lowerType = fileType.toLowerCase();
+    if (['jpg', 'jpeg'].includes(lowerType)) return 'image/jpeg';
+    if (lowerType === 'png') return 'image/png';
+    if (lowerType === 'gif') return 'image/gif';
+    if (lowerType === 'bmp') return 'image/bmp';
+    if (lowerType === 'txt') return 'text/plain';
+    if (lowerType === 'pdf') return 'application/pdf';
+    if (['doc', 'docx'].includes(lowerType)) return 'application/msword';
+    if (['xls', 'xlsx'].includes(lowerType)) return 'application/vnd.ms-excel';
+    return 'application/octet-stream';
+  }
+
+  isImageType(fileType: string): boolean {
+    return ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(
+      fileType.toLowerCase()
+    );
+  }
+
+  getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  formatTime(time: any): string {
+    if (typeof time.format === 'function') {
+      return time.format('HH:mm:ss');
+    }
+    if (time instanceof Date) {
+      return time.toTimeString().slice(0, 8);
+    }
+    return time;
+  }
+
+  formatDate(date: any): string {
+    if (typeof date.format === 'function') {
+      return date.format('YYYY-MM-DDTHH:mm:ss');
+    }
+    if (date instanceof Date) {
+      return date.toISOString();
+    }
+    return date;
+  }
+
+  parseTimeStringToDate(timeStr: string): Date | null {
+    if (!timeStr) return null;
+    const [h, m, s] = timeStr.split(':').map(Number);
+    const d = new Date();
+    d.setHours(h, m, s || 0, 0);
+    return d;
   }
 }

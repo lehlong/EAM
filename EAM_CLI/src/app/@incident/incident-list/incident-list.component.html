@@ -95,12 +95,12 @@
           <td>{{ data.qmtxt }}</td>
           <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
           <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ getNameWc(data.arbpl) }}</td>
-          <td>{{ getFullNameUser(data.qmnam) }}</td>
-          <td>{{ getFullNameUser(data.staffSc) }}</td>
-          <td>{{ getFlocName(data.tplnr) }}</td>
-          <td>{{ getNameEquip(data.equnr) }}</td>
-          <td>{{ getPriorityText(data.priok) }}</td>
+          <td>{{ _global.getNameWc(lstWc, data.arbpl) }}</td>
+          <td>{{ _global.getFullNameUser(lstUser, data.qmnam) }}</td>
+          <td>{{ _global.getFullNameUser(lstUser, data.staffSc) }}</td>
+          <td>{{ _global.getNameFloc(lstFloc, data.tplnr) }}</td>
+          <td>{{ _global.getNameEquip(lstEquip, data.equnr) }}</td>
+          <td>{{ _global.getPriorityText(data.priok) }}</td>
           <td>
             <nz-tag *ngIf="data.statAct == '01'" nzColor="processing">Chờ duyệt</nz-tag>
             <nz-tag *ngIf="data.statAct == '02'" nzColor="success">Phê duyệt</nz-tag>
@@ -159,7 +159,7 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Thiết bị</label>
-              <input nz-input [value]="getNameEquip(model.equnr)" [disabled]="true">
+              <input nz-input [value]="_global.getNameEquip(lstEquip, model.equnr)" [disabled]="true">
             </div>
           </div>
 
@@ -167,14 +167,14 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Khu vực chức năng</label>
-              <input nz-input [value]="getFlocName(model.tplnr)" [disabled]="true">
+              <input nz-input [value]="_global.getNameFloc(lstFloc, model.tplnr)" [disabled]="true">
             </div>
           </div>
 
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Nhóm thiết bị</label>
-              <input nz-input [value]="getNameEqGroup(model.eqart)" [disabled]="true">
+              <input nz-input [value]="_global.getNameEqGroup(lstEqGroup, model.eqart)" [disabled]="true">
             </div>
           </div>
 

@@ -23,7 +23,7 @@ export class NotiCatalogService {
   }
 
   update(params: any): Observable<any> {
-    return this.commonService.put('NotiCatalog/Update', params)
+    return this.commonService.putWithoutNoti('NotiCatalog/Update', params)
   }
 
   delete(id: string): Observable<any> {

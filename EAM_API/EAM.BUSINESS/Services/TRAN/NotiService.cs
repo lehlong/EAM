@@ -15,10 +15,34 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<PagedResponseDto> SearchApproval(BaseFilter filter);
         Task<PagedResponseDto> SearchClose(BaseFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
+        Task<NotiDto> Create(NotiDto dto);
     }
     
     public class NotiService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNoti, NotiDto>(dbContext, mapper), INotiService
     {
+        public async Task<NotiDto> Create(NotiDto dto)
+        {
+            try
+            {
+                var notiType = _dbContext.TblMdNotiType.Find(dto.Qmart);
+                var qmnum = notiType.Sequence + _dbContext.TblTranNoti.Where(x => x.Qmart == dto.Qmart).Count();
+                dto.Qmnum = qmnum.ToString();
+                dto.Erdat = DateTime.Now;
+                dto.StatAct = "01";
+
+                var entity = _mapper.Map<TblTranNoti>(dto);
+                await _dbContext.TblTranNoti.AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
+
+                return _mapper.Map<NotiDto>(entity);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
         public override async Task<PagedResponseDto> Search(BaseFilter filter)
         {
             try
