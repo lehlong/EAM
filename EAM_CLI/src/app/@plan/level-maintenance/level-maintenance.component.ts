@@ -53,6 +53,7 @@ export class LevelMaintenanceComponent implements OnInit {
     private _sOrderType: OrderTypeService
   ) {}
   ngOnInit(): void {
+    this.model.mptyp = '2';
     this.getMasterData();
   }
 
