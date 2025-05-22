@@ -86,4 +86,7 @@ export class OrderModel {
   gjahr: number | null = null;
   equipName: number | null = null;
   flocName: number | null = null;
+  lstCatalog: any[] = [];
+  lstEquip: any[] = [];
+  lstVt : any[] = [];
 }

@@ -69,9 +69,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   lstTTTH = TTTH;
   lstItemOrderS: any[] = [];
   lstItemOrderM: any[] = [];
-  deletedItemIds: string[] = [];
 
-  lstNotiCatalog: any[] = [];
   lstCatalog: any[] = [];
   lstCatalogTypeA: any[] = [];
   lstCatalogTypeB: any[] = [];
@@ -80,8 +78,6 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   lstCatalogType5: any[] = [];
   lstOrderEq: any[] = [];
   lstEqCat: any = [];
-  lstEquipOrder: any[] = [];
-  lstItemOrder: any[] = [];
   lstOrderOperation: any[] = [];
 
   pendingFileList: File[] = [];
@@ -158,7 +154,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   addCatalogItem() {
     const notiCatalog = new NotiCatalogModel();
     notiCatalog.qmnum = this.model.qmnum;
-    this.lstNotiCatalog = [...this.lstNotiCatalog, notiCatalog];
+    this.model.lstCatalog = [...this.model.lstCatalog, notiCatalog];
   }
 
   addOrderItem() {
@@ -179,29 +175,39 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   getMasterData() {
     this.subscriptions.push(
       this._sPlant.getAll().subscribe((data: any) => (this.lstPlant = data)),
-      this._sOrderType.getAll().subscribe((data: any) => (this.lstOrderType = data)),
+      this._sOrderType
+        .getAll()
+        .subscribe((data: any) => (this.lstOrderType = data)),
       this._sNotiTp.getAll().subscribe((data: any) => (this.lstNotiTp = data)),
       this._sPlgrp.getAll().subscribe((data: any) => (this.lstPlgrp = data)),
-      this._sEqGroup.getAll().subscribe((data: any) => (this.lstEqGroup = data)),
-      this._sAccount.getListUser().subscribe((data: any) => (this.lstUser = data)),
+      this._sEqGroup
+        .getAll()
+        .subscribe((data: any) => (this.lstEqGroup = data)),
+      this._sAccount
+        .getListUser()
+        .subscribe((data: any) => (this.lstUser = data)),
       this._sWc.getAll().subscribe((data: any) => (this.lstWc = data)),
       this._sEquip.getAll().subscribe((data: any) => (this.lstEquip = data)),
       this._sFloc.getAll().subscribe((data: any) => (this.lstFloc = data)),
-      this._sUsage.getAll().subscribe((data: any) => (this.lstUsageStatus = data)),
-      this._sActive.getAll().subscribe((data: any) => (this.lstActiveStatus = data)),
+      this._sUsage
+        .getAll()
+        .subscribe((data: any) => (this.lstUsageStatus = data)),
+      this._sActive
+        .getAll()
+        .subscribe((data: any) => (this.lstActiveStatus = data)),
       this._sItem.getAll().subscribe((data: any) => (this.lstItem = data)),
-      this._serviceCat.getAll().subscribe((data: any) => (this.lstEqCat = data)),
-      this._sCatalog.getAll().subscribe((data: any) => (this.lstCatalog = data)),
-      this._sUnit.getAll().subscribe((data: any) => (this.lstUnit = data)),
+      this._serviceCat
+        .getAll()
+        .subscribe((data: any) => (this.lstEqCat = data)),
+      this._sCatalog
+        .getAll()
+        .subscribe((data: any) => (this.lstCatalog = data)),
+      this._sUnit.getAll().subscribe((data: any) => (this.lstUnit = data))
     );
   }
 
-  openEditOrder(data: any) {
-    this.model = data;
-    this.model.equipName = this._global.getNameEquip(this.lstEquip, data.equnr);
-    this.model.flocName = this._global.getNameFloc(this.lstFloc, data.tplnr);
-
-    const tempCatalog = this.lstCatalog.filter((x) => x.catCode == data.eqart);
+  openEditOrder(e: any) {
+    const tempCatalog = this.lstCatalog.filter((x) => x.catCode == e.eqart);
     this.lstCatalogTypeA = tempCatalog.filter((x) => x.catType === 'A');
     this.lstCatalogTypeB = tempCatalog.filter((x) => x.catType === 'B');
     this.lstCatalogTypeC = tempCatalog.filter((x) => x.catType === 'C');
@@ -209,72 +215,39 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     this.lstCatalogType5 = tempCatalog.filter((x) => x.catType === '5');
 
     this.subscriptions.push(
-      this._sNotiCatalog.getByQmnum(data.qmnum).subscribe({
+      this._sOrder.getDetail(e.aufnr).subscribe({
         next: (data) => {
-          this.lstNotiCatalog = data;
-        },
-        error: (err) => console.error(err),
-      }),
-      this._sOrderEq.GetByAufnr(data.aufnr).subscribe({
-        next: (data) => {
-          this.lstEquipOrder = (data || []).map(
-            (item: {
-              datab: string | number | Date;
-              datbi: string | number | Date;
-              timeF: string;
-              timeT: string;
-            }) => ({
-              ...item,
-              datab: item.datab ? new Date(item.datab) : null,
-              datbi: item.datbi ? new Date(item.datbi) : null,
-              timeF: item.timeF
-                ? this._global.parseTimeStringToDate(item.timeF)
-                : null,
-              timeT: item.timeT
-                ? this._global.parseTimeStringToDate(item.timeT)
-                : null,
-            })
+          this.visibleOrder = true;
+          this.model = data;
+          this.model.equipName = this._global.getNameEquip(
+            this.lstEquip,
+            data.equnr
+          );
+          this.model.flocName = this._global.getNameFloc(
+            this.lstFloc,
+            data.tplnr
+          );
+          this.lstItemOrderS = data.lstVt.filter(
+            (item : any) => item.category === 'S'
+          );
+          this.lstItemOrderM = data.lstVt.filter(
+            (item : any) => item.category === 'M'
           );
         },
         error: (err) => {
           console.error(err);
-        },
-      }),
-      this._sOrderVt.getByAufnr(data.aufnr).subscribe({
-        next: (data) => {
-          this.lstItemOrder = data;
-          this.loadOrderItems();
-        },
-        error: (err) => {
-          console.error(err);
+          this.message.error('Không thể tải thông tin lệnh');
         },
       })
     );
+    this.loadAttachments(e.aufnr);
+  }
 
-    this.visibleOrder = true;
-    this.loadAttachments(data.aufnr);
-  }
-  loadOrderItems(): void {
-    if (this.lstItemOrder && this.lstItemOrder.length > 0) {
-      this.lstItemOrderS = this.lstItemOrder.filter(
-        (item) => item.category === 'S'
-      );
-      this.lstItemOrderM = this.lstItemOrder.filter(
-        (item) => item.category === 'M'
-      );
-    } else {
-      this.lstItemOrderS = [];
-      this.lstItemOrderM = [];
-    }
-  }
   closeOrder() {
     this.visibleOrder = false;
 
     this.lstItemOrderS = [];
     this.lstItemOrderM = [];
-    this.lstItemOrder = [];
-    this.lstNotiCatalog = [];
-    this.lstEquipOrder = [];
 
     this.lstCatalogTypeA = [];
     this.lstCatalogTypeB = [];
@@ -286,31 +259,20 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     this.fileListTable = [];
     this.pendingFileList = [];
     this.removedFiles = [];
-    this.deletedItemIds = [];
 
-    this.model = new OrderModel();
+    this.model = {};
   }
 
   updateOrder() {
-    const lstEquipOrderToSend = this.lstEquipOrder.map((item) => ({
-      ...item,
-      datab: item.datab ? this._global.formatDate(item.datab) : null,
-      datbi: item.datbi ? this._global.formatDate(item.datbi) : null,
-      timeF: item.timeF ? this._global.formatTime(item.timeF) : null,
-      timeT: item.timeT ? this._global.formatTime(item.timeT) : null,
-    }));
-
+    const data = this.model
+    var lstItemOrderAll = [...this.lstItemOrderS, ...this.lstItemOrderM];
+    this.model.lstVt = lstItemOrderAll;
     this.subscriptions.push(
-      this._sOrderEq.update(lstEquipOrderToSend[0]).subscribe({
-        next: () => { },
-        error: (err) => {
-          console.error(err);
-        },
-      }),
       this._sOrder.update(this.model).subscribe({
         next: () => {
           this.processFiles();
           this.search();
+          this.openEditOrder(data);
         },
         error: (err) => {
           console.error(err);
@@ -318,46 +280,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
         },
       })
     );
-
-    this.lstItemOrder = [...this.lstItemOrderS, ...this.lstItemOrderM];
-    const lstItemOrderSend = this.lstItemOrder.map((item) => ({
-      ...item,
-      budat: item.budat ? this._global.formatDate(item.budat) : null,
-    }));
-    if (this.deletedItemIds.length > 0) {
-      // Xóa từng ID một
-      this.deletedItemIds.forEach(id => {
-        this.subscriptions.push(
-          this._sOrderVt.delete(id).subscribe({
-            next: () => {
-              this.message.success('Đã xóa vật tư mua ngoài thành công');
-            },
-            error: (err) => {
-              console.error('Lỗi khi xóa vật tư:', err);
-              this.message.error(`Xóa vật tư với ID ${id} thất bại`);
-            }
-          })
-        );
-      });
-      // Reset mảng sau khi đã xử lý
-      this.deletedItemIds = [];
-    }
-
-    this.subscriptions.push(
-      this._sOrderVt.saveOrderVt(lstItemOrderSend).subscribe({
-        next: () => { },
-        error: (err) => {
-          console.error(err);
-        },
-      }),
-      this._sNotiCatalog.update(this.lstNotiCatalog).subscribe({
-        next: () => { },
-        error: (err) => {
-          console.error(err);
-        },
-      })
-    );
   }
+
   onMaterialChange(materialCode: string, itemData: any): void {
     const selectedItem = this.lstItem.find(
       (item) => item.matnr === materialCode
@@ -398,8 +322,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
           const attachmentData = Array.isArray(result)
             ? result
             : result && result.data
-              ? result.data
-              : [];
+            ? result.data
+            : [];
 
           const uniqueAttachments = Array.from(
             new Map(
@@ -558,22 +482,4 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       },
     });
   }
-  removeOrderItemM(index: number): void {
-    this.modal.confirm({
-      nzTitle: 'Bạn có chắc chắn muốn xóa vật tư này?',
-      nzContent: 'Hành động này không thể hoàn tác.',
-      nzOkText: 'Xác nhận',
-      nzOkType: 'primary',
-      nzOkDanger: true,
-      nzOnOk: () => {
-        const removedItem = this.lstItemOrderM[index];
-        if (removedItem.id && removedItem.id !== 'A') {
-          this.deletedItemIds.push(removedItem.id);
-        }
-        this.lstItemOrderM = this.lstItemOrderM.filter((_, i) => i !== index);
-      },
-      nzCancelText: 'Hủy',
-    });
-  }
-
 }

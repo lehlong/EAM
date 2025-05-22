@@ -94,11 +94,14 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string? Needup { get; set; }
         public string? Belnr { get; set; }
         public string? Gjahr { get; set; }
+        public List<TblTranNotiCatalog>? lstCatalog { get; set; }
+        public List<TblTranOrderVt>? lstVt { get; set; }
+        public List<TblTranOrderEq>? lstEquip { get; set; }
         public string? State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
-        
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TblTranOrder, OrderDto>().ReverseMap();
         }
     }
-} 
+}

@@ -50,6 +50,24 @@ namespace EAM.API.Controllers.TRAN
             return Ok(transferObject);
         }
 
+        [HttpGet("GetDetail")]
+        public async Task<IActionResult> GetDetail([FromQuery] string code)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetDetail(code);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] OrderDto Order)
         {
@@ -74,7 +92,7 @@ namespace EAM.API.Controllers.TRAN
         public async Task<IActionResult> Update([FromBody] OrderDto Order)
         {
             var transferObject = new TransferObject();
-            await _service.Update(Order);
+            await _service.UpdateOrder(Order);
             if (_service.Status)
             {
                 transferObject.Status = true;

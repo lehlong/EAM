@@ -10,10 +10,10 @@ namespace EAM.CORE.Entities.TRAN
     {
         [Key]
         [Column("ID")]
-        public string Id { get; set; } = null!;
+        public string Id { get; set; }
 
         [Column("AUFNR")]
-        public string Aufnr { get; set; } = null!;
+        public string? Aufnr { get; set; }
 
         [Column("CATEGORY")]
         public string? Category { get; set; }

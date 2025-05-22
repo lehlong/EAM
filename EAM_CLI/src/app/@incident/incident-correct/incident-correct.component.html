@@ -312,7 +312,7 @@
         </div>
       </nz-tab>
       <nz-tab nzTitle="Danh sách thiết bị">
-        <nz-table #EquiqTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEquipOrder">
+        <nz-table #EquiqTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstEquip">
           <thead>
             <tr>
               <th>Mã thiết bị</th>
@@ -413,7 +413,7 @@
         </nz-table>
       </nz-tab>
       <nz-tab nzTitle="Phân tích sự cố">
-        <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="lstNotiCatalog">
+        <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstCatalog">
           <thead>
             <tr>
               <th style="width: 20%;">Thành phần hư hỏng</th>
@@ -521,7 +521,6 @@
               <th style="width: 20%;">Thành Tiền</th>
               <th>Nước sản xuất</th>
               <th>Chất lượng</th>
-              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -534,21 +533,17 @@
               </td>
               <td>
                 <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.meins">
-                  <nz-option *ngFor="let item of lstUnit" [nzValue]="item.code" 
+                  <nz-option *ngFor="let item of lstUnit" [nzValue]="item.code"
                     [nzLabel]="item.code + ' - ' + item.name"></nz-option>
                 </nz-select></td>
-             
+
               <td><input type="text" nz-input [(ngModel)]="data.price" (ngModelChange)="calculateTotal(data)" /></td>
               <td>
                 <input type="text" nz-input [(ngModel)]="data.dmbtr" [disabled]="true" />
               </td>
               <td><input type="text" nz-input [(ngModel)]="data.lgort" /></td>
               <td><input type="text" nz-input [(ngModel)]="data.uname" /></td>
-              <td>
-                <a nz-tooltip nzTooltipTitle="Xóa" nz-button nzType="link" nzDanger (click)="removeOrderItemM(i)">
-                  <span nz-icon nzType="delete" nzTheme="outline"></span>
-                </a>
-              </td>
+
             </tr>
           </tbody>
         </nz-table>
