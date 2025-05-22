@@ -97,6 +97,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public List<TblTranNotiCatalog>? lstCatalog { get; set; }
         public List<TblTranOrderVt>? lstVt { get; set; }
         public List<TblTranOrderEq>? lstEquip { get; set; }
+        public List<TblTranOrderOperation>? lstOpe { get; set; }
         public string? State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
 
         public void Mapping(Profile profile)

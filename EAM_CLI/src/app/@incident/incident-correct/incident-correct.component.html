@@ -371,15 +371,13 @@
         </nz-table>
       </nz-tab>
       <nz-tab nzTitle="Tác vụ theo lệnh">
-        <nz-table #operationTable [nzShowPagination]="false" nzSize="small" [nzData]="lstOrderOperation">
+        <nz-table #operationTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstOpe">
           <thead>
             <tr>
-              <th>Số lệnh</th>
-              <th>Tác vụ</th>
+              <th>Mã tác vụ</th>
+              <th>Tên tác vụ</th>
               <th>Từ ngày</th>
-              <th>Giờ</th>
               <th>Tới ngày</th>
-              <th>Giờ</th>
               <th>Trạng thái</th>
               <th>ND Xác nhận</th>
               <th>Kết quả</th>
@@ -387,23 +385,15 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of operationTable.data; let i = index">
-              <td>{{data.aufnr}}</td>
+              <td>{{data.vornr}}</td>
               <td>{{data.ltxa1}}</td>
               <td>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datcf"
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCf"
                   [nzShowTime]="true"></nz-date-picker>
               </td>
               <td>
-                <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.dateCfTime"
-                ></nz-time-picker>
-              </td>
-              <td>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datct"
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCt"
                   [nzShowTime]="true"></nz-date-picker>
-              </td>
-              <td>
-                <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.datectTime"
-                  ></nz-time-picker>
               </td>
               <td>{{data.status}}</td>
               <td><input type="text" nz-input [(ngModel)]="data.ndxn"></td>

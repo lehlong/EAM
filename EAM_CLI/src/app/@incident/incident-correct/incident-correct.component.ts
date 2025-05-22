@@ -94,7 +94,6 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private _sNotiCatalog: NotiCatalogService,
     private _sOrder: OrderService,
     private _sOrderType: OrderTypeService,
     private _sNotiTp: NotiTypeService,
@@ -113,8 +112,6 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     private _serviceCat: EqCatService,
     private _sUsage: UsageStatusService,
     private _sActive: ActiveStatusService,
-    private _sOrderEq: OrderEqService,
-    private _sOrderVt: OrderVtService,
     private _sItem: ItemService,
     private _sUnit: UnitService
   ) {
@@ -217,6 +214,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this._sOrder.getDetail(e.aufnr).subscribe({
         next: (data) => {
+          console.log(data)
           this.visibleOrder = true;
           this.model = data;
           this.model.equipName = this._global.getNameEquip(

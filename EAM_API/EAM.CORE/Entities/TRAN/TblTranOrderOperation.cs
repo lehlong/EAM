@@ -16,7 +16,7 @@ namespace EAM.CORE.Entities.TRAN
         public string? Aufnr { get; set; }
 
         [Column("VORNR")]
-        public string Vornr { get; set; } = null!;
+        public string? Vornr { get; set; } = null!;
 
         [Column("LTXA1")]
         public string? Ltxa1 { get; set; }

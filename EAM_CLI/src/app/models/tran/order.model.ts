@@ -89,4 +89,5 @@ export class OrderModel {
   lstCatalog: any[] = [];
   lstEquip: any[] = [];
   lstVt : any[] = [];
+  lstOpe : any[] = [];
 }

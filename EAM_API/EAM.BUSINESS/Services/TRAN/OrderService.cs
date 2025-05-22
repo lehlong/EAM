@@ -112,7 +112,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 }
 
                 _dbContext.TblTranOrderEq.UpdateRange(data.lstEquip);
-
+                _dbContext.TblTranOrderOperation.UpdateRange(data.lstOpe);
                 await _dbContext.SaveChangesAsync();
 
             }
@@ -132,6 +132,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 dto.lstCatalog = await _dbContext.TblTranNotiCatalog.Where(x => x.Qmnum == dto.Qmnum).ToListAsync();
                 dto.lstEquip = await _dbContext.TblTranOrderEq.Where(x => x.Aufnr == dto.Aufnr).ToListAsync();
                 dto.lstVt = await _dbContext.TblTranOrderVt.Where(x => x.Aufnr == dto.Aufnr).ToListAsync();
+                dto.lstOpe = await _dbContext.TblTranOrderOperation.Where(x => x.Aufnr == dto.Aufnr).ToListAsync();
                 return dto;
             }
             catch (Exception ex)
