@@ -82,6 +82,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   lstEqCat: any = [];
   lstEquipOrder: any[] = [];
   lstItemOrder: any[] = [];
+  lstOrderOperation: any[] = [];
 
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];

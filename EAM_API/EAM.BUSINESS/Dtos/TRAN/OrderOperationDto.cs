@@ -8,10 +8,13 @@ namespace EAM.BUSINESS.Dtos.TRAN
 {
     public class OrderOperationDto : BaseMdDto, IMapFrom, IDto
     {
+        [Key]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Aufnr { get; set; }
         public string Vornr { get; set; }
         public string Ltxa1 { get; set; }
         public string Arbpl { get; set; }
+        public string Status { get; set; }
         public DateTime? DateCf { get; set; }
         public TimeSpan? DateCfTime { get; set; }
         public DateTime? DateCt { get; set; }

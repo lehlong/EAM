@@ -8,10 +8,13 @@ namespace EAM.CORE.Entities.TRAN
     [Table("EAM_TRAN_ORDER_OPERATION")]
     public class TblTranOrderOperation : SoftDeleteEntity
     {
+
+        [Key]
+        [Column("ID")]
+        public string Id { get; set; }
         [Column("AUFNR")]
         public string? Aufnr { get; set; }
 
-        [Key]
         [Column("VORNR")]
         public string Vornr { get; set; } = null!;
 
@@ -20,6 +23,9 @@ namespace EAM.CORE.Entities.TRAN
 
         [Column("ARBPL")]
         public string? Arbpl { get; set; }
+
+        [Column("STATUS")]
+        public string? Status { get; set; }
 
         [Column("DATE_CF")]
         public DateTime? DateCf { get; set; }

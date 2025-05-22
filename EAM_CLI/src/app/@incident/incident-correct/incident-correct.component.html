@@ -370,7 +370,48 @@
           </tbody>
         </nz-table>
       </nz-tab>
-      <nz-tab nzTitle="Tác vụ theo lệnh">Content of Tab Pane 3</nz-tab>
+      <nz-tab nzTitle="Tác vụ theo lệnh">
+        <nz-table #operationTable [nzShowPagination]="false" nzSize="small" [nzData]="lstOrderOperation">
+          <thead>
+            <tr>
+              <th>Số lệnh</th>
+              <th>Tác vụ</th>
+              <th>Từ ngày</th>
+              <th>Giờ</th>
+              <th>Tới ngày</th>
+              <th>Giờ</th>
+              <th>Trạng thái</th>
+              <th>ND Xác nhận</th>
+              <th>Kết quả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of operationTable.data; let i = index">
+              <td>{{data.aufnr}}</td>
+              <td>{{data.ltxa1}}</td>
+              <td>
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datcf"
+                  [nzShowTime]="true"></nz-date-picker>
+              </td>
+              <td>
+                <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.dateCfTime"
+                ></nz-time-picker>
+              </td>
+              <td>
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datct"
+                  [nzShowTime]="true"></nz-date-picker>
+              </td>
+              <td>
+                <nz-time-picker [nzFormat]="'HH:mm'" [nzPlaceHolder]="'Chọn giờ'" [(ngModel)]="data.datectTime"
+                  ></nz-time-picker>
+              </td>
+              <td>{{data.status}}</td>
+              <td><input type="text" nz-input [(ngModel)]="data.ndxn"></td>
+              <td><input type="text" nz-input [(ngModel)]="data.note"></td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-tab>
       <nz-tab nzTitle="Phân tích sự cố">
         <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="lstNotiCatalog">
           <thead>
