@@ -24,10 +24,11 @@
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
-          <th>Operation/Activity Number</th>
-          <th>Operation short text</th>
           <th>Mã task list</th>
-          <th>Task list description</th>
+          <th>Tên task list</th>
+          <th>Mã bước</th>
+          <th>Tên bước</th>
+          
 
           <th nzAlign="center">Trạng thái</th>
         </tr>
@@ -36,11 +37,11 @@
         <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
           <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
           </td>
-
+<td>{{ data.plnnr }}</td>
+          <td>{{ data.ktext }}</td>
           <td>{{ data.vornr }}</td>
           <td>{{ data.ltxa1 }}</td>
-          <td>{{ data.plnnr }}</td>
-          <td>{{ data.ktext }}</td>
+          
 
 
           <td nzAlign="center">
@@ -71,15 +72,16 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Operation/Activity Number"  label="Operation/Activity Number"
+       <app-input-clear placeholder="Mã task list"  label="Mã task list"
+        [control]="$any(validateForm).controls['plnnr']"></app-input-clear>
+        <app-input-clear placeholder="Tên task list"  label="Tên task list"
+        [control]="$any(validateForm).controls['ktext']"></app-input-clear>
+      <app-input-clear placeholder="Mã bước"  label="Mã bước"
         [control]="$any(validateForm).controls['vornr']"
         [disabled]="edit ? true : false"></app-input-clear>
-      <app-input-clear placeholder="Operation short text"  label="Operation short text"
+      <app-input-clear placeholder="Tên bước"  label="Tên bước"
         [control]="$any(validateForm).controls['ltxa1']"></app-input-clear>
-        <app-input-clear placeholder="Mã task list"  label="Mã task list"
-        [control]="$any(validateForm).controls['plnnr']"></app-input-clear>
-        <app-input-clear placeholder="Task list description"  label="Task list description"
-        [control]="$any(validateForm).controls['ktext']"></app-input-clear>
+       
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>

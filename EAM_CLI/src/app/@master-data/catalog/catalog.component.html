@@ -17,7 +17,8 @@
       <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
         <span nz-icon nzType="plus-circle"></span> Thêm mới
       </button>
-      <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
+      <button (click)="exportExcel()" class="!flex !items-center !border-l-0"
+        style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
     </div>
@@ -27,11 +28,12 @@
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
-          <th>Mã thống kê</th>
-          <th>Tên thống kê</th>
           <th>Mã nhóm</th>
           <th>Tên nhóm thống kê</th>
           <th>Loại thống kê</th>
+          <th>Mã thống kê</th>
+          <th>Tên thống kê</th>
+
 
           <th nzAlign="center">Trạng thái</th>
         </tr>
@@ -40,11 +42,12 @@
         <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
           <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
           </td>
-          <td><a (click)="openEdit(data)">{{ data.code }}</a></td>
-          <td>{{ data.codeDes }}</td>
           <td> {{ data.catCode }}</td>
           <td>{{ data.catName }}</td>
           <td>{{ getCataTypeName(data.catType) }}</td>
+
+          <td><a (click)="openEdit(data)">{{ data.code }}</a></td>
+          <td>{{ data.codeDes }}</td>
 
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">

@@ -25,10 +25,10 @@
         <tr>
           <th nzWidth="60px">STT</th>
           <th>Mã</th>
-          <th>Description of technical object</th>
-          <th>Maintenance <br> Planning Plant</th>
-          <th>Superior functional location</th>
-          <th>Start Date</th>
+          <th>Tên khu vực chức năng</th>
+          <th>Đơn vị bảo trì</th>
+          <th>Mã khu vực chức năng cấp trên</th>
+          <th>Ngày hoạt động</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
@@ -72,8 +72,8 @@
       <app-input-clear placeholder="Mã" [required]="true" label="Mã" [control]="$any(validateForm).controls['tplnr']"
         [required]="true" [disabled]="edit ? true : false"></app-input-clear>
       <nz-form-control style="margin-bottom: 15px;">
-        <label>Maintenance Planning Plant</label>
-        <nz-select nzShowSearch nzAllowClear placeholder="Maintenance Planning Plant" formControlName="iwerk">
+        <label>Đơn vị bảo trì</label>
+        <nz-select nzShowSearch nzAllowClear placeholder="Đơn vị bảo trì" formControlName="iwerk">
           <ng-container *ngFor="let item of lstPlants">
             <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.iwerkTxt" [nzValue]="item.iwerk">
             </nz-option>
@@ -81,16 +81,16 @@
         </nz-select>
       </nz-form-control>
 
-      <app-input-clear placeholder="Planner Group for Customer Service and Plant Maintenance"
-        label="Planner Group for Customer Service and Plant Maintenance"
+      <app-input-clear placeholder="Bộ phận tiếp nhận"
+        label="Bộ phận tiếp nhận"
         [control]="$any(validateForm).controls['ingrp']"></app-input-clear>
 
-      <app-input-clear placeholder="Description of technical object" label="Description of technical object"
+      <app-input-clear placeholder="Tên khu vực chức năng" label="Tên khu vực chức năng"
         [control]="$any(validateForm).controls['descript']"></app-input-clear>
 
         <nz-form-control style="margin-bottom: 15px;">
-          <label>Superior functional location</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Superior functional location" formControlName="supfloc">
+          <label>Mã khu vực chức năng cấp trên</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Mã khu vực chức năng cấp trên" formControlName="supfloc">
             <ng-container *ngFor="let item of lstFloc">
               <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.descript" [nzValue]="item.tplnr">
               </nz-option>
@@ -98,16 +98,16 @@
           </nz-select>
         </nz-form-control>
 
-      <app-input-clear placeholder="Work center" label="Work center"
+      <app-input-clear placeholder="Bộ phận thực hiện" label="Bộ phận thực hiện"
         [control]="$any(validateForm).controls['arbpl']"></app-input-clear>
 
       <div class="inner-box" style="margin-bottom: 15px;">
-        <label>Start-up Date of the Technical Object</label>
+        <label>Ngày hoạt động</label>
         <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="startUpdate"
           [nzPlaceHolder]="'Chọn ngày'" style="width: 100%;"></nz-date-picker>
       </div>
 
-      <app-input-clear placeholder="Object status" label="Object status"
+      <app-input-clear placeholder="Trạng thái đối tượng" label="Trạng thái đối tượng"
         [control]="$any(validateForm).controls['txt30']"></app-input-clear>
 
       <nz-form-item>
