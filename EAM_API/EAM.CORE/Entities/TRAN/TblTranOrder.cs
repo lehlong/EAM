@@ -10,7 +10,7 @@ namespace EAM.CORE.Entities.TRAN
     {
         [Key]
         [Column("AUFNR")]
-        public string Aufnr { get; set; } = null!;
+        public string Aufnr { get; set; }
 
         [Column("IWERK")]
         public string? Iwerk { get; set; }

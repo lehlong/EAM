@@ -402,7 +402,7 @@
           </tbody>
         </nz-table>
       </nz-tab>
-      <nz-tab nzTitle="Phân tích sự cố">
+      <nz-tab *ngIf="model.qmnum != null && model.qmnum != ''" nzTitle="Phân tích sự cố">
         <nz-table #catalogTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstCatalog">
           <thead>
             <tr>

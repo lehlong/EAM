@@ -1,33 +1,41 @@
-import { Injectable } from '@angular/core'
-import { CommonService } from '../common.service'
-import { Observable } from 'rxjs'
+import { Injectable } from '@angular/core';
+import { CommonService } from '../common.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlanHService {
-  constructor(private commonService: CommonService) { }
+  constructor(private commonService: CommonService) {}
 
   search(params: any): Observable<any> {
-    return this.commonService.get('PlanH/Search', params)
+    return this.commonService.get('PlanH/Search', params);
+  }
+
+  searchPlan(params: any): Observable<any> {
+    return this.commonService.get('PlanH/SearchPlan', params);
+  }
+
+  genarateOrder(params: any): Observable<any> {
+    return this.commonService.get('PlanH/GenarateOrder', params);
   }
 
   getAll(): Observable<any> {
-    return this.commonService.get('PlanH/GetAll')
+    return this.commonService.get('PlanH/GetAll');
   }
 
   create(params: any): Observable<any> {
-    return this.commonService.post('PlanH/Insert', params)
+    return this.commonService.post('PlanH/Insert', params);
   }
 
   update(params: any): Observable<any> {
-    return this.commonService.put('PlanH/Update', params)
+    return this.commonService.put('PlanH/Update', params);
   }
 
   delete(id: string): Observable<any> {
-    return this.commonService.delete(`PlanH/Delete/${id}`)
+    return this.commonService.delete(`PlanH/Delete/${id}`);
   }
   exportExcel(params: any): Observable<any> {
-    return this.commonService.downloadFile('PlanH/Export', params)
+    return this.commonService.downloadFile('PlanH/Export', params);
   }
 }

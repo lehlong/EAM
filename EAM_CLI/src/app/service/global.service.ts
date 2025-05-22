@@ -318,6 +318,13 @@ export class GlobalService {
     return `${day}/${month}/${year}`;
   }
 
+  formatDatePlanFilter(date: Date): string {
+    const day = `${date.getDate()}`.padStart(2, '0');
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  }
+
   convertToIsoDateString(dateStr: string): string {
     const [dd, mm, yyyy] = dateStr.split('/');
     return `${yyyy}-${mm}-${dd}`;

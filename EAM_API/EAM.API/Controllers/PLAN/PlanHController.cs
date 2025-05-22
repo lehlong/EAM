@@ -3,6 +3,7 @@ using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
 using EAM.BUSINESS.Dtos.PLAN;
+using EAM.BUSINESS.Model;
 using EAM.BUSINESS.Services.MD;
 using EAM.BUSINESS.Services.PLAN;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,41 @@ namespace EAM.API.Controllers.PLAN
             if (_service.Status)
             {
                 transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
+        [HttpGet("SearchPlan")]
+        public async Task<IActionResult> SearchPlan([FromQuery] FilterPlanModel filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.SearchPlan(filter);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
+        [HttpGet("GenarateOrder")]
+        public async Task<IActionResult> GenarateOrder([FromQuery] FilterPlanModel filter)
+        {
+            var transferObject = new TransferObject();
+            await _service.GenarateOrder(filter);
+            if (_service.Status)
+            {
             }
             else
             {
