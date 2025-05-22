@@ -1,1 +1,99 @@
-<p>plan-order works!</p>
+<nz-page-header nzBackIcon>
+  <nz-page-header-title>LỆNH BẢO DƯỠNG</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách lệnh bảo dưỡng</nz-page-header-subtitle>
+   <nz-page-header-extra>
+    <div class="flex-grow-2 flex">
+      <button class="!flex !items-center !border-l-0" nz-button>
+        <span nz-icon nzType="save"></span>Triển khai kế hoạch
+      </button>
+    </div>
+  </nz-page-header-extra>
+  <nz-page-header-content>
+    <div nz-row [nzGutter]="12" style="margin: 0;">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Đơn vị bảo trì</label>
+          <nz-select nzShowSearch nzAllowClear>
+            <nz-option cdkScrollable *ngFor="let item of lstWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt"
+              [nzValue]="item.arbpl">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Nhóm thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear>
+            <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
+              [nzValue]="item.eqart">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear>
+            <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị">
+            <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Mã kế hoạch</label>
+          <input nz-input>
+        </div>
+      </div>
+
+
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Từ ngày</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy'"></nz-date-picker>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Đến ngày</label>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy'"></nz-date-picker>
+        </div>
+      </div>
+    </div>
+
+
+  </nz-page-header-content>
+  <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">
+    <nz-table nzBordered [nzSize]="'middle'" class="auto-scroll-table" [nzShowPagination]="false"
+      [nzFrontPagination]="false" #headerTable>
+      <thead>
+        <tr>
+          <th>Bộ phận</th>
+          <th>Mã kế hoạch</th>
+          <th>Tên kế hoạch</th>
+          <th>Khu vực chức năng</th>
+          <th>Ngày dự kiến</th>
+          <th>Số lệnh</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tbody>
+
+      </tbody>
+    </nz-table>
+
+  </nz-page-header-content>
+</nz-page-header>
