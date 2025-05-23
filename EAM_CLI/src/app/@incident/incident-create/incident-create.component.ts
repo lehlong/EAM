@@ -16,6 +16,7 @@ import { AccountService } from '../../service/system-manager/account.service';
 import { WcService } from '../../service/master-data/wc.service';
 import { PlgrpService } from '../../service/master-data/plgrp.service';
 import { NotiModel } from '../../models/tran/noti.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-incident-create',
@@ -53,7 +54,8 @@ export class IncidentCreateComponent implements OnInit {
     private _sNotiTp: NotiTypeService,
     private _sNoti: NotiService,
     private _sNotiAtt: NotiAttService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private route: ActivatedRoute
   ) {
     this.username = _global.getUserName();
     this.model.qmnam = this.username;
@@ -64,6 +66,15 @@ export class IncidentCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMasterData();
+    this.route.queryParams.subscribe(params => {
+      if (params['equnr']) {this.model.equnr = params['equnr'];}
+      if (params['eqart']) {this.model.eqart = params['eqart'];}
+      if (params['tplnr']) {this.model.tplnr = params['tplnr'];}
+    //  if (params['eqktx']) {this.model.eqktx = params['eqktx'];}
+      if (params['arbpl']) {this.model.arbpl = params['arbpl'];}
+      if (params['ingrp']) {this.model.ingrp = params['ingrp'];}
+      if (params['iwerk']) {this.model.iwerk = params['iwerk'];}
+    });
   }
 
   getMasterData() {
@@ -76,6 +87,7 @@ export class IncidentCreateComponent implements OnInit {
     this._sEquip.getAll().subscribe((data: any) => {
       this.lstEquip = data;
       this.lstEquipSelect = data;
+
     });
     this._sPlant.getAll().subscribe((data: any) => (this.lstPlant = data));
   }

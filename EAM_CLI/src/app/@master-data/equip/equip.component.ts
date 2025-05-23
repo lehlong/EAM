@@ -23,6 +23,7 @@ import { AccountService } from '../../service/system-manager/account.service';
 import { EquipFilter } from '../../filter/master-data/equiq-filter';
 import { EquipCharService } from '../../service/master-data/equiq-char.service';
 import { EquiqCharModel } from '../../models/master-data/eqchar.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-equip',
@@ -81,7 +82,8 @@ export class EquipComponent {
     private globalService: GlobalService,
     private message: NzMessageService,
     private commonService: CommonService,
-    private _sEqChar: EquipCharService
+    private _sEqChar: EquipCharService,
+    private router: Router,
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
@@ -424,6 +426,26 @@ export class EquipComponent {
     this.validateForm.reset();
     this.isSubmit = false;
   }
+  createIncident(): void {
+  if (!this.currentEquipCode) {
+    this.message.warning('Vui lòng chọn thiết bị trước khi tạo sự cố');
+    return;
+  }
+  
+  const queryParams = {
+    equnr: this.currentEquipCode,
+    eqart: this.validateForm.value.eqart,
+    tplnr: this.validateForm.value.tplnr,
+    eqktx: this.validateForm.value.eqktx,
+    arbpl: this.validateForm.value.arbpl,
+    ingrp: this.validateForm.value.ingrp,
+    iwerk: this.validateForm.value.iwerk,
+  };
+  console.log('Query Params:', queryParams);
+  this.router.navigate(['/incident/create'], { 
+    queryParams: queryParams 
+  });
+}
 
   deleteItem(tplnr: string) {
     this._service.delete(tplnr).subscribe({

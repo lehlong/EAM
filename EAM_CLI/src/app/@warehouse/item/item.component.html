@@ -119,8 +119,17 @@
                 </div>
 
                 <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
-                    <app-input-clear placeholder="Đơn vị tính" [required]="true" label="Đơn vị tính"
-                        [control]="$any(validateForm).controls['meins']"></app-input-clear>
+                    <nz-form-item>
+                        <nz-form-label>Đơn vị tính</nz-form-label>
+                        <nz-form-control nzErrorTip="Không được để trống">
+                            <nz-select formControlName="meins" nzShowSearch nzAllowClear placeholder="Đơn vị tính">
+                                <nz-option *ngFor="let item of lstUnit" [nzLabel]="item.code + ' - ' + item.name"
+                                    [nzValue]="item.code">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+
 
                     <app-input-clear placeholder="Nhà sản xuất" [required]="true" label="Nhà sản xuất"
                         [control]="$any(validateForm).controls['mfrnr']"></app-input-clear>

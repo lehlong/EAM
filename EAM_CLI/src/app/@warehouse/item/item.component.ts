@@ -25,6 +25,7 @@ export class ItemComponent {
   loading: boolean = false;
   lstmtype: any[] = [];
   lstmtgrp: any[] = [];
+  lstUnit: any[] = [];
 
   constructor(
     private _service: ItemService,
@@ -81,6 +82,11 @@ export class ItemComponent {
   getMtgrp() {
     this.dropdown.getAllMtgrp().subscribe((data) => {
       this.lstmtgrp = data;
+    });
+  }
+  getUnit() {
+    this.dropdown.getAllUnit().subscribe((data) => {
+      this.lstUnit = data;
     });
   }
   search() {
