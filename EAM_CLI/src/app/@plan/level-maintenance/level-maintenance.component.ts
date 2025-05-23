@@ -89,6 +89,14 @@ export class LevelMaintenanceComponent implements OnInit {
     this.lstEquipSelect = this.lstEquip.filter((i) => i.tplnr === e);
   }
 
+  onChangeMpgrp(e: any) {
+    this._sPlanH.genarateCode(e).subscribe({
+      next: (data) => {
+        this.model.warpl = data;
+      },
+    });
+  }
+
   onChangeEquip(e: any) {
     var equip = this.lstEquip.find((i) => i.equnr === e);
     this.model.tplnr = equip?.tplnr;

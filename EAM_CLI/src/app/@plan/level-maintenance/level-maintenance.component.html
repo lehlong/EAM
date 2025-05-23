@@ -24,7 +24,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Loại kế hoạch</label>
-          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.mpgrp">
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.mpgrp" (ngModelChange)="onChangeMpgrp($event)">
             <nz-option *ngFor="let item of lstMpgrp" [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
             </nz-option>
           </nz-select>

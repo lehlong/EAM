@@ -68,6 +68,25 @@ namespace EAM.API.Controllers.PLAN
             }
             return Ok(transferObject);
         }
+
+        [HttpGet("GenarateCode")]
+        public async Task<IActionResult> GenarateCode([FromQuery] string m)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GenarateCode(m);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

@@ -37,7 +37,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                return await Paging(query, filter);
+                return await Paging(query.OrderByDescending(x => x.CreateDate), filter);
             }
             catch (Exception ex)
             {

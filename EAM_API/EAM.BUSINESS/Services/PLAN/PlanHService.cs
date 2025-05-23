@@ -19,11 +19,28 @@ namespace EAM.BUSINESS.Services.PLAN
         Task<byte[]> Export(BaseMdFilter filter);
         Task Create(PlanHDto dto);
         Task GenarateOrder(FilterPlanModel filter);
+        Task<string> GenarateCode(string m);
         Task<List<ResponsePlanModel>> SearchPlan(FilterPlanModel filter);
     }
 
     public class PlanHService(AppDbContext dbContext, IMapper mapper) : GenericService<TblPlanH, PlanHDto>(dbContext, mapper), IPlanHService
     {
+        public async Task<string> GenarateCode(string m)
+        {
+            try
+            {
+                var sequence = m == "M1" ? 10000000 : m == "M2" ? 20000000 : 30000000;
+                var count = await _dbContext.TblPlanH.Where(x => x.Mpgrp == m).CountAsync();
+                return (sequence + count).ToString();
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
         public async Task<List<ResponsePlanModel>> SearchPlan(FilterPlanModel filter)
         {
             try

@@ -20,6 +20,10 @@ export class PlanHService {
     return this.commonService.get('PlanH/GenarateOrder', params);
   }
 
+  genarateCode(params: any): Observable<any> {
+    return this.commonService.get(`PlanH/GenarateCode?m=${params}`);
+  }
+
   getAll(): Observable<any> {
     return this.commonService.get('PlanH/GetAll');
   }

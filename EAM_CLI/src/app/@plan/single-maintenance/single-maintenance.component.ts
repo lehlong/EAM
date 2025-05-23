@@ -120,6 +120,14 @@ export class SingleMaintenanceComponent implements OnInit {
       .sort((a, b) => a.vornr.localeCompare(b.vornr));
   }
 
+  onChangeMpgrp(e: any) {
+    this._sPlanH.genarateCode(e).subscribe({
+      next: (data) => {
+        this.model.warpl = data;
+      },
+    });
+  }
+
   getUniqueByPlnnrAndKtext(items: any[]): any[] {
     const map = new Map<string, any>();
     items.forEach((item) => {

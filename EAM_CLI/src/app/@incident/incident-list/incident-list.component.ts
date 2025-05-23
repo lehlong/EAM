@@ -244,9 +244,9 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   updateStatusNoti(data: any, status: string) {
     Swal.fire({
-      title: status == '05' ? 'Đóng sự cố?' : 'Từ chối đóng?',
+      title: status == '04' ? 'Hoàn thành' : 'Đang thực hiện',
       text: 'Bạn sẽ không thể hoàn tác điều này!',
-      icon: 'question',
+      icon: 'success',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',
       cancelButtonText: 'Huỷ',
