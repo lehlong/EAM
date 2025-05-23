@@ -490,6 +490,36 @@
             </ng-template>
           </nz-modal>
         </nz-tab>
+        <nz-tab nzTitle="Thông số kỹ thuật">
+          <nz-table #charTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEqChar">
+          <thead>
+            <tr>
+              <th>Nhà sản xuất</th>
+              <th>Nước sản xuất</th>
+              <th>Năm sản xuất</th>
+              <th>Model</th>
+              <th>Số serial</th>
+              <th>Năm sử dụng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of charTable.data; let i = index">
+             <td><input type="text" nz-input [(ngModel)]="data.manuf"  [ngModelOptions]="{ standalone: true }"></td>
+             <td><input type="text" nz-input [(ngModel)]="data.coo"  [ngModelOptions]="{ standalone: true }"></td>
+             <td><input type="text" nz-input [(ngModel)]="data.yom"  [ngModelOptions]="{ standalone: true }"></td>
+             <td><input type="text" nz-input [(ngModel)]="data.modl"  [ngModelOptions]="{ standalone: true }"></td>
+             <td><input type="text" nz-input [(ngModel)]="data.serl"  [ngModelOptions]="{ standalone: true }"></td>
+            <td><input type="text" nz-input [(ngModel)]="data.used"  [ngModelOptions]="{ standalone: true }"></td>
+            </tr>
+          </tbody>
+        </nz-table>
+          <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button type="button" nz-button nzType="dashed" (click)="addEqChar()">
+            <nz-icon nzType="plus" />
+            Thêm thông số
+          </button>
+        </div>
+        </nz-tab>
 
         <nz-tab nzTitle="File đính kèm">
           <div class="document-upload-container">

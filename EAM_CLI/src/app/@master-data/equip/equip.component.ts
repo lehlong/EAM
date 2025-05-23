@@ -21,6 +21,8 @@ import { UsageStatusService } from '../../service/master-data/usage-status.servi
 import { ActiveStatusService } from '../../service/master-data/active-status.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { EquipFilter } from '../../filter/master-data/equiq-filter';
+import { EquipCharService } from '../../service/master-data/equiq-char.service';
+import { EquiqCharModel } from '../../models/master-data/eqchar.model';
 
 @Component({
   selector: 'app-equip',
@@ -46,6 +48,7 @@ export class EquipComponent {
   lstUsageStatus: any = [];
   lstActiveStatus: any = [];
   lstAccount: any = [];
+  lstEqChar: any = [];
   loading: boolean = false;
 
   environment = environment;
@@ -77,7 +80,8 @@ export class EquipComponent {
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private _sEqChar: EquipCharService
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
@@ -157,10 +161,15 @@ export class EquipComponent {
         })
         const url = window.URL.createObjectURL(blob)
         var anchor = document.createElement('a')
-        anchor.download = 'danh-sach-bo-thong-ke-su-co.xlsx'
+        anchor.download = 'danh-sach-thiet-bi.xlsx'
         anchor.href = url
         anchor.click()
       })
+  }
+  addEqChar() {
+    const EquipChar = new EquiqCharModel();
+    EquipChar.equnr = this.currentEquipCode;
+    this.lstEqChar = [...this.lstEqChar, EquipChar];
   }
 
   search() {
@@ -252,14 +261,14 @@ export class EquipComponent {
       },
     });
   }
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
- * Retrieves a list of equipment categories from the service and updates the
- * `lstEqCat` property with the retrieved data. Resets the `isSubmit` flag to false.
- * Logs any error responses received during the data retrieval process.
- */
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Retrieves a list of equipment categories from the service and updates the
+   * `lstEqCat` property with the retrieved data. Resets the `isSubmit` flag to false.
+   * Logs any error responses received during the data retrieval process.
+   */
 
-/*******  8d15dc4e-0540-4331-9832-af3a2506f521  *******/
+  /*******  8d15dc4e-0540-4331-9832-af3a2506f521  *******/
   searchCat() {
     this.isSubmit = false;
     this._serviceCat.getAll().subscribe({
@@ -301,9 +310,9 @@ export class EquipComponent {
       ?.eqartTxt;
   }
 
-  getNameFloc(code : string){
+  getNameFloc(code: string) {
     return this.lstFloc.find((x: { tplnr: string }) => x.tplnr == code)
-    ?.descript;
+      ?.descript;
   }
 
   getEquipmentCategoryName(code: string) {
@@ -336,6 +345,14 @@ export class EquipComponent {
             console.log(response);
           },
         });
+        this._sEqChar.create(this.lstEqChar).subscribe({
+          next: (data) => {
+          },
+          error: (response) => {
+            console.log(response);
+          },
+        });
+
       } else {
         const formData = this.validateForm.getRawValue();
         if (this.isCodeExist(formData.tplnr)) {
@@ -352,6 +369,13 @@ export class EquipComponent {
             // Set edit mode to true to enable editing uploaded files
             this.edit = true;
             this.search();
+          },
+          error: (response) => {
+            console.log(response);
+          },
+        });
+        this._sEqChar.create(this.lstEqChar).subscribe({
+          next: (data) => {
           },
           error: (response) => {
             console.log(response);
@@ -374,6 +398,7 @@ export class EquipComponent {
     this.equipDocuments = [];
     this.equipPictures = [];
     this.currentEquipCode = '';
+    this.lstEqChar = [];
   }
 
   reset() {
@@ -392,6 +417,7 @@ export class EquipComponent {
     this.docFileList = [];
     this.picFileList = [];
     this.currentEquipCode = '';
+    this.lstEqChar = [];
   }
 
   resetForm() {
@@ -416,8 +442,14 @@ export class EquipComponent {
     this.resetForm();
     this.validateForm.patchValue(data);
     this.currentEquipCode = data.equnr;
-
-    // Load equipment documents and pictures
+    this._sEqChar.getDetail(data.equnr).subscribe({
+      next: (data) => {
+        this.lstEqChar = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
     this.loadEquipDocuments(data.equnr);
     this.loadEquipPictures(data.equnr);
   }
@@ -432,8 +464,6 @@ export class EquipComponent {
     this.filter.currentPage = index;
     this.search();
   }
-
-  // Method to load equipment documents
   loadEquipDocuments(equnr: string) {
     this._serviceEquipDoc.getByEqunr(equnr).subscribe({
       next: (data) => {
@@ -755,14 +785,14 @@ export class EquipComponent {
       } else {
         this.message.error(
           'Tải lên hình ảnh thất bại: ' +
-            (info.file.response?.messageObject?.message || 'Lỗi không xác định')
+          (info.file.response?.messageObject?.message || 'Lỗi không xác định')
         );
       }
     } else if (info.file.status === 'error') {
       this.uploadingPic = false;
       this.message.error(
         'Tải lên hình ảnh thất bại: ' +
-          (info.file.error?.status || 'Lỗi không xác định')
+        (info.file.error?.status || 'Lỗi không xác định')
       );
     }
   }
@@ -783,14 +813,14 @@ export class EquipComponent {
       } else {
         this.message.error(
           'Tải lên tài liệu thất bại: ' +
-            (info.file.response?.messageObject?.message || 'Lỗi không xác định')
+          (info.file.response?.messageObject?.message || 'Lỗi không xác định')
         );
       }
     } else if (info.file.status === 'error') {
       this.uploadingDoc = false;
       this.message.error(
         'Tải lên tài liệu thất bại: ' +
-          (info.file.error?.status || 'Lỗi không xác định')
+        (info.file.error?.status || 'Lỗi không xác định')
       );
     }
   }

@@ -9,9 +9,22 @@ namespace EAM.CORE.Entities.MD
     public class TblMdEquipChar : SoftDeleteEntity
     {
         [Key]
+        [Column("ID")]
+        public string Id { get; set; }
         [Column("EQUNR")]
-        public string Equnr { get; set; } = null!;
-
+        public string? Equnr { get; set; }
+        [Column("MANUF")]
+        public string? Manuf { get; set; }
+        [Column("COO")]
+        public string? Coo { get; set; }
+        [Column("YOM")]
+        public string? Yom { get; set; }
+        [Column("MODL")]
+        public string? Modl { get; set; }
+        [Column("SERL")]
+        public string? Serl { get; set; }
+        [Column("USED")]
+        public string? Used { get; set; }
         [Column("CLASS")]
         public string? Class { get; set; }
 

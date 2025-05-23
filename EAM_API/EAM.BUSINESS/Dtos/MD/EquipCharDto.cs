@@ -4,6 +4,7 @@ using EAM.CORE.Entities.MD;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace EAM.BUSINESS.Dtos.MD
@@ -14,8 +15,16 @@ namespace EAM.BUSINESS.Dtos.MD
         [Description("STT")]
         public int OrdinalNumber { get; set; }
         [Key]
+        [Description("Mã ")]
+        public string Id { get; set; } = null!;
         [Description("Mã thiết bị")]
         public string Equnr { get; set; } = null!;
+        public string? Manuf { get; set; }
+        public string? Coo { get; set; }
+        public string? Yom { get; set; }
+        public string? Modl { get; set; }
+        public string? Serl { get; set; }
+        public string? Used { get; set; }
         [Description("Lớp")]
         public string? Class { get; set; }
         [Description("Mã đặc tính")]
