@@ -17,7 +17,8 @@
       <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
         <span nz-icon nzType="plus-circle"></span> Thêm mới
       </button>
-      <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
+      <button (click)="exportExcel()" class="!flex !items-center !border-l-0"
+        style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
     </div>
@@ -27,7 +28,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="filter.tplnr" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="filter.tplnr"
+            (ngModelChange)="search()">
             <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
               [nzValue]="item.tplnr">
             </nz-option>
@@ -37,7 +39,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Type of Technical Object</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Type of Technical Object" [(ngModel)]="filter.eqart" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Type of Technical Object" [(ngModel)]="filter.eqart"
+            (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
               [nzValue]="item.eqart">
             </nz-option>
@@ -231,9 +234,9 @@
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
                 <nz-form-item>
-                  <nz-form-label>Type of Technical Object</nz-form-label>
+                  <nz-form-label>Nhóm thiết bị</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear placeholder="Type of Technical Object" formControlName="eqart">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" formControlName="eqart">
                       <nz-option cdkScrollable *ngFor="let item of lstEqGroup"
                         [nzLabel]="item.eqart+ ' - '+item.eqartTxt" [nzValue]="item.eqart">
                       </nz-option>
@@ -492,33 +495,33 @@
         </nz-tab>
         <nz-tab nzTitle="Thông số kỹ thuật">
           <nz-table #charTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEqChar">
-          <thead>
-            <tr>
-              <th>Nhà sản xuất</th>
-              <th>Nước sản xuất</th>
-              <th>Năm sản xuất</th>
-              <th>Model</th>
-              <th>Số serial</th>
-              <th>Năm sử dụng</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of charTable.data; let i = index">
-             <td><input type="text" nz-input [(ngModel)]="data.manuf"  [ngModelOptions]="{ standalone: true }"></td>
-             <td><input type="text" nz-input [(ngModel)]="data.coo"  [ngModelOptions]="{ standalone: true }"></td>
-             <td><input type="text" nz-input [(ngModel)]="data.yom"  [ngModelOptions]="{ standalone: true }"></td>
-             <td><input type="text" nz-input [(ngModel)]="data.modl"  [ngModelOptions]="{ standalone: true }"></td>
-             <td><input type="text" nz-input [(ngModel)]="data.serl"  [ngModelOptions]="{ standalone: true }"></td>
-            <td><input type="text" nz-input [(ngModel)]="data.used"  [ngModelOptions]="{ standalone: true }"></td>
-            </tr>
-          </tbody>
-        </nz-table>
+            <thead>
+              <tr>
+                <th>Nhà sản xuất</th>
+                <th>Nước sản xuất</th>
+                <th>Năm sản xuất</th>
+                <th>Model</th>
+                <th>Số serial</th>
+                <th>Năm sử dụng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of charTable.data; let i = index">
+                <td><input type="text" nz-input [(ngModel)]="data.manuf" [ngModelOptions]="{ standalone: true }"></td>
+                <td><input type="text" nz-input [(ngModel)]="data.coo" [ngModelOptions]="{ standalone: true }"></td>
+                <td><input type="text" nz-input [(ngModel)]="data.yom" [ngModelOptions]="{ standalone: true }"></td>
+                <td><input type="text" nz-input [(ngModel)]="data.modl" [ngModelOptions]="{ standalone: true }"></td>
+                <td><input type="text" nz-input [(ngModel)]="data.serl" [ngModelOptions]="{ standalone: true }"></td>
+                <td><input type="text" nz-input [(ngModel)]="data.used" [ngModelOptions]="{ standalone: true }"></td>
+              </tr>
+            </tbody>
+          </nz-table>
           <div style="display: flex; justify-content: center; margin-top: 20px;">
-          <button type="button" nz-button nzType="dashed" (click)="addEqChar()">
-            <nz-icon nzType="plus" />
-            Thêm thông số
-          </button>
-        </div>
+            <button type="button" nz-button nzType="dashed" (click)="addEqChar()">
+              <nz-icon nzType="plus" />
+              Thêm thông số
+            </button>
+          </div>
         </nz-tab>
 
         <nz-tab nzTitle="File đính kèm">
@@ -587,6 +590,10 @@
 </nz-drawer>
 <ng-template #extra>
   <nz-space>
+    <button *nzSpaceItem nz-button nzType="default" style="background-color: #ffa400; color: white;"
+      class="!flex !items-center" (click)="createIncident()">
+      <span nz-icon nzType="warning" nzTheme="outline"></span>Tạo sự cố
+    </button>
     <ng-container *ngIf="edit">
       <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
         (click)="submitForm()">
