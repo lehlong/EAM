@@ -22,6 +22,8 @@ namespace EAM.CORE.Entities.PLAN
 
         [Column("EQUNR")]
         public string? Equnr { get; set; }
+        [Column("PLNNR")]
+        public string? Plnnr { get; set; }
 
         [Column("TPLNR")]
         public string? Tplnr { get; set; }

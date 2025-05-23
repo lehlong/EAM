@@ -117,28 +117,69 @@
     </div>
     <nz-tabset>
       <nz-tab nzTitle="Thiết bị lập kế hoạch">
-        <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
+        <nz-table nzBordered [nzSize]="'middle'" #dataTable [nzData]="model.lstPlanOrder" [nzFrontPagination]="false">
           <thead>
             <tr>
+              <th>Loại lập</th>
               <th>Mã thiết bị</th>
               <th>Tên thiết bị</th>
               <th>Khu vực chức năng</th>
-              <th>Nhóm thiết bị</th>
-              <th>Bộ phận phụ trách</th>
+              <th>Chỉ số hoạt động</th>
+              <th>Tần suất</th>
+              <th style="width: 20%;">Mã checklist</th>
             </tr>
           </thead>
           <tbody>
-            <!-- <tr *ngFor="let data of checklistTable.data; let i = index">
-              <td>{{ data.vornr }}</td>
-              <td>{{ i + 1 }}</td>
-              <td>{{ data.ltxa1 }}</td>
+            <tr *ngFor="let data of dataTable.data; let i = index">
+              <td>{{ data.cyctype == 'T' ? 'Thời gian' : 'Chỉ số hoạt động' }}</td>
+              <td>{{ data.equnr }}</td>
+              <td>{{ _global.getNameEquip(lstEquip, data.equnr) }}</td>
+              <td>{{ _global.getNameFloc(lstFloc, data.tplnr)}}</td>
+              <td>
+                <input nz-input [(ngModel)]="data.measvalue">
+              </td>
+              <td>
+                <input nz-input [(ngModel)]="data.cycle" (ngModelChange)="calculateDate(data)">
+              </td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.plnnr">
+                  <nz-option *ngFor="let item of lstChecklist" [nzLabel]="item.plnnr + ' - ' + item.ktext"
+                    [nzValue]="item.plnnr">
+                  </nz-option>
+                </nz-select>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+        <div *ngIf="isValidAdd()" style="display: flex; justify-content: center;">
+          <button nz-button nzType="dashed" (click)="addPlanOrder()">
+            <nz-icon nzType="plus" />
+            Thêm mới
+          </button>
+        </div>
+      </nz-tab>
+     <nz-tab nzTitle="Kế hoạch dự kiến">
+        <nz-table nzBordered [nzSize]="'middle'" #plandTable [nzData]="model.lstPlanOrder" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Mã kế hoạch</th>
+              <th>Tên kế hoạch</th>
+              <th>Khu vực chức năng</th>
+              <th>Ngày dự kiến</th>
+              <th>Số lệnh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of plandTable.data; let i = index">
+              <td>{{ model.warpl}}</td>
+              <td>{{ model.wptxt }}</td>
+              <td>{{_global.getNameFloc(lstFloc, data.tplnr)}}</td>
+              <td>{{ data.schstart | date : 'dd/MM/yyyy'}}</td>
               <td></td>
-              <td></td>
-            </tr> -->
+            </tr>
           </tbody>
         </nz-table>
       </nz-tab>
-      <nz-tab nzTitle="Kế hoạch dự kiến">Kế hoạch dự kiến</nz-tab>
     </nz-tabset>
   </nz-page-header-content>
 </nz-page-header>

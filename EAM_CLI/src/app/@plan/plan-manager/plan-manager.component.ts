@@ -69,7 +69,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   constructor(
     private _service: PlanHService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService,
     private flocService: FlocService,
     private plgrp : PlgrpService,

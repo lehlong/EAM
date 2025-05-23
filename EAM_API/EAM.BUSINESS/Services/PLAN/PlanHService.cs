@@ -143,6 +143,11 @@ namespace EAM.BUSINESS.Services.PLAN
                         Name = entity.Wptxt,
                         Warpl = entity.Warpl,
                         Schstart = i.Schstart,
+                        Plnnr = i.Plnnr,
+                        Cycle = i.Cycle,
+                        Measure = i.Measure,
+                        Tplnr = i.Tplnr,
+                        Equnr = i.Equnr,
                         Iscompled = false
                     });
 
@@ -213,24 +218,27 @@ namespace EAM.BUSINESS.Services.PLAN
                     foreach (var _d in filteredPlanOrders)
                     {
                         var code = pmOrders.ContainsKey(i.Auart) ? pmOrders[i.Auart].ToString() : string.Empty;
+
+                        _d.Iscompled = true;
+                        _d.Aufnr = code;
+                        _dbContext.TblPlanOrder.Update(_d);
+
+                        _dbContext.TblTranOrder.Add(new TblTranOrder
+                        {
+                            Aufnr = code,
+                            Iwerk = i.Iwerk,
+                            Auart = i.Auart,
+                            Ktext = i.Wptxt,
+                            Tplnr = i.Tplnr,
+                            Ingpr = i.Ingrp,
+                            Arbpl = i.Arbpl,
+                            Gstrs = _d.Schstart,
+                            Warpl = i.Warpl,
+                            Equnr = i.Equnr,
+                        });
+
                         if (i.Mptyp == "1")
                         {
-                            _d.Iscompled = true;
-                            _d.Aufnr = code;
-                            _dbContext.TblPlanOrder.Update(_d);
-                            _dbContext.TblTranOrder.Add(new TblTranOrder
-                            {
-                                Aufnr = code,
-                                Iwerk = i.Iwerk,
-                                Auart = i.Auart,
-                                Ktext = i.Wptxt,
-                                Tplnr = i.Tplnr,
-                                Ingpr = i.Ingrp,
-                                Arbpl = i.Arbpl,
-                                Gstrs = _d.Schstart,
-                                Warpl = i.Warpl,
-                            });
-
                             var lstEquip = _dbContext.TblPlanD.Where(x => x.Warpl == i.Warpl).ToList();
                             foreach (var e in lstEquip)
                             {
@@ -257,6 +265,25 @@ namespace EAM.BUSINESS.Services.PLAN
                         }
                         else
                         {
+                            _dbContext.TblTranOrderEq.Add(new TblTranOrderEq
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Aufnr = code,
+                                Equnr = i.Equnr,
+                            });
+
+                            var lstTaskList = _dbContext.TblMdTasklist.Where(x => x.Plnnr == _d.Plnnr).ToList();
+                            foreach (var t in lstTaskList)
+                            {
+                                _dbContext.TblTranOrderOperation.Add(new TblTranOrderOperation
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Aufnr = code,
+                                    Vornr = t.Vornr,
+                                    Ltxa1 = t.Ltxa1,
+                                });
+                            }
+
 
                         }
                         if (pmOrders.ContainsKey(i.Auart)) pmOrders[i.Auart]++;

@@ -11,7 +11,7 @@ import {
 } from '../../shared/constants/select.constants';
 import { ShareModule } from '../../shared/share-module';
 import { EquipService } from '../../service/master-data/equip.service';
-import { PlanHModel } from '../../models/plan/plan-h.model';
+import { OrderPlanModel, PlanHModel } from '../../models/plan/plan-h.model';
 import { GlobalService } from '../../service/global.service';
 import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { PlanHService } from '../../service/plan/plan-h.service';
@@ -89,6 +89,28 @@ export class LevelMaintenanceComponent implements OnInit {
     this.lstEquipSelect = this.lstEquip.filter((i) => i.tplnr === e);
   }
 
+  isValidAdd() {
+    if (
+      this.model.cyctype &&
+      this.model.cycunit &&
+      this.model.stdate &&
+      this.model.tplnr &&
+      this.model.equnr
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  addPlanOrder() {
+    const plan = new OrderPlanModel();
+    plan.cyctype = this.model.cyctype;
+    plan.equnr = this.model.equnr;
+    plan.tplnr = this.model.tplnr;
+    this.model.lstPlanOrder = [...this.model.lstPlanOrder, plan];
+  }
+
   onChangeMpgrp(e: any) {
     this._sPlanH.genarateCode(e).subscribe({
       next: (data) => {
@@ -111,5 +133,17 @@ export class LevelMaintenanceComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+
+  calculateDate(data: any): void {
+    const cycle = Number(data.cycle);
+    const date = new Date(this.model.stdate);
+    const unit = this.model.cycunit;
+
+    if (unit === 'D') date.setDate(date.getDate() + cycle);
+    else if (unit === 'W') date.setDate(date.getDate() + cycle * 7);
+    else if (unit === 'M') date.setMonth(date.getMonth() + cycle);
+
+    data.schstart = date;
   }
 }

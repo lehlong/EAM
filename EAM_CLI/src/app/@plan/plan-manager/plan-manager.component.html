@@ -198,7 +198,42 @@
       </div>
     </div>
     <nz-tabset>
-      <nz-tab nzTitle="Thiết bị lập kế hoạch">
+      <nz-tab  *ngIf="model.mptyp=='2'" nzTitle="Thiết bị lập kế hoạch">
+        <nz-table nzBordered [nzSize]="'middle'" #d2Table [nzData]="model.lstPlanOrder" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Loại lập</th>
+              <th>Mã thiết bị</th>
+              <th>Tên thiết bị</th>
+              <th>Khu vực chức năng</th>
+              <th>Chỉ số hoạt động</th>
+              <th>Tần suất</th>
+              <th style="width: 20%;">Mã checklist</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of d2Table.data; let i = index">
+              <td>{{ data.cyctype == 'T' ? 'Thời gian' : 'Chỉ số hoạt động' }}</td>
+              <td>{{ data.equnr }}</td>
+              <td>{{ globalService.getNameEquip(lstEquip, data.equnr) }}</td>
+              <td>{{ globalService.getNameFloc(lstFloc, data.tplnr)}}</td>
+              <td>
+                <input nz-input [(ngModel)]="data.measvalue">
+              </td>
+              <td> {{data.cycle}}</td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.plnnr" [disabled]="true">
+                  <nz-option *ngFor="let item of lstChecklist" [nzLabel]="item.plnnr + ' - ' + item.ktext"
+                    [nzValue]="item.plnnr">
+                  </nz-option>
+                </nz-select>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+      </nz-tab>
+      <nz-tab  *ngIf="model.mptyp=='1'" nzTitle="Thiết bị lập kế hoạch">
         <nz-table nzBordered [nzSize]="'middle'" #equipTable [nzData]="model.lstEquip" [nzFrontPagination]="false">
           <thead>
             <tr>
@@ -220,7 +255,7 @@
           </tbody>
         </nz-table>
       </nz-tab>
-      <nz-tab nzTitle="Tác vụ thực hiện">
+      <nz-tab *ngIf="model.mptyp=='1'" nzTitle="Tác vụ thực hiện">
         <nz-table nzBordered [nzSize]="'middle'" #checklistTable [nzData]="lstTask" [nzFrontPagination]="false">
           <thead>
             <tr>
