@@ -12,6 +12,10 @@ export class OrderService {
     return this.commonService.get('Order/Search', params);
   }
 
+  searchOrderPlan(params: any): Observable<any> {
+    return this.commonService.get('Order/SearchOrderPlan', params);
+  }
+
   searchApproval(params: any): Observable<any> {
     return this.commonService.get('Order/SearchApproval', params);
   }

@@ -14,6 +14,7 @@ namespace EAM.BUSINESS.Services.TRAN
         Task InsertOrder(OrderDto data);
         Task UpdateOrder(OrderDto data);
         Task<OrderDto> GetDetail(string code);
+        Task<PagedResponseDto> SearchPlanOrder(BaseFilter filter);
     }
 
     public class OrderService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranOrder, OrderDto>(dbContext, mapper), IOrderService
@@ -37,6 +38,37 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
+                query = query.Where(x => string.IsNullOrEmpty(x.Warpl) && !string.IsNullOrEmpty(x.Qmnum));
+                return await Paging(query.OrderByDescending(x => x.CreateDate), filter);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+        public async Task<PagedResponseDto> SearchPlanOrder(BaseFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblTranOrder.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x => x.Aufnr.Contains(filter.KeyWord) ||
+                                      x.Ktext.Contains(filter.KeyWord) ||
+                                      x.Iwerk.Contains(filter.KeyWord) ||
+                                      x.Auart.Contains(filter.KeyWord) ||
+                                      x.Qmnum.Contains(filter.KeyWord) ||
+                                      x.Equnr.Contains(filter.KeyWord) ||
+                                      x.Tplnr.Contains(filter.KeyWord));
+                }
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                query = query.Where(x => !string.IsNullOrEmpty(x.Warpl) && string.IsNullOrEmpty(x.Qmnum));
                 return await Paging(query.OrderByDescending(x => x.CreateDate), filter);
             }
             catch (Exception ex)

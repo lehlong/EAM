@@ -210,8 +210,14 @@ export class IncidentApprovalComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',
       cancelButtonText: 'Huỷ',
+      input: 'text',
+      inputPlaceholder: 'Nhập lý do phê duyệt hoặc từ chối',
     }).then((result) => {
       if (result.isConfirmed) {
+        const reason = result.value || '';
+        data.datePd = new Date();
+        data.contentPd = reason;
+        data.userPd = this._global.getUserName();
         data.statAct = status;
         this.subscriptions.push(
           this._sNoti.update(data).subscribe({

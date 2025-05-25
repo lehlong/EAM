@@ -15,6 +15,7 @@ import { OrderPlanModel, PlanHModel } from '../../models/plan/plan-h.model';
 import { GlobalService } from '../../service/global.service';
 import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { PlanHService } from '../../service/plan/plan-h.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-level-maintenance',
@@ -50,7 +51,8 @@ export class LevelMaintenanceComponent implements OnInit {
     private _sFloc: FlocService,
     private _sTasklist: TasklistService,
     private _sWc: WcService,
-    private _sOrderType: OrderTypeService
+    private _sOrderType: OrderTypeService,
+    private message: NzMessageService
   ) {}
   ngOnInit(): void {
     this.model.mptyp = '2';
@@ -124,13 +126,41 @@ export class LevelMaintenanceComponent implements OnInit {
     this.model.tplnr = equip?.tplnr;
   }
 
-  onCreate() {
+  onCreate(): void {
+    // Kiểm tra bắt buộc
+    const isValid =
+      this._global.validateRequired(this.model.wptxt, 'Vui lòng nhập Tên kế hoạch') &&
+      this._global.validateRequired(this.model.mpgrp, 'Vui lòng chọn Loại kế hoạch') &&
+      this._global.validateRequired(this.model.cyctype, 'Vui lòng chọn Kiểu lập') &&
+      this._global.validateRequired(this.model.cycunit, 'Vui lòng chọn Đơn vị đo') &&
+      this._global.validateRequired(
+        this.model.stdate,
+        'Vui lòng chọn Ngày bắt đầu kế hoạch'
+      ) &&
+      this._global.validateRequired(
+        this.model.tplnr,
+        'Vui lòng chọn Khu vực chức năng'
+      ) &&
+      this._global.validateRequired(this.model.equnr, 'Vui lòng chọn Mã thiết bị') &&
+      this._global.validateRequired(
+        this.model.ingrp,
+        'Vui lòng chọn Bộ phận lập kế hoạch'
+      ) &&
+      this._global.validateRequired(
+        this.model.arbpl,
+        'Vui lòng chọn Bộ phận thực hiện'
+      ) &&
+      this._global.validateRequired(this.model.auart, 'Vui lòng chọn Loại lệnh');
+
+    if (!isValid) return;
+
     this._sPlanH.create(this.model).subscribe({
-      next: (data) => {
+      next: () => {
         this.model = new PlanHModel();
       },
-      error: (error) => {
-        console.log(error);
+      error: (err) => {
+        console.error(err);
+        this.message.error('Tạo kế hoạch thất bại');
       },
     });
   }

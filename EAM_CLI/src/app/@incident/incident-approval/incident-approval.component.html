@@ -129,8 +129,8 @@
 
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
-              <label>Người phê duyệt</label>
-              <input nz-input [disabled]="true">
+              <label>Người phê duyệt | từ chối</label>
+              <input nz-input [disabled]="true" [(ngModel)]="model.userPd">
             </div>
           </div>
 
@@ -141,17 +141,18 @@
             </div>
           </div>
 
-          <div nz-col class="gutter-row" [nzSpan]="12">
+           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
-              <label>Ngày phê duyệt</label>
-              <input nz-input [disabled]="true">
+              <label>Ngày phê duyệt | từ chối</label>
+              <nz-date-picker nz-input [disabled]="true" nzFormat="dd/MM/yyyy hh:mm" [(ngModel)]="model.datePd">
+              </nz-date-picker>
             </div>
           </div>
 
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
-              <label>Ý kiến phê duyệt</label>
-              <input nz-input [disabled]="true">
+              <label>Ý kiến phê duyệt | từ chối</label>
+              <input nz-input [disabled]="true" [(ngModel)]="model.contentPd">
             </div>
           </div>
 

@@ -12,7 +12,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Mã kế hoạch</label>
-          <input nz-input [(ngModel)]="model.warpl" (ngModelChange)="onChangeCode($event)">
+          <input nz-input [(ngModel)]="model.warpl" (ngModelChange)="onChangeCode($event)" [disabled]="true">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">

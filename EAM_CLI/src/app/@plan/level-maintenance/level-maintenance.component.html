@@ -12,7 +12,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Mã kế hoạch</label>
-          <input nz-input [(ngModel)]="model.warpl">
+          <input nz-input [(ngModel)]="model.warpl" [disabled]="true">
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
@@ -39,7 +39,6 @@
             </nz-option>
           </nz-select>
         </div>
-
       </div>
 
       <div nz-col class="gutter-row" [nzSpan]="6">
@@ -59,7 +58,6 @@
           <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate"></nz-date-picker>
         </div>
       </div>
-
 
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">

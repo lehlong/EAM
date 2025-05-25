@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -19,7 +20,7 @@ export class GlobalService {
   orgCode?: string = localStorage.getItem('companyCode')?.toString();
   warehouseCode?: string = localStorage.getItem('warehouseCode')?.toString();
 
-  constructor() {
+  constructor(private message: NzMessageService) {
     this.loading = new BehaviorSubject<boolean>(false);
     this.rightSubject.subscribe((value) => {
       localStorage.setItem('userRights', value);
@@ -328,5 +329,17 @@ export class GlobalService {
   convertToIsoDateString(dateStr: string): string {
     const [dd, mm, yyyy] = dateStr.split('/');
     return `${yyyy}-${mm}-${dd}`;
+  }
+
+  validateRequired(field: any, message: string): boolean {
+    if (
+      field === undefined ||
+      field === null ||
+      (typeof field === 'string' && field.trim() === '')
+    ) {
+      this.message.error(message);
+      return false;
+    }
+    return true;
   }
 }

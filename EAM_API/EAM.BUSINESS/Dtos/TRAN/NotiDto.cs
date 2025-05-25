@@ -4,6 +4,7 @@ using EAM.CORE.Entities.TRAN;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace EAM.BUSINESS.Dtos.TRAN
@@ -98,7 +99,13 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string? NtDvth { get; set; }
         public string? NtDvthDes { get; set; }
         public string? NtDvthCd { get; set; }
-        
+        public DateTime? DatePd { get; set; }
+        public DateTime? DateTc { get; set; }
+        public string? UserPd { get; set; }
+        public string? UserTc { get; set; }
+        public string? ContentPd { get; set; }
+        public string? ContentTc { get; set; }
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TblTranNoti, NotiDto>().ReverseMap();

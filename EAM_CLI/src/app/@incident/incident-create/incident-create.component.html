@@ -16,7 +16,7 @@
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
                 <label>Khu vực chức năng</label>
-                <nz-select nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" (ngModelChange)="OnChangeEquip()">
+                <nz-select [required]="true" nzShowSearch nzAllowClear placeholder="Khu vực chức năng" [(ngModel)]="model.tplnr" (ngModelChange)="OnChangeEquip()">
                   <nz-option *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript" [nzValue]="item.tplnr"></nz-option>
                 </nz-select>
               </div>

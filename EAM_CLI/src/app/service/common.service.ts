@@ -296,10 +296,10 @@ export class CommonService {
       )
   }
 
-  private showSuccess(message: string): void {
+  showSuccess(message: string): void {
     this.message.create('success', message)
   }
-  private showError(message: string): void {
+  showError(message: string): void {
     this.message.create('error', message)
   }
 

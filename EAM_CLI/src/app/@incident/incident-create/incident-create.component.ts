@@ -60,20 +60,34 @@ export class IncidentCreateComponent implements OnInit {
     this.username = _global.getUserName();
     this.model.qmnam = this.username;
     this.model.qmdat = new Date();
-    this._global.setBreadcrumb([{ name: 'Tạo mới sự cố', path: 'incident/create' }]);
+    this._global.setBreadcrumb([
+      { name: 'Tạo mới sự cố', path: 'incident/create' },
+    ]);
     this._global.getLoading().subscribe((value) => (this.loading = value));
   }
 
   ngOnInit(): void {
     this.getMasterData();
-    this.route.queryParams.subscribe(params => {
-      if (params['equnr']) {this.model.equnr = params['equnr'];}
-      if (params['eqart']) {this.model.eqart = params['eqart'];}
-      if (params['tplnr']) {this.model.tplnr = params['tplnr'];}
-    //  if (params['eqktx']) {this.model.eqktx = params['eqktx'];}
-      if (params['arbpl']) {this.model.arbpl = params['arbpl'];}
-      if (params['ingrp']) {this.model.ingrp = params['ingrp'];}
-      if (params['iwerk']) {this.model.iwerk = params['iwerk'];}
+    this.route.queryParams.subscribe((params) => {
+      if (params['equnr']) {
+        this.model.equnr = params['equnr'];
+      }
+      if (params['eqart']) {
+        this.model.eqart = params['eqart'];
+      }
+      if (params['tplnr']) {
+        this.model.tplnr = params['tplnr'];
+      }
+      //  if (params['eqktx']) {this.model.eqktx = params['eqktx'];}
+      if (params['arbpl']) {
+        this.model.arbpl = params['arbpl'];
+      }
+      if (params['ingrp']) {
+        this.model.ingrp = params['ingrp'];
+      }
+      if (params['iwerk']) {
+        this.model.iwerk = params['iwerk'];
+      }
     });
   }
 
@@ -87,7 +101,6 @@ export class IncidentCreateComponent implements OnInit {
     this._sEquip.getAll().subscribe((data: any) => {
       this.lstEquip = data;
       this.lstEquipSelect = data;
-
     });
     this._sPlant.getAll().subscribe((data: any) => (this.lstPlant = data));
   }
@@ -130,10 +143,13 @@ export class IncidentCreateComponent implements OnInit {
         formData.append('file', fileObj);
         formData.append('qmnum', this.qmnum);
 
-        this._sNotiAtt.uploadFile(formData, this.qmnum)
+        this._sNotiAtt
+          .uploadFile(formData, this.qmnum)
           .then((res) => {
             if (res && res.status) {
-              this.message.success(`Tệp ${fileObj.name} đã được tải lên thành công`);
+              this.message.success(
+                `Tệp ${fileObj.name} đã được tải lên thành công`
+              );
             } else {
               this.message.error(`Tải lên tệp ${fileObj.name} thất bại`);
             }
@@ -147,6 +163,40 @@ export class IncidentCreateComponent implements OnInit {
   }
 
   onCreate(): void {
+    const isValid =
+      this._global.validateRequired(
+        this.model.tplnr,
+        'Vui lòng chọn Khu vực chức năng'
+      ) &&
+      this._global.validateRequired(this.model.eqart, 'Vui lòng chọn Nhóm thiết bị') &&
+      this._global.validateRequired(this.model.equnr, 'Vui lòng chọn Thiết bị') &&
+      this._global.validateRequired(
+        this.model.arbpl,
+        'Vui lòng chọn Bộ phận thực hiện'
+      ) &&
+      this._global.validateRequired(
+        this.model.ingrp,
+        'Vui lòng chọn Bộ phận tiếp nhận'
+      ) &&
+      this._global.validateRequired(this.model.qmart, 'Vui lòng chọn Loại thông báo') &&
+      this._global.validateRequired(this.model.qmtxt, 'Vui lòng nhập Mô tả sự cố') &&
+      this._global.validateRequired(
+        this.model.qmdetail,
+        'Vui lòng nhập Chi tiết sự cố'
+      ) &&
+      this._global.validateRequired(this.model.priok, 'Vui lòng chọn Mức độ ưu tiên') &&
+      this._global.validateRequired(
+        this.model.staffSc,
+        'Vui lòng chọn Người sửa chữa'
+      ) &&
+      this._global.validateRequired(
+        this.model.ltrmn,
+        'Vui lòng chọn Ngày yêu cầu hoàn thành'
+      ) &&
+      this._global.validateRequired(this.model.iwerk, 'Vui lòng chọn Đơn vị bảo trì');
+
+    if (!isValid) return;
+
     this._sNoti.create(this.model).subscribe({
       next: (data) => {
         if (data && data.qmnum) {

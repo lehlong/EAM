@@ -16,6 +16,7 @@ import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { EquipPlanModel } from '../../models/plan/equip-plan.model';
 import { GlobalService } from '../../service/global.service';
 import { PlanHModel } from '../../models/plan/plan-h.model';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-single-maintenance',
@@ -51,7 +52,8 @@ export class SingleMaintenanceComponent implements OnInit {
     private _sFloc: FlocService,
     private _sTasklist: TasklistService,
     private _sWc: WcService,
-    private _sOrderType: OrderTypeService
+    private _sOrderType: OrderTypeService,
+    private message: NzMessageService
   ) {}
   ngOnInit(): void {
     this.getMasterData();
@@ -75,30 +77,60 @@ export class SingleMaintenanceComponent implements OnInit {
     });
   }
 
-  onCreate() {
-    this.lstEquipPlan.forEach((i) => {
-      this.model.lstEquip.push({
-        id: 'A',
-        warpl: this.model.warpl,
-        equnr: i.equnr,
-        eqart: i.eqart,
-      });
-    });
+  onCreate(): void {
+    const isValid =
+      this._global.validateRequired(this.model.wptxt, 'Vui lòng nhập Tên kế hoạch') &&
+      this._global.validateRequired(this.model.mpgrp, 'Vui lòng chọn Loại kế hoạch') &&
+      this._global.validateRequired(this.model.cyctype, 'Vui lòng chọn Kiểu lập') &&
+      this._global.validateRequired(
+        this.model.tplnr,
+        'Vui lòng chọn Khu vực chức năng'
+      ) &&
+      this._global.validateRequired(this.model.cycunit, 'Vui lòng chọn Đơn vị đo') &&
+      this._global.validateRequired(this.model.cycle, 'Vui lòng nhập Tần suất') &&
+      this._global.validateRequired(
+        this.model.cycef,
+        'Vui lòng nhập Thời gian hiệu lực'
+      ) &&
+      this._global.validateRequired(
+        this.model.stdate,
+        'Vui lòng chọn Ngày bắt đầu kế hoạch'
+      ) &&
+      this._global.validateRequired(this.model.plnnr, 'Vui lòng chọn Mã checklist') &&
+      this._global.validateRequired(
+        this.model.ingrp,
+        'Vui lòng chọn Bộ phận lập kế hoạch'
+      ) &&
+      this._global.validateRequired(
+        this.model.arbpl,
+        'Vui lòng chọn Bộ phận thực hiện'
+      ) &&
+      this._global.validateRequired(this.model.auart, 'Vui lòng chọn Loại lệnh');
 
-    this.lstPlan.forEach((i) => {
-      this.model.lstPlanOrder.push({
-        id: 'A',
-        warpl: this.model.warpl,
-        schstart: this._global.convertToIsoDateString(i.schstart),
-      });
-    });
+    if (!isValid) return;
+
+    this.model.lstEquip = this.lstEquipPlan.map((i) => ({
+      id: 'A',
+      warpl: this.model.warpl,
+      equnr: i.equnr,
+      eqart: i.eqart,
+    }));
+
+    this.model.lstPlanOrder = this.lstPlan.map((i) => ({
+      id: 'A',
+      warpl: this.model.warpl,
+      schstart: this._global.convertToIsoDateString(i.schstart),
+    }));
 
     this._sPlanH.create(this.model).subscribe({
-      next: (data) => {
+      next: () => {
         this.model = new PlanHModel();
         this.lstEquipPlan = [];
         this.lstPlan = [];
         this.lstTask = [];
+      },
+      error: () => {
+        this.message.error('Tạo kế hoạch thất bại');
       },
     });
   }

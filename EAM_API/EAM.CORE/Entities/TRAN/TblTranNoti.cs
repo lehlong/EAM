@@ -224,5 +224,22 @@ namespace EAM.CORE.Entities.TRAN
 
         [Column("NT_DVTH_CD")]
         public string? NtDvthCd { get; set; }
+
+        [Column("DATE_PD")]
+        public DateTime? DatePd { get; set; }
+        [Column("DATE_TC")]
+        public DateTime? DateTc { get; set; }
+
+        [Column("USER_PD")]
+        public string? UserPd { get; set; }
+
+        [Column("USER_TC")]
+        public string? UserTc { get; set; }
+
+        [Column("CONTENT_PD")]
+        public string? ContentPd { get; set; }
+
+        [Column("CONTENT_TC")]
+        public string? ContentTc { get; set; }
     }
 }

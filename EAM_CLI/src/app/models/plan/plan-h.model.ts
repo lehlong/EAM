@@ -17,7 +17,7 @@ export class PlanHModel {
   plnnr: string | null = null;
   ingrp: string | null = null;
   arbpl: string | null = null;
-  auart: string | null = null;
+  auart: string | null = 'PM01';
   isActive: boolean | null = true;
   lstEquip: any[] = [];
   lstPlanOrder: any[] = [];

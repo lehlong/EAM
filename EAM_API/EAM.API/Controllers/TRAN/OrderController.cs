@@ -32,6 +32,24 @@ namespace EAM.API.Controllers.TRAN
             return Ok(transferObject);
         }
 
+        [HttpGet("SearchOrderPlan")]
+        public async Task<IActionResult> SearchOrderPlan([FromQuery] BaseFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.SearchPlanOrder(filter);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
