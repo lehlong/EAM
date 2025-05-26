@@ -27,4 +27,7 @@ export class TasklistService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`Tasklist/Delete/${id}`)
   }
+    exportExcel(params: any): Observable<any> {
+      return this.commonService.downloadFile('Tasklist/Export', params)
+    }
 }

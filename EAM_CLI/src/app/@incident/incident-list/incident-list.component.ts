@@ -261,7 +261,20 @@ export class IncidentListComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+ exportExcel() {
+    return this._sNoti
+      .exportExcel(this.filter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-su-co.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
   reset() {
     this.filter = new BaseFilter();
     this.search();

@@ -106,5 +106,22 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [HttpGet("Export")]
+        public async Task<IActionResult> Export([FromQuery] BaseMdFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.Export(filter);
+            if (_service.Status)
+            {
+                return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Danh sách nhóm thiết bị" + DateTime.Now.ToString() + ".xlsx");
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("2000", _service);
+                return Ok(transferObject);
+            }
+        }
     }
 }

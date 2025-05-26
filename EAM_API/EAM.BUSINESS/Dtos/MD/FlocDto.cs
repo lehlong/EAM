@@ -18,17 +18,17 @@ namespace EAM.BUSINESS.Dtos.MD
         public string Tplnr { get; set; } = null!;
         [Description("Mã nhà máy")]
         public string? Iwerk { get; set; }
-        [Description("Mã nhóm quản lý")]
+      //  [Description("Mã nhóm quản lý")]
         public string? Ingrp { get; set; }
         [Description("Mô tả")]
         public string? Descript { get; set; }
         [Description("Vị trí chức năng cấp trên")]
         public string? Supfloc { get; set; }
-        [Description("Mã trung tâm công việc")]
+     //   [Description("Mã trung tâm công việc")]
         public string? Arbpl { get; set; }
         [Description("Ngày bắt đầu cập nhật")]
         public DateTime? StartUpdate { get; set; }
-        [Description("Mô tả ngắn")]
+    //    [Description("Mô tả ngắn")]
         public string? Txt30 { get; set; }
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }

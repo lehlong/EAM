@@ -115,7 +115,20 @@ export class FlocComponent {
     );
     return plant ? plant.iwerkTxt : iwerk;
   }
-
+  exportExcel() {
+    return this._service
+      .exportExcel(this.filter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'khu-vuc-chuc-nang.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
   isCodeExist(tplnr: string): boolean {
     return this.paginationResult.data?.some(
       (accType: any) => accType.tplnr === tplnr

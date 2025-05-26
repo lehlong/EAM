@@ -29,16 +29,28 @@ namespace EAM.BUSINESS.Dtos.MD
     //    [Description("Ngày kết thúc hiệu lực")]
         public DateTime? Datbi { get; set; }
 
+        [Description("Tên nhà máy")]
+        public string? IwerkText { get; set; }
+
+        [Description("Tên khu vực chức năng")]
+        public string? TplnrText { get; set; }
+
+        [Description("Tên loại thiết bị")]
+        public string? EqtypText { get; set; }
+
+        [Description("Tên nhóm thiết bị")]
+        public string? EqartText { get; set; }
+
         [Description("Khu vực chức năng")]
         public string? Tplnr { get; set; }
 
         [Description("Bộ phận quản lý")]
         public string? Ingrp { get; set; }
 
-        [Description("Loại thiết bị")]
+      //  [Description("Loại thiết bị")]
         public string? Eqtyp { get; set; }
 
-        [Description("Nhóm thiết bị")]
+    //    [Description("Nhóm thiết bị")]
         public string? Eqart { get; set; }
 
     //    [Description("Loại đối tượng phụ")]
@@ -47,31 +59,31 @@ namespace EAM.BUSINESS.Dtos.MD
     //    [Description("Loại đối tượng thường")]
         public string? EqartTp { get; set; }
 
-        [Description("Thiết bị cấp trên")]
+     //   [Description("Thiết bị cấp trên")]
         public string? Hequi { get; set; }
 
-        [Description("Cờ thiết bị cha")]
+    //    [Description("Cờ thiết bị cha")]
         public string? ParentFlg { get; set; }
 
-        [Description("Số lượng thiết bị con")]
+    //    [Description("Số lượng thiết bị con")]
         public int? ChildCnt { get; set; }
 
         [Description("Tổ đội bảo trì")]
         public string? Arbpl { get; set; }
 
-        [Description("Mã trung tâm chi phí")]
+      //  [Description("Mã trung tâm chi phí")]
         public string? Kostl { get; set; }
 
-        [Description("Mã phân đoạn")]
+      //  [Description("Mã phân đoạn")]
         public string? Beber { get; set; }
 
-        [Description("Trạng thái hoạt động")]
+     //   [Description("Trạng thái hoạt động")]
         public string? StatAct { get; set; }
 
-        [Description("Mô tả trạng thái hoạt động")]
+      //  [Description("Mô tả trạng thái hoạt động")]
         public string? StatActT { get; set; }
 
-        [Description("Trạng thái kỹ thuật")]
+    //    [Description("Trạng thái kỹ thuật")]
         public string? StatusTh { get; set; }
 
         [Description("Mã tài sản cố định")]

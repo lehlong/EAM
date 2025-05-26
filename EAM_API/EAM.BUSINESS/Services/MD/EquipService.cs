@@ -54,25 +54,74 @@ namespace EAM.BUSINESS.Services.MD
                 return null;
             }
         }
+        //public async Task<byte[]> Export(BaseMdFilter filter)
+        //{
+        //    try
+        //    {
+        //        var query = _dbContext.TblMdEquip.AsQueryable();
+        //        if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+        //        {
+        //            query = query.Where(x => x.Class.Contains(filter.KeyWord));
+        //        }
+        //        if (filter.IsActive.HasValue)
+        //        {
+        //            query = query.Where(x => x.IsActive == filter.IsActive);
+        //        }
+        //        var data = await base.GetAllMd(query, filter);
+        //        int i = 1;
+        //        data.ForEach(x =>
+        //        {
+        //            x.OrdinalNumber = i++;
+        //        });
+        //        return await ExportExtension.ExportToExcel(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Status = false;
+        //        Exception = ex;
+        //        return null;
+        //    }
+        //}
         public async Task<byte[]> Export(BaseMdFilter filter)
         {
             try
             {
                 var query = _dbContext.TblMdEquip.AsQueryable();
+
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x => x.Class.Contains(filter.KeyWord));
+                    query = query.Where(x => x.Eqktx.Contains(filter.KeyWord) || x.EqUnr.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                var data = await base.GetAllMd(query, filter);
-                int i = 1;
-                data.ForEach(x =>
+
+                var equipList = await query.ToListAsync();
+                var data = _mapper.Map<List<EquipDto>>(equipList);
+
+                var plantList = await _dbContext.TblMdPlant.ToListAsync();
+                var flocList = await _dbContext.TblMdFloc.ToListAsync();
+                var eqCatList = await _dbContext.TblMdEqCat.ToListAsync();
+                var eqGroupList = await _dbContext.TblMdEqGroup.ToListAsync();
+
+                for (int i = 0; i < data.Count; i++)
                 {
-                    x.OrdinalNumber = i++;
-                });
+                    data[i].OrdinalNumber = i + 1;
+
+                    var plant = plantList.FirstOrDefault(p => p.Iwerk == equipList[i].Iwerk);
+                    data[i].IwerkText = plant?.IwerkTxt;
+
+                    var floc = flocList.FirstOrDefault(f => f.Tplnr == equipList[i].Tplnr);
+                    data[i].TplnrText = floc?.Descript;
+
+                    var eqCat = eqCatList.FirstOrDefault(c => c.Eqtyp == equipList[i].Eqtyp);
+                    data[i].EqtypText = eqCat?.EqtypTxt;
+
+                    var eqGroup = eqGroupList.FirstOrDefault(g => g.Eqart == equipList[i].Eqart);
+                    data[i].EqartText = eqGroup?.EqartTxt;
+                }
+
                 return await ExportExtension.ExportToExcel(data);
             }
             catch (Exception ex)

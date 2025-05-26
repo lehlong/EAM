@@ -27,4 +27,7 @@ export class WcService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`Wc/Delete/${id}`)
   }
+      exportExcel(params: any): Observable<any> {
+      return this.commonService.downloadFile('Wc/Export', params)
+    }
 }

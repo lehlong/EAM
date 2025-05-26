@@ -27,4 +27,7 @@ export class FlocService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`Floc/Delete/${id}`)
   }
+  exportExcel(params: any): Observable<any> {
+      return this.commonService.downloadFile('Floc/Export', params)
+    }
 }

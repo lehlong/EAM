@@ -27,4 +27,7 @@ export class PlantService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`Plant/Delete/${id}`)
   }
+    exportExcel(params: any): Observable<any> {
+      return this.commonService.downloadFile('Plant/Export', params)
+    }
 }

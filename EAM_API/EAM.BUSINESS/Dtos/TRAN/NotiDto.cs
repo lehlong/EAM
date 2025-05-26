@@ -27,11 +27,16 @@ namespace EAM.BUSINESS.Dtos.TRAN
         [Description("Mức độ nghiêm trọng")]
         public string? Priok { get; set; }
         [Description("Ngày ghi nhận")]
+        public string QmdatTxt { get; set; }
+
+        [Description("Ngày hoàn thành")]
+        public string LtrmnTxt { get; set; }
+      //  [Description("Ngày ghi nhận")]
         public DateTime? Qmdat { get; set; }
         public TimeSpan? Mzeit { get; set; }
         public DateTime? Strmn { get; set; }
         public TimeSpan? Strur { get; set; }
-        [Description("Ngày hoàn thành")]
+      //  [Description("Ngày hoàn thành")]
         public DateTime? Ltrmn { get; set; }
         public TimeSpan? Ltrur { get; set; }
         public string? Aufnr { get; set; }

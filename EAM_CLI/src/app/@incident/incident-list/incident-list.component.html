@@ -3,8 +3,7 @@
   <nz-page-header-subtitle>Danh sách sự cố phát sinh</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
-      <button class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;"
-        nz-button>
+       <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
     </div>

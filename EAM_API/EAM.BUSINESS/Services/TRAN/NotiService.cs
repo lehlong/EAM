@@ -243,6 +243,15 @@ namespace EAM.BUSINESS.Services.TRAN
                 data.ForEach(x =>
                 {
                     x.OrdinalNumber = i++;
+                    if (x.Qmdat.HasValue)
+                    {
+                        x.QmdatTxt = x.Qmdat.Value.ToString("dd/MM/yyyy HH:mm:ss");
+                    }
+
+                    if (x.Ltrmn.HasValue)
+                    {
+                        x.LtrmnTxt = x.Ltrmn.Value.ToString("dd/MM/yyyy HH:mm:ss");
+                    }
                 });
                 return await ExportExtension.ExportToExcel(data);
             }

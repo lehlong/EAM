@@ -70,7 +70,20 @@ export class EqCatComponent {
       },
     });
   }
-
+  exportExcel() {
+    return this._service
+      .exportExcel(this.filter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-loai-thiet-bi.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
   isCodeExist(eqtyp: string): boolean {
     return this.paginationResult.data?.some(
       (accType: any) => accType.eqtyp === eqtyp

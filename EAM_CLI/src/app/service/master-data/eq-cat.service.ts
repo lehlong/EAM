@@ -27,4 +27,7 @@ export class EqCatService {
   delete(id: string): Observable<any> {
     return this.commonService.delete(`EqCat/Delete/${id}`)
   }
+  exportExcel(params: any): Observable<any> {
+      return this.commonService.downloadFile('EqCat/Export', params)
+    }
 }
