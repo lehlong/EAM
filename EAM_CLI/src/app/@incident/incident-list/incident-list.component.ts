@@ -32,6 +32,7 @@ import { OrderEqService } from '../../service/tran/orderEq.service';
 import { OrderModel } from '../../models/tran/order.model';
 import { NotiModel } from '../../models/tran/noti.model';
 import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
+import { NotiFilter } from '../../filter/incident/incident.filter';
 
 @Component({
   selector: 'app-incident-list',
@@ -44,6 +45,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   isVisibleAddOrder = false;
   visibleDetail: boolean = false;
   filter = new BaseFilter();
+  sfilter = new NotiFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
   lstFloc: any[] = [];
@@ -100,7 +102,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
     private _sOrder: OrderService,
     public _global: GlobalService,
     private message: NzMessageService,
-    private modal: NzModalService
+    private modal: NzModalService,
   ) {
     this._global.setBreadcrumb([
       {
@@ -235,7 +237,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   search() {
     this.subscriptions.push(
-      this._sNoti.search(this.filter).subscribe({
+      this._sNoti.search(this.sfilter).subscribe({
         next: (data) => (this.paginationResult = data),
         error: (err) => console.log(err),
       })

@@ -13,7 +13,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="sfilter.tplnr" (ngModelChange)="search()">
             <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
               [nzValue]="item.tplnr">
             </nz-option>
@@ -23,7 +23,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Nhóm thiết bị</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị"  [(ngModel)]="sfilter.eqart" (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
               [nzValue]="item.eqart">
             </nz-option>
@@ -34,7 +34,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Đơn vị quản lý</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị quản lý" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị quản lý" [(ngModel)]="sfilter.ingrp" (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp+ ' - '+item.ingrpTxt"
               [nzValue]="item.ingrp">
             </nz-option>
@@ -45,7 +45,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Thiết bị</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị">
+          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="sfilter.equnr" (ngModelChange)="search()">
             <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
             </nz-option>
           </nz-select>
@@ -53,18 +53,18 @@
       </div>
 
       <div nz-col class="gutter-row" [nzSpan]="6">
-        <div class="inner-box">
-          <label>Ngày yêu cầu hoàn thành</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
-        </div>
-      </div>
-      <div nz-col class="gutter-row" [nzSpan]="6">
-        <div class="inner-box">
-          <label>đến ngày</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
-        </div>
-      </div>
-    </div>
+  <div class="inner-box">
+    <label>Ngày yêu cầu hoàn thành</label>
+    <nz-date-picker [(ngModel)]="sfilter.fromDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+  </div>
+</div>
+<div nz-col class="gutter-row" [nzSpan]="6">
+  <div class="inner-box">
+    <label>đến ngày</label>
+    <nz-date-picker [(ngModel)]="sfilter.toDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+  </div>
+</div>
+</div>
   </nz-page-header-content>
   <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">
     <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResult.data" class="auto-scroll-table"

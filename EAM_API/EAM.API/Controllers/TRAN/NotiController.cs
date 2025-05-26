@@ -2,6 +2,7 @@
 using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.TRAN;
+using EAM.BUSINESS.Filter.TRAN;
 using EAM.BUSINESS.Services.TRAN;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace EAM.API.Controllers.TRAN
         public readonly INotiService _service = service;
 
         [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        public async Task<IActionResult> Search([FromQuery] NotiFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.Search(filter);

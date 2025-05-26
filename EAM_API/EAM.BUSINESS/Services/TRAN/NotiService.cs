@@ -2,6 +2,8 @@ using AutoMapper;
 using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
+using EAM.BUSINESS.Filter.MD;
+using EAM.BUSINESS.Filter.TRAN;
 using EAM.CORE;
 using EAM.CORE.Entities.TRAN;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +18,60 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<PagedResponseDto> SearchClose(BaseFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
         Task<NotiDto> Create(NotiDto dto);
+        Task<PagedResponseDto> Search(NotiFilter filter);
     }
     
     public class NotiService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNoti, NotiDto>(dbContext, mapper), INotiService
     {
+        public async Task<PagedResponseDto> Search(NotiFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblTranNoti.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x => x.Qmnum.ToString().Contains(filter.KeyWord));
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Ingrp))
+                {
+                    query = query.Where(x => x.Ingrp == filter.Ingrp);
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Equnr))
+                {
+                    query = query.Where(x => x.Equnr == filter.Equnr);
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Tplnr))
+                {
+                    query = query.Where(x => x.Tplnr == filter.Tplnr);
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.Eqart))
+                {
+                    query = query.Where(x => x.Eqart == filter.Eqart);
+                }
+                if (filter.FromDate.HasValue)
+                {
+                    query = query.Where(x => x.Ltrmn >= filter.FromDate);
+                }
+                if (filter.ToDate.HasValue)
+                {
+                    query = query.Where(x => x.Ltrmn <= filter.ToDate);
+                }
+
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                return await Paging(query, filter);
+
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
         public async Task<NotiDto> Create(NotiDto dto)
         {
             try
