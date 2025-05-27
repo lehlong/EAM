@@ -22,6 +22,7 @@
           <th>Mức độ ưu tiên</th>
           <th nzAlign="center">Trạng thái</th>
           <th nzAlign="center">Hành động</th>
+          <th nzAlign="center">In</th>
         </tr>
       </thead>
       <tbody>
@@ -59,6 +60,9 @@
               </button>
             </div>
           </td>
+           <td>
+                <button nz-button nzType="default" (click)="exportNoti(data.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /></button>
+              </td>
         </tr>
       </tbody>
     </nz-table>

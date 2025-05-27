@@ -105,6 +105,24 @@ namespace EAM.API.Controllers.TRAN
             return Ok(transferObject);
         }
 
+        [HttpGet("ExportExcel")]
+        public async Task<IActionResult> ExportExcel([FromQuery] string qmnum)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.ExportExcel(qmnum);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpGet("GetLastQmnum")]
         public async Task<IActionResult> GetLastQmnum([FromQuery] string qmart)
         {

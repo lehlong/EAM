@@ -1,4 +1,5 @@
-using AutoMapper;
+﻿using AutoMapper;
+using ClosedXML.Excel;
 using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
@@ -14,6 +15,7 @@ namespace EAM.BUSINESS.Services.TRAN
     public interface INotiService : IGenericService<TblTranNoti, NotiDto>
     {
         Task<string> GetLastQmnum();
+        Task<string> ExportExcel(string qmnum);
         Task<string> GenerateQmnum(string qmart);
         Task<PagedResponseDto> SearchApproval(BaseFilter filter);
         Task<PagedResponseDto> SearchClose(BaseFilter filter);
@@ -22,9 +24,70 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<PagedResponseDto> Search(NotiFilter filter);
         Task<DashboardModel> GetDataDashboard();
     }
-    
+
     public class NotiService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNoti, NotiDto>(dbContext, mapper), INotiService
     {
+        public async Task<string> ExportExcel(string qmnum)
+        {
+            try
+            {
+                var noti = await _dbContext.TblTranNoti.FindAsync(qmnum);
+                string templatePath = Path.Combine("TemplateExcel", "PhieuDeNghiSuaChua.xlsx");
+                DateTime now = DateTime.Now;
+                string exportFolder = Path.Combine("ExportFiles",
+                                                   now.Year.ToString(),
+                                                   now.Month.ToString("D2"),
+                                                   now.Day.ToString("D2"));
+                Directory.CreateDirectory(exportFolder);
+                string exportFileName = "PhieuDeNghiSuaChua.xlsx";
+                string exportPath = Path.Combine(exportFolder, exportFileName);
+                using (var workbook = new XLWorkbook(templatePath))
+                {
+                    var worksheet = workbook.Worksheet(1);
+
+                    worksheet.Cell("G2").Value = noti.Qmnum;
+                    worksheet.Cell("D8").Value = $"{noti.Equnr} - {_dbContext.TblMdEquip.Find(noti.Equnr)?.Eqktx}";
+                    worksheet.Cell("D9").Value = $"{noti.Tplnr} - {_dbContext.TblMdFloc.Find(noti.Tplnr)?.Descript}";
+                    worksheet.Cell("D10").Value = $"{noti.Priok} - {GetPriorityText(noti.Priok)}";
+                    worksheet.Cell("D11").Value = $"{noti.HtDvql}";
+                    worksheet.Cell("D12").Value = $"{noti.Iwerk} - {_dbContext.TblMdPlant.Find(noti.Iwerk)?.IwerkTxt}";
+                    worksheet.Cell("D13").Value = $"{noti.HtDvsd}";
+                    worksheet.Cell("D14").Value = noti.Qmdat?.ToString("dd/MM/yyyy");
+                    worksheet.Cell("D15").Value = noti.Ltrmn?.ToString("dd/MM/yyyy");
+                    worksheet.Cell("B18").Value = noti.Qmtxt;
+                    worksheet.Cell("F28").Value = $"Ngày {DateTime.Now.Day} tháng {DateTime.Now.Month} năm {DateTime.Now.Year}";
+                    workbook.SaveAs(exportPath);
+                }
+
+                return exportPath.Replace("\\", "/");
+
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+        public string GetPriorityText(string priok)
+        {
+            switch (priok)
+            {
+                case "1":
+                    return "Rất Cao";
+                case "2":
+                    return "Cao";
+                case "3":
+                    return "Trung Bình";
+                case "4":
+                    return "Thấp";
+                case "5":
+                    return "Rất Thấp";
+                default:
+                    return "";
+            }
+        }
 
         public async Task<DashboardModel> GetDataDashboard()
         {
@@ -33,7 +96,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 var data = new DashboardModel();
                 var lstEqGroup = await _dbContext.TblMdEqGroup.ToListAsync();
                 var lstActiveStatus = await _dbContext.TblMdActiveStatus.ToListAsync();
-                foreach(var i in lstEqGroup)
+                foreach (var i in lstEqGroup)
                 {
                     data.ChartBar.Add(new Dashboard
                     {
@@ -64,7 +127,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 data.Noti4 = noti.Where(x => x.StatAct == "01").Count();
                 return data;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Status = false;
                 Exception = ex;
@@ -150,7 +213,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 var query = _dbContext.TblTranNoti.AsQueryable();
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x => x.Qmnum.Contains(filter.KeyWord) || 
+                    query = query.Where(x => x.Qmnum.Contains(filter.KeyWord) ||
                                         x.Qmtxt.Contains(filter.KeyWord) ||
                                         x.Iwerk.Contains(filter.KeyWord) ||
                                         x.Aufnr.Contains(filter.KeyWord) ||
@@ -231,7 +294,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 var lastNoti = await _dbContext.TblTranNoti
                     .OrderByDescending(x => x.Qmnum)
                     .FirstOrDefaultAsync();
-                
+
                 return lastNoti?.Qmnum?.Trim() ?? "0";
             }
             catch (Exception ex)
@@ -298,7 +361,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 if (string.IsNullOrEmpty(notiDto.Qmnum) && !string.IsNullOrEmpty(notiDto.Qmart))
                 {
                     notiDto.Qmnum = await GenerateQmnum(notiDto.Qmart);
-                    
+
                     if (notiDto.Qmnum == null)
                     {
                         // Failed to generate qmnum
@@ -363,4 +426,4 @@ namespace EAM.BUSINESS.Services.TRAN
             }
         }
     }
-} 
+}

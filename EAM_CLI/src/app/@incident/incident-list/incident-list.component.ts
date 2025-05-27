@@ -238,6 +238,19 @@ export class IncidentListComponent implements OnInit, OnDestroy {
     }, 200);
   }
 
+  exportNoti(qmnum : string){
+    this.subscriptions.push(
+      this._sNoti.exportExcelNoti(qmnum).subscribe({
+        next: (result) => {
+          var anchor = document.createElement('a');
+          anchor.href = environment.urlFiles + "/" + result;
+          anchor.click();
+        },
+        error: (err) => console.error(err),
+      })
+    );
+  }
+
   search() {
     this.subscriptions.push(
       this._sNoti.search(this.sfilter).subscribe({

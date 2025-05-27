@@ -202,6 +202,19 @@ export class IncidentApprovalComponent implements OnInit, OnDestroy {
     );
   }
 
+  exportNoti(qmnum : string){
+    this.subscriptions.push(
+      this._sNoti.exportExcelNoti(qmnum).subscribe({
+        next: (result) => {
+          var anchor = document.createElement('a');
+          anchor.href = environment.urlFiles + "/" + result;
+          anchor.click();
+        },
+        error: (err) => console.error(err),
+      })
+    );
+  }
+
   updateStatusNoti(data: any, status: string) {
     Swal.fire({
       title: status == '02' ? 'Phê duyệt?' : 'Từ chối?',

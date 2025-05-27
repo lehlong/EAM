@@ -175,6 +175,19 @@ export class IncidentCloseComponent implements OnInit, OnDestroy {
     this.visibleDetail = false;
   }
 
+  exportNoti(qmnum : string){
+    this.subscriptions.push(
+      this._sNoti.exportExcelNoti(qmnum).subscribe({
+        next: (result) => {
+          var anchor = document.createElement('a');
+          anchor.href = environment.urlFiles + "/" + result;
+          anchor.click();
+        },
+        error: (err) => console.error(err),
+      })
+    );
+  }
+
   updateDetail() {
     console.log(this.lstNotiCatalog);
     this.subscriptions.push(
