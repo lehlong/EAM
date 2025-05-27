@@ -10,13 +10,13 @@ namespace EAM.CORE.Entities.MD
     {
         [Key]
         [Column("EQUNR")]
-        public string EqUnr { get; set; } = null!;
+        public string Equnr { get; set; }
 
         [Column("EQKTX")]
         public string? Eqktx { get; set; }
 
         [Column("IWERK")]
-        public string Iwerk { get; set; } = null!;
+        public string? Iwerk { get; set; }
 
         [Column("DATAB")]
         public DateTime? Datab { get; set; }
