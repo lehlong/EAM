@@ -16,7 +16,6 @@ import { AccountService } from '../service/system-manager/account.service';
 import { NotiService } from '../service/tran/noti.service';
 import { OrderService } from '../service/tran/order.service';
 import { PriorityLevel } from '../shared/constants/select.constants';
-import { he_IL } from 'ng-zorro-antd/i18n';
 declare var google: any;
 
 @Component({
@@ -29,8 +28,10 @@ declare var google: any;
 export class HomeComponent implements OnInit {
   checked: boolean = false;
   filter = new BaseFilter();
+  filterOrder = new BaseFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
+  paginationOrder = new PaginationResult();
   lstFloc: any = [];
   lstUser: any = [];
   lstWc: any[] = [];
@@ -167,7 +168,7 @@ export class HomeComponent implements OnInit {
     private _sNoti: NotiService,
     private _sWc: WcService,
     private _sEquip: EquipService,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService,
     private _sFloc: FlocService,
     private _sAccount: AccountService,
@@ -182,6 +183,7 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.search();
+    this.searchOrder();
     this.getAllFloc();
     this.getAllUser();
     this.getAllWc();
@@ -210,6 +212,17 @@ export class HomeComponent implements OnInit {
     this._sNoti.search(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  searchOrder() {
+    this._sOrder.searchOrderPlan(this.filterOrder).subscribe({
+      next: (data) => {
+        this.paginationOrder = data;
       },
       error: (response) => {
         console.log(response);

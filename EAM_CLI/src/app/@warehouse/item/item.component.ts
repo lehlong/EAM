@@ -64,6 +64,7 @@ export class ItemComponent {
     this.search();
     this.getMtype();
     this.getMtgrp();
+    this.getUnit();
   }
 
   onSortChange(column: string, value: any) {

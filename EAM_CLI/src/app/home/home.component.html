@@ -120,53 +120,44 @@
   </div>
   <div>
     <nz-divider nzText="DANH SÁCH LỆNH BẢO DƯỠNG THEO KẾ HOẠCH" nzOrientation="left"></nz-divider>
-    <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResult.data" class="auto-scroll-table"
+    <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationOrder.data" class="auto-scroll-table"
       [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable>
       <thead>
         <tr>
-          <th>Mã yêu cầu</th>
+          <th>Mã lệnh</th>
           <th>Nội dung</th>
-          <th>Ngày ghi nhận</th>
-          <th>Ngày hoàn thành</th>
+          <th>Ngày bắt đầu</th>
+          <th>Ngày dự kiến hoàn thành</th>
           <th>Bộ phận thực hiện</th>
-          <th>Người tạo sự cố</th>
-          <th>Người sửa chữa</th>
+          <th>Người thực hiện</th>
           <th>Khu vực phát sinh</th>
-          <th>Tên thiết bị</th>
-          <th>Mức độ ưu tiên</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
       <tbody>
       <tbody>
-        <tr *ngFor="let data of paginationResult.data; let i = index">
-          <td>{{ data.qmnum }}</td>
-          <td>{{ data.qmtxt }}</td>
-          <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ getNameWc(data.arbpl) }}</td>
-          <td>{{ getFullNameUser(data.qmnam) }}</td>
-          <td>{{ getFullNameUser(data.staffSc) }}</td>
-          <td>{{ getFlocName(data.tplnr) }}</td>
-          <td>{{ getNameEquip(data.equnr) }}</td>
-          <td>{{ getPriorityText(data.priok) }}</td>
-          <td>
-            <nz-tag *ngIf="data.statAct == '01'" nzColor="processing">Chờ duyệt</nz-tag>
-            <nz-tag *ngIf="data.statAct == '02'" nzColor="success">Phê duyệt</nz-tag>
-            <nz-tag *ngIf="data.statAct == '03'" nzColor="error">Từ chối</nz-tag>
-            <nz-tag *ngIf="data.statAct == '04'" nzColor="success">Hoàn thành</nz-tag>
-            <nz-tag *ngIf="data.statAct == '05'" nzColor="default">Đóng</nz-tag>
-            <nz-tag *ngIf="data.statAct == '06'" nzColor="error">Từ chối đóng</nz-tag>
-            <nz-tag *ngIf="data.statAct == '07'" nzColor="processing">Đang thực hiện</nz-tag>
+        <tr *ngFor="let data of paginationOrder.data; let i = index">
+          <td>{{ data.aufnr }}</td>
+          <td>{{ data.ktext }}</td>
+          <td>{{ data.gstrs | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.gltrs | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ globalService.getNameWc(lstWc, data.arbpl) }}</td>
+          <td>{{ globalService.getFullNameUser(lstUser, data.staffSc) }}</td>
+          <td>{{ globalService.getNameFloc(lstFloc,data.tplnr) }}</td>
+           <td>
+            <nz-tag *ngIf="data.status == '01'" nzColor="default">Khởi tạo</nz-tag>
+            <nz-tag *ngIf="data.status == '02'" nzColor="processing">Đã phân công</nz-tag>
+            <nz-tag *ngIf="data.status == '04'" nzColor="success">Hoàn thành</nz-tag>
+            <nz-tag *ngIf="data.status == '07'" nzColor="processing">Đang thực hiện</nz-tag>
           </td>
         </tr>
       </tbody>
     </nz-table>
-    <div *ngIf="paginationResult?.data" class="paging">
-      <nz-pagination nzShowSizeChanger [nzShowTotal]="totalTemplate" [nzPageIndex]="filter.currentPage"
-        [nzTotal]="paginationResult.totalRecord" [nzPageSize]="filter.pageSize"
+    <div *ngIf="paginationOrder?.data" class="paging">
+      <nz-pagination nzShowSizeChanger [nzShowTotal]="totalTemplateOrder" [nzPageIndex]="filterOrder.currentPage"
+        [nzTotal]="paginationOrder.totalRecord" [nzPageSize]="filterOrder.pageSize"
         (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
-      <ng-template #totalTemplate let-total>Tổng số {{ paginationResult.totalRecord }} mục</ng-template>
+      <ng-template #totalTemplateOrder let-total>Tổng số {{ paginationOrder.totalRecord }} mục</ng-template>
     </div>
   </div>
 
