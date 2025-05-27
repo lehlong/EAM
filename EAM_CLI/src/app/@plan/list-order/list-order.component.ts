@@ -126,6 +126,19 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     this.search();
     this.getMasterData();
   }
+
+  exportOrder(aufnr: string) {
+    this.subscriptions.push(
+      this._sOrder.exportExcelOrder(aufnr).subscribe({
+        next: (result) => {
+          var anchor = document.createElement('a');
+          anchor.href = environment.urlFiles + '/' + result;
+          anchor.click();
+        },
+        error: (err) => console.error(err),
+      })
+    );
+  }
   search() {
     this.subscriptions.push(
       this._sOrder.searchOrderPlan(this.filter).subscribe({

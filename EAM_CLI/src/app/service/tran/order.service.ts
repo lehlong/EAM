@@ -20,6 +20,10 @@ export class OrderService {
     return this.commonService.get('Order/SearchApproval', params);
   }
 
+  exportExcelOrder(aufnr: string): Observable<any> {
+    return this.commonService.get(`Order/ExportExcel?aufnr=${aufnr}`);
+  }
+
   searchClose(params: any): Observable<any> {
     return this.commonService.get('Order/SearchClose', params);
   }

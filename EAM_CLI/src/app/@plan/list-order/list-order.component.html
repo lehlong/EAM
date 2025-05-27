@@ -76,6 +76,7 @@
           <th>Khu vực phát sinh</th>
           <th nzAlign="center">Trạng thái</th>
           <th nzAlign="center">Thao tác</th>
+          <th nzAlign="center">In</th>
         </tr>
       </thead>
       <tbody>
@@ -110,6 +111,10 @@
                 <nz-icon nzType="check" nzTheme="outline" />
               </button>
             </td>
+             <td>
+            <button nz-button nzType="default" (click)="exportOrder(data.aufnr)"><nz-icon nzType="printer"
+                nzTheme="outline" /></button>
+          </td>
 
         </tr>
       </tbody>

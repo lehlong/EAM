@@ -170,6 +170,19 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     this.lstItemOrderM = [...this.lstItemOrderM, item];
   }
 
+  exportOrder(aufnr: string) {
+    this.subscriptions.push(
+      this._sOrder.exportExcelOrder(aufnr).subscribe({
+        next: (result) => {
+          var anchor = document.createElement('a');
+          anchor.href = environment.urlFiles + '/' + result;
+          anchor.click();
+        },
+        error: (err) => console.error(err),
+      })
+    );
+  }
+
   getMasterData() {
     this.subscriptions.push(
       this._sPlant.getAll().subscribe((data: any) => (this.lstPlant = data)),
@@ -286,7 +299,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateStatusOrder(data : any, status : any){
+  updateStatusOrder(data: any, status: any) {
     data.status = status;
     if (status == '07') {
       data.gstri = new Date();

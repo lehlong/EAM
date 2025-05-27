@@ -80,6 +80,7 @@
           <th>Mức độ ưu tiên</th>
           <th nzAlign="center">Trạng thái</th>
           <th nzAlign="center">Thao tác</th>
+          <th nzAlign="center">In</th>
         </tr>
       </thead>
       <tbody>
@@ -105,22 +106,25 @@
           </td>
           <td nzAlign="center">
             <button nzTooltipTitle="Phân công" nzTooltipPlacement="top" nz-button nz-tooltip nzType="default"
-              *ngIf="data.status == '01'" (click)="updateUserOrder(data)"><nz-icon nzType="user-add" nzTheme="outline" /></button>
+              *ngIf="data.status == '01'" (click)="updateUserOrder(data)"><nz-icon nzType="user-add"
+                nzTheme="outline" /></button>
 
 
-              <button nzTooltipTitle="Đang thực hiện" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
-                *ngIf="data.status == '02'" class="btn-check" (click)="updateStatusOrder(data, '07')">
-                <nz-icon nzType="right-circle" nzTheme="outline" />
-              </button>
+            <button nzTooltipTitle="Đang thực hiện" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
+              *ngIf="data.status == '02'" class="btn-check" (click)="updateStatusOrder(data, '07')">
+              <nz-icon nzType="right-circle" nzTheme="outline" />
+            </button>
 
-              <button nzTooltipTitle="Hoàn thành" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
-                *ngIf="data.status == '07'" class="btn-check" (click)="updateStatusOrder(data, '04')">
-                <nz-icon nzType="check" nzTheme="outline" />
-              </button>
+            <button nzTooltipTitle="Hoàn thành" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
+              *ngIf="data.status == '07'" class="btn-check" (click)="updateStatusOrder(data, '04')">
+              <nz-icon nzType="check" nzTheme="outline" />
+            </button>
 
-
-            </td>
-
+          </td>
+          <td>
+            <button nz-button nzType="default" (click)="exportOrder(data.aufnr)"><nz-icon nzType="printer"
+                nzTheme="outline" /></button>
+          </td>
         </tr>
       </tbody>
     </nz-table>
@@ -540,7 +544,8 @@
                 <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.meins">
                   <nz-option *ngFor="let item of lstUnit" [nzValue]="item.code"
                     [nzLabel]="item.code + ' - ' + item.name"></nz-option>
-                </nz-select></td>
+                </nz-select>
+              </td>
 
               <td><input type="text" nz-input [(ngModel)]="data.price" (ngModelChange)="calculateTotal(data)" /></td>
               <td>

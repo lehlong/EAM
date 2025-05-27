@@ -1,4 +1,5 @@
-using AutoMapper;
+﻿using AutoMapper;
+using ClosedXML.Excel;
 using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
@@ -6,11 +7,13 @@ using EAM.CORE;
 using EAM.CORE.Entities.TRAN;
 using Microsoft.EntityFrameworkCore;
 using NPOI.OpenXmlFormats.Wordprocessing;
+using NPOI.SS.Formula.Functions;
 
 namespace EAM.BUSINESS.Services.TRAN
 {
     public interface IOrderService : IGenericService<TblTranOrder, OrderDto>
     {
+        Task<string> ExportExcel(string aufnr);
         Task InsertOrder(OrderDto data);
         Task UpdateOrder(OrderDto data);
         Task<OrderDto> GetDetail(string code);
@@ -19,6 +22,91 @@ namespace EAM.BUSINESS.Services.TRAN
 
     public class OrderService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranOrder, OrderDto>(dbContext, mapper), IOrderService
     {
+        public async Task<string> ExportExcel(string aufnr)
+        {
+            try
+            {
+                var order = await _dbContext.TblTranOrder.FindAsync(aufnr);
+                var orderTask = await _dbContext.TblTranOrderOperation
+                    .Where(x => x.Aufnr == aufnr).ToListAsync();
+                var orderVt = await _dbContext.TblTranOrderVt
+                    .Where(x => x.Aufnr == aufnr && x.Category == "S").ToListAsync();
+
+                string templatePath = Path.Combine("TemplateExcel", "PhieuBaoDuongSuaChua.xlsx");
+                DateTime now = DateTime.Now;
+                string exportFolder = Path.Combine("ExportFiles", now.Year.ToString(), now.Month.ToString("D2"), now.Day.ToString("D2"));
+                Directory.CreateDirectory(exportFolder);
+                string exportFileName = "PhieuBaoDuongSuaChua.xlsx";
+                string exportPath = Path.Combine(exportFolder, exportFileName);
+
+                using (var workbook = new XLWorkbook(templatePath))
+                {
+                    var worksheet = workbook.Worksheet(1);
+
+                    // Gán thông tin chung
+                    worksheet.Cell("F1").Value = $"Số lệnh: {order.Aufnr}";
+                    if (!string.IsNullOrEmpty(order.Equnr))
+                    {
+                        worksheet.Cell("C7").Value = _dbContext.TblMdEquip.Find(order.Equnr)?.Eqktx;
+                    }
+                    worksheet.Cell("C8").Value = _dbContext.TblMdWc.Find(order.Arbpl)?.ArbplTxt;
+                    worksheet.Cell("C9").Value = _dbContext.TblMdWc.Find(order.Arbpl)?.ArbplTxt;
+                    worksheet.Cell("E6").Value = $"Từ ngày {order.Gstrs?.ToString("dd/MM/yyyy")} đến {order.Gltrs?.ToString("dd/MM/yyyy")}";
+                    worksheet.Cell("E9").Value = order.Gltrs?.ToString("dd/MM/yyyy");
+                    worksheet.Cell("E8").Value = $"{order.StaffSc} - {_dbContext.TblAdAccount.Find(order.StaffSc)?.FullName}";
+                    worksheet.Cell("A12").Value = order.Ktext;
+
+                    int rowTaskStart = 18;
+                    int currentRow = rowTaskStart;
+                    int taskStt = 1;
+
+                    foreach (var task in orderTask)
+                    {
+                        worksheet.Row(currentRow).InsertRowsAbove(1);
+                        worksheet.Cell(currentRow, 1).Value = taskStt++;
+                        worksheet.Range(currentRow, 2, currentRow, 5).Merge();
+                        var mergedCell = worksheet.Cell(currentRow, 2);
+                        mergedCell.Value = task.Ltxa1;
+                        mergedCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                        mergedCell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                        currentRow++;
+                    }
+
+                    int rowVtTaskStart = currentRow + 3;
+                    int rowVtCurrent = rowVtTaskStart;
+                    var vtStt = 1;
+                    foreach (var vt in orderVt)
+                    {
+                        worksheet.Row(rowVtCurrent).InsertRowsAbove(1);
+                        worksheet.Cell(rowVtCurrent, 1).Value = vtStt++;
+                        worksheet.Cell(rowVtCurrent, 2).Value = vt.Matnr;
+
+                        var maktxCell = worksheet.Cell(rowVtCurrent, 3);
+                        maktxCell.Value = vt.Maktx;
+                        maktxCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                        maktxCell.Style.Alignment.WrapText = true;
+
+                        worksheet.Cell(rowVtCurrent, 4).Value = vt.Menge;
+                        worksheet.Cell(rowVtCurrent, 5).Value = vt.Meins;
+                        worksheet.Cell(rowVtCurrent, 6).Value = vt.Lgort;
+                        rowVtCurrent++;
+                    }
+                    workbook.SaveAs(exportPath);
+                }
+                
+                return exportPath.Replace("\\", "/");
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+
+
         public override async Task<PagedResponseDto> Search(BaseFilter filter)
         {
             try
@@ -120,7 +208,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 _dbContext.TblTranOrder.Update(entity);
                 if (!string.IsNullOrEmpty(data.Qmnum))
                 {
-                    if(data.Status == "07" || data.Status == "04")
+                    if (data.Status == "07" || data.Status == "04")
                     {
                         var noti = _dbContext.TblTranNoti.Find(data.Qmnum);
                         noti.StatAct = data.Status;
@@ -161,7 +249,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 }
                 if (data.lstEquip != null)
                 {
-                    foreach(var e in data.lstEquip)
+                    foreach (var e in data.lstEquip)
                     {
                         var equip = _dbContext.TblMdEquip.Find(e.Equnr);
                         equip.StatAct = e.Status;
