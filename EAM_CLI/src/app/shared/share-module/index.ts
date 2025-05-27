@@ -46,6 +46,7 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline'
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
 import { NzCardModule } from 'ng-zorro-antd/card'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
+import { GoogleChartsModule } from 'angular-google-charts'
 
 @NgModule({
   providers: [{ provide: NZ_ICONS, useValue: [UserOutline, LockOutline] }],
@@ -53,7 +54,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
     InputClearComponent,
     InputNumberComponent,
     NzIconModule,
-    NzUploadModule
+    NzUploadModule,
   ],
   declarations: [],
   exports: [

@@ -5,32 +5,28 @@
     <div class="flex-grow-2 flex">
       <nz-space>
         <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Nhóm tài khoản"
-        [(ngModel)]="filter.GroupId">
-        <nz-option *ngFor="let item of listAccountGroup" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
-      </nz-select>
-      <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Kiểu người dùng"
-        [(ngModel)]="filter.AccountType">
-        <nz-option cdkScrollable *ngFor="let item of accountType" [nzLabel]="item.name" [nzValue]="item.id">
-        </nz-option>
-      </nz-select>
+          [(ngModel)]="filter.GroupId">
+          <nz-option *ngFor="let item of listAccountGroup" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+        </nz-select>
+        <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Kiểu người dùng"
+          [(ngModel)]="filter.AccountType">
+          <nz-option cdkScrollable *ngFor="let item of accountType" [nzLabel]="item.name" [nzValue]="item.id">
+          </nz-option>
+        </nz-select>
 
-      <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Chức vụ"
-        [(ngModel)]="filter.positionCode">
-        <nz-option cdkScrollable *ngFor="let item of positionList" [nzLabel]="item.name" [nzValue]="item.code">
-        </nz-option>
-      </nz-select>
 
-      <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái" [(ngModel)]="filter.IsActive">
-        <nz-option *ngFor="let item of listStatus" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
-      </nz-select>
-      <div class="flex-grow-2 flex">
-        <button *nzSpaceItem (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button>
-          <span nz-icon nzType="plus-circle"></span> Thêm mới
-        </button>
-        <button *nzSpaceItem class="!flex !items-center" nz-button nzType="primary" nzDanger>
-          <span nz-icon nzType="file-excel"></span>Tải Excel
-        </button>
-      </div>
+
+        <nz-select class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái" [(ngModel)]="filter.IsActive">
+          <nz-option *ngFor="let item of listStatus" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+        </nz-select>
+        <div class="flex-grow-2 flex">
+          <button *nzSpaceItem (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button>
+            <span nz-icon nzType="plus-circle"></span> Thêm mới
+          </button>
+          <button *nzSpaceItem class="!flex !items-center" nz-button nzType="primary" nzDanger>
+            <span nz-icon nzType="file-excel"></span>Tải Excel
+          </button>
+        </div>
         <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()" [(value)]="filter.keyWord"></app-input-clear>
         <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
           nzType="default">
@@ -47,7 +43,9 @@
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content">
-    <nz-table nzBordered [nzSize]="'middle'" class="auto-scroll-table" [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data" [nzScroll]="{ y: 'calc(100vh - 244px)' }">
+    <nz-table nzBordered [nzSize]="'middle'" class="auto-scroll-table" [nzShowPagination]="false"
+      [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data"
+      [nzScroll]="{ y: 'calc(100vh - 244px)' }">
       <thead>
         <tr>
           <th nzWidth="80px">STT</th>
@@ -59,7 +57,6 @@
             Tên đầy đủ
           </th>
           <th>Kiểu người dùng</th>
-          <th>Chức vụ</th>
           <th nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
@@ -77,8 +74,7 @@
             <a (click)="openEdit(data.userName)">{{ data.userName }}</a>
           </td>
           <td>{{ data.fullName }}</td>
-          <td>{{ getAccountTypeNameById(data?.accountType) }}</td>
-          <td>{{ getPositionCodeNameById(data?.positionCode) }}</td>
+          <td>{{ getAccountTypeName(data.accountType) }}</td>
           <td nzAlign="center">
             <nz-tag nzColor="success" *ngIf="data.isActive">
               <nz-icon nzType="check-circle" />

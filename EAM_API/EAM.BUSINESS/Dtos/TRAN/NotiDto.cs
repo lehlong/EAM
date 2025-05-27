@@ -13,10 +13,10 @@ namespace EAM.BUSINESS.Dtos.TRAN
     {
         [JsonIgnore]
         [Description("STT")]
-        public int OrdinalNumber { get; set; }
+        public int? OrdinalNumber { get; set; }
         [Key]
         [Description("Mã sự cố")]
-        public string Qmnum { get; set; } = null!;
+        public string Qmnum { get; set; } 
         public string? Iwerk { get; set; }
         public string? Qmart { get; set; }
         public string? Qmdetail { get; set; }
@@ -27,16 +27,14 @@ namespace EAM.BUSINESS.Dtos.TRAN
         [Description("Mức độ nghiêm trọng")]
         public string? Priok { get; set; }
         [Description("Ngày ghi nhận")]
-        public string QmdatTxt { get; set; }
+        public string? QmdatTxt { get; set; }
 
         [Description("Ngày hoàn thành")]
-        public string LtrmnTxt { get; set; }
-      //  [Description("Ngày ghi nhận")]
+        public string? LtrmnTxt { get; set; }
         public DateTime? Qmdat { get; set; }
         public TimeSpan? Mzeit { get; set; }
         public DateTime? Strmn { get; set; }
         public TimeSpan? Strur { get; set; }
-      //  [Description("Ngày hoàn thành")]
         public DateTime? Ltrmn { get; set; }
         public TimeSpan? Ltrur { get; set; }
         public string? Aufnr { get; set; }

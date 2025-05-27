@@ -11,6 +11,7 @@ import { AuthService } from '../../../service/auth.service'
 import { GlobalService } from '../../../service/global.service'
 import { AccountGroupService } from '../../../service/system-manager/account-group.service'
 import { environment } from '../../../../environments/environment'
+import { AccountTypeService } from '../../../service/master-data/account-type.service'
 
 @Component({
   selector: 'app-account-edit',
@@ -44,9 +45,6 @@ export class AccountEditComponent {
   nodesConstant: any[] = []
   initialCheckedNodes: any[] = []
   searchValue = ''
-  // listPartnerCustomer: any[] = []
-  // UserTypeCodes = UserTypeCodes
-  // isShowSelectPartner: boolean = false
   accountType: any[] = []
   orgList: any[] = []
   warehouseList: any[] = []
@@ -64,15 +62,16 @@ export class AccountEditComponent {
     private route: ActivatedRoute,
     private authService: AuthService,
     private globalService: GlobalService,
+    private _sAccountType: AccountTypeService
   ) {
     this.validateForm = this.fb.group({
       userName: ['', [Validators.required]],
       fullName: ['', [Validators.required]],
       address: [''],
-      phoneNumber: ['', [Validators.pattern('^0\\d{8,9}$')]],
+      phoneNumber: [''],
       email: ['', [Validators.email]],
       isActive: [true],
-      accountType: ['', [Validators.required]],
+      accountType: [''],
       urlImage: [''],
     })
     this.widthDeault =
@@ -84,7 +83,7 @@ export class AccountEditComponent {
 
   ngOnInit(): void {
     this.loadInit()
-    this.selectedOrg = this.validateForm.getRawValue().organizeCode
+
   }
 
   loadInit() {
@@ -330,12 +329,8 @@ export class AccountEditComponent {
   // }
 
   getAllAccountType() {
-    this.dropdownService
-      .getAllAccountType({
-        IsCustomer: true,
-        SortColumn: 'name',
-        IsDescending: true,
-      })
+    this._sAccountType
+      .getAll()
       .subscribe({
         next: (data) => {
           this.accountType = data
@@ -455,7 +450,7 @@ export class AccountEditComponent {
   }
 
   clearImage() {
-    this.avatarBase64 = ''; 
+    this.avatarBase64 = '';
     this.fileInput.nativeElement.value = '';
   }
 
@@ -464,7 +459,7 @@ export class AccountEditComponent {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.avatarBase64 = e.target.result;  
+        this.avatarBase64 = e.target.result;
       };
       reader.readAsDataURL(file);
     }

@@ -151,6 +151,9 @@ export class IncidentListComponent implements OnInit, OnDestroy {
     this.order.ktext = data.qmtxt;
     this.order.htBtbd = data.htbtbd;
     this.order.loaivtSd = data.lvtsd;
+    this.order.staffSc = '';
+    this.order.status = '01'
+    this.order.ernam = data.qmnam;
     this.isVisibleAddOrder = true;
   }
 
@@ -247,7 +250,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   updateStatusNoti(data: any, status: string) {
     Swal.fire({
       title: status == '04' ? 'Hoàn thành' : 'Đang thực hiện',
-      text: 'Bạn sẽ không thể hoàn tác điều này!',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
       icon: 'success',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',

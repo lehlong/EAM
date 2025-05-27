@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ShareModule } from '../shared/share-module';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -16,6 +16,8 @@ import { AccountService } from '../service/system-manager/account.service';
 import { NotiService } from '../service/tran/noti.service';
 import { OrderService } from '../service/tran/order.service';
 import { PriorityLevel } from '../shared/constants/select.constants';
+import { he_IL } from 'ng-zorro-antd/i18n';
+declare var google: any;
 
 @Component({
   selector: 'app-home',
@@ -39,6 +41,18 @@ export class HomeComponent implements OnInit {
   lstPriorityLevel = PriorityLevel;
   lstNotiTp: any[] = [];
   lstOrderType: any[] = [];
+  dataDashboard: any = {
+    chartBar: [],
+    chartDonut: [],
+    order1: 0,
+    order2: 0,
+    order3: 0,
+    order4: 0,
+    noti1: 0,
+    noti2: 0,
+    noti3: 0,
+    noti4: 0,
+  };
 
   model: any = {
     arbpl: '',
@@ -58,6 +72,91 @@ export class HomeComponent implements OnInit {
     qmdat: new Date(),
     isActive: true,
   };
+
+  getDataDashboard() {
+    this._sNoti.getDataDashboard().subscribe({
+      next: (data) => {
+        this.dataDashboard = data;
+        setTimeout(() => {
+          google.charts.load('current', { packages: ['corechart'] });
+          google.charts.setOnLoadCallback(() => this.drawChartDonut());
+          google.charts.setOnLoadCallback(() => this.drawChartBar());
+        }, 500);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  drawChartDonut() {
+    //var filter = this.dataDashboard.chartDonut.filter((x: { value: number; }) => x.value != 0)
+    var filter = this.dataDashboard.chartDonut;
+    var temp: any = [];
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Trạng thái');
+    data.addColumn('number', '%');
+    filter.forEach((i: any) => {
+      temp.push([i.name, i.value]);
+    });
+    data.addRows(temp);
+
+    var options = {
+      chartArea: { width: '90%', height: '70%' },
+      title: 'TRẠNG THÁI TÀI SẢN',
+      pieHole: 0.4,
+    };
+
+    var chart = new google.visualization.PieChart(
+      document.getElementById('donutchart')
+    );
+    chart.draw(data, options);
+  }
+
+  drawChartBar() {
+    const filter = this.dataDashboard.chartBar.filter(
+      (x: { value: number }) => x.value != 0
+    );
+    const temp: any[] = filter.map((i: any) => [i.name, i.value]);
+
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Nhóm tài sản');
+    data.addColumn('number', 'Số lượng');
+    data.addRows(temp);
+
+    const chartWidth = Math.max(600, temp.length * 80);
+    const chartHeight = 360;
+
+    const options = {
+      legend: 'none',
+      title: 'PHÂN LOẠI TÀI SẢN',
+      width: chartWidth,
+      height: chartHeight,
+      chartArea: {
+        width: '90%',
+        height: '70%',
+      },
+      hAxis: {
+        title: '',
+        slantedText: false,
+        showTextEvery: 1,
+        textStyle: {
+          fontSize: 12,
+        },
+      },
+      vAxis: {
+        minValue: 0,
+        textStyle: {
+          fontSize: 12,
+        },
+      },
+    };
+
+    const chart = new google.visualization.ColumnChart(
+      document.getElementById('chart_div')
+    );
+    chart.draw(data, options);
+  }
 
   constructor(
     private router: Router,
@@ -92,6 +191,7 @@ export class HomeComponent implements OnInit {
     this.getAllPlant();
     this.getAllNotiTp();
     this.getAllOrderType();
+    this.getDataDashboard();
   }
   exportExcel() {
     return this._sNoti.exportExcel(this.filter).subscribe((result: Blob) => {

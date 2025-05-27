@@ -118,33 +118,63 @@ namespace EAM.BUSINESS.Services.TRAN
             {
                 var entity = _mapper.Map<TblTranOrder>(data);
                 _dbContext.TblTranOrder.Update(entity);
-                foreach (var i in data.lstCatalog)
+                if (!string.IsNullOrEmpty(data.Qmnum))
                 {
-                    if (i.Id == "A")
+                    if(data.Status == "07" || data.Status == "04")
                     {
-                        i.Id = Guid.NewGuid().ToString();
-                        _dbContext.TblTranNotiCatalog.Add(i);
-                    }
-                    else
-                    {
-                        _dbContext.TblTranNotiCatalog.Update(i);
-                    }
-                }
-                foreach (var i in data.lstVt)
-                {
-                    if (i.Id == "A")
-                    {
-                        i.Id = Guid.NewGuid().ToString();
-                        _dbContext.TblTranOrderVt.Add(i);
-                    }
-                    else
-                    {
-                        _dbContext.TblTranOrderVt.Update(i);
+                        var noti = _dbContext.TblTranNoti.Find(data.Qmnum);
+                        noti.StatAct = data.Status;
+                        _dbContext.TblTranNoti.Update(noti);
                     }
                 }
 
-                _dbContext.TblTranOrderEq.UpdateRange(data.lstEquip);
-                _dbContext.TblTranOrderOperation.UpdateRange(data.lstOpe);
+
+                if (data.lstCatalog != null)
+                {
+                    foreach (var i in data.lstCatalog)
+                    {
+                        if (i.Id == "A")
+                        {
+                            i.Id = Guid.NewGuid().ToString();
+                            _dbContext.TblTranNotiCatalog.Add(i);
+                        }
+                        else
+                        {
+                            _dbContext.TblTranNotiCatalog.Update(i);
+                        }
+                    }
+                }
+                if (data.lstVt != null)
+                {
+                    foreach (var i in data.lstVt)
+                    {
+                        if (i.Id == "A")
+                        {
+                            i.Id = Guid.NewGuid().ToString();
+                            _dbContext.TblTranOrderVt.Add(i);
+                        }
+                        else
+                        {
+                            _dbContext.TblTranOrderVt.Update(i);
+                        }
+                    }
+                }
+                if (data.lstEquip != null)
+                {
+                    foreach(var e in data.lstEquip)
+                    {
+                        var equip = _dbContext.TblMdEquip.Find(e.Equnr);
+                        equip.StatAct = e.Status;
+                        equip.StatusTh = e.StatusTb;
+                    }
+                    _dbContext.TblTranOrderEq.UpdateRange(data.lstEquip);
+                }
+
+                if (data.lstOpe != null)
+                {
+                    _dbContext.TblTranOrderOperation.UpdateRange(data.lstOpe);
+                }
+
                 await _dbContext.SaveChangesAsync();
 
             }

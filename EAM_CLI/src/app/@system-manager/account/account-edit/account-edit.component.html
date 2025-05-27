@@ -29,7 +29,7 @@
               <nz-form-label>Kiểu người dùng</nz-form-label>
               <nz-form-control nzErrorTip="Không được để trống">
                 <nz-select nzShowSearch nzAllowClear placeholder="Chọn kiểu người dùng" formControlName="accountType">
-                  <nz-option cdkScrollable *ngFor="let item of accountType" [nzLabel]="item.name" [nzValue]="item.id">
+                  <nz-option cdkScrollable *ngFor="let item of accountType" [nzLabel]="item.name" [nzValue]="item.code">
                   </nz-option>
                 </nz-select>
               </nz-form-control>

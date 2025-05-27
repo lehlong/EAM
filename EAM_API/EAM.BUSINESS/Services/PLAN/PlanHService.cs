@@ -235,6 +235,7 @@ namespace EAM.BUSINESS.Services.PLAN
                             Gstrs = _d.Schstart,
                             Warpl = i.Warpl,
                             Equnr = i.Equnr,
+                            Status = "01"
                         });
 
                         if (i.Mptyp == "1")

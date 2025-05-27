@@ -55,15 +55,7 @@ export class AccountCreateComponent {
   }
 
   loadInit() {
-    const organizeCode = localStorage.getItem('companyCode') || '';
-    const warehouseCode = localStorage.getItem('warehouseCode') || '';
-    this.validateForm.patchValue({
-      organizeCode: organizeCode,
-      warehouseCode: warehouseCode,
-    });
-    if (organizeCode) {
-      this.selectedOrg = organizeCode;
-    }
+
   }
 
   changeSaleType(value: string) { }
@@ -138,7 +130,7 @@ export class AccountCreateComponent {
     this.validateForm.reset()
   }
   clearImage() {
-    this.avatarBase64 = ''; 
+    this.avatarBase64 = '';
     this.fileInput.nativeElement.value = '';
   }
 
@@ -147,10 +139,10 @@ export class AccountCreateComponent {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.avatarBase64 = e.target.result; 
+        this.avatarBase64 = e.target.result;
       };
       reader.readAsDataURL(file);
     }
   }
-  
+
 }

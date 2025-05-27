@@ -10,6 +10,7 @@ import { AccountEditComponent } from '../account-edit/account-edit.component'
 import { AccountGroupEditComponent } from '../../account-group/account-group-edit/account-group-edit.component'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ADMIN_RIGHTS } from '../../../shared/constants'
+import { AccountTypeService } from '../../../service/master-data/account-type.service'
 
 @Component({
   selector: 'app-account-index',
@@ -31,9 +32,7 @@ export class AccountIndexComponent {
   userName: string = ''
 
   listAccountGroup: any[] = []
-  //listPartner: any[] = []
   accountType: any[] = []
-  positionList: any[] = []
   listStatus: any[] = [
     { id: 'true', name: 'Kích hoạt' },
     { id: 'false', name: 'Khoá' },
@@ -41,7 +40,6 @@ export class AccountIndexComponent {
 
   showEditAcg: boolean = false
   idDetail: number | string = 0
-  // UserTypeCodes = UserTypeCodes
 
   @ViewChild(AccountEditComponent) accountEditComponent!: AccountEditComponent
   @ViewChild(AccountGroupEditComponent)
@@ -49,11 +47,11 @@ export class AccountIndexComponent {
  ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(
     private dropdownService: DropdownService,
-    // private _service: PartnerManagementService,
     private _as: AccountService,
     private globalService: GlobalService,
     private route: ActivatedRoute,
     private router: Router,
+    private _sAccountType : AccountTypeService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -68,7 +66,8 @@ export class AccountIndexComponent {
   }
 
   ngOnInit(): void {
-    this.loadInit()
+    this.loadInit();
+    this.getAllAccountType()
   }
 
   ngAfterViewInit() {
@@ -93,7 +92,6 @@ export class AccountIndexComponent {
 
   loadInit() {
     this.getAllAccountGroup()
-    this.getAllAccountType()
     this.search()
   }
 
@@ -114,18 +112,7 @@ export class AccountIndexComponent {
     this.showEdit = false
     this.showEditAcg = false
     this.loadInit()
-    // this.router.navigate([], {
-    //   queryParams: {},
-    // });
   }
-
-  // getUserTypeText(type: string) {
-  //   if (type === 'KH') return 'Khách hàng'
-  //   else if (type === 'NM') return 'Nhà máy'
-  //   else if (type === 'LX') return 'Lái xe'
-  //   else if (type === 'NM_TV') return 'Nhân viên thương vụ'
-  //   return ''
-  // }
 
   search() {
     this._as
@@ -153,10 +140,10 @@ export class AccountIndexComponent {
   }
 
   getAllAccountType() {
-    this.dropdownService.getAllAccountType().subscribe({
+    this._sAccountType.getAll().subscribe({
       next: (data) => {
         this.accountType = data
-
+console.log(this.accountType)
       },
       error: (response) => {
         console.log(response)
@@ -164,25 +151,9 @@ export class AccountIndexComponent {
     })
   }
 
-  getAccountTypeNameById(id: string | number): string {
-    const accountType = this.accountType.find(item => item.id === id);
-    return accountType ? accountType.name : 'N/A';
+  getAccountTypeName(code : any) {
+    return this.accountType.find((item) => item.code === code)?.name || ''
   }
-
-  getPositionCodeNameById(positionCode: string | number): string {
-    const positionName = this.positionList.find(item => item.code === positionCode);
-    return positionName ? positionName.name : 'N/A';
-  }
-  // exportExcel() {
-  //   return this._service.exportExcel(this.filter).subscribe((result: Blob) => {
-  //     const blob = new Blob([result], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  //     const url = window.URL.createObjectURL(blob);
-  //     var anchor = document.createElement('a');
-  //     anchor.download = 'danh-sach-doi-tac.xlsx';
-  //     anchor.href = url;
-  //     anchor.click();
-  //   });
-  // }
 
   reset() {
     this.filter = new AccountFilter()

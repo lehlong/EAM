@@ -1,3 +1,4 @@
+import { saleType } from './../../shared/constants/partner.constants';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ShareModule } from '../../shared/share-module';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -214,7 +215,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this._sOrder.getDetail(e.aufnr).subscribe({
         next: (data) => {
-          console.log(data)
+          console.log(data);
           this.visibleOrder = true;
           this.model = data;
           this.model.equipName = this._global.getNameEquip(
@@ -226,10 +227,10 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
             data.tplnr
           );
           this.lstItemOrderS = data.lstVt.filter(
-            (item : any) => item.category === 'S'
+            (item: any) => item.category === 'S'
           );
           this.lstItemOrderM = data.lstVt.filter(
-            (item : any) => item.category === 'M'
+            (item: any) => item.category === 'M'
           );
         },
         error: (err) => {
@@ -261,8 +262,51 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     this.model = {};
   }
 
+  isVisibleUserOrder: boolean = false;
+  updateUserOrder(data: any) {
+    this.isVisibleUserOrder = true;
+    this.model = data;
+  }
+  userCancel() {
+    this.isVisibleUserOrder = false;
+    this.model = new OrderModel();
+  }
+  userOk() {
+    this.model.status = '02';
+    this._sOrder.update(this.model).subscribe({
+      next: () => {
+        this.isVisibleUserOrder = false;
+        this.model = new OrderModel();
+        this.search();
+      },
+      error: (err) => {
+        console.error(err);
+        this.message.error('Cập nhật thất bại');
+      },
+    });
+  }
+
+  updateStatusOrder(data : any, status : any){
+    data.status = status;
+    if (status == '07') {
+      data.gstri = new Date();
+    } else {
+      data.gltri = new Date();
+    }
+
+    this._sOrder.update(data).subscribe({
+      next: () => {
+        this.search();
+      },
+      error: (err) => {
+        console.error(err);
+        this.message.error('Cập nhật thất bại');
+      },
+    });
+  }
+
   updateOrder() {
-    const data = this.model
+    const data = this.model;
     var lstItemOrderAll = [...this.lstItemOrderS, ...this.lstItemOrderM];
     this.model.lstVt = lstItemOrderAll;
     this.subscriptions.push(

@@ -17,8 +17,6 @@ export class GlobalService {
   breadcrumbSubject: Subject<boolean> = new Subject<boolean>();
   breadcrumb: any = [];
 
-  orgCode?: string = localStorage.getItem('companyCode')?.toString();
-  warehouseCode?: string = localStorage.getItem('warehouseCode')?.toString();
 
   constructor(private message: NzMessageService) {
     this.loading = new BehaviorSubject<boolean>(false);
@@ -137,9 +135,7 @@ export class GlobalService {
   }
 
   isValidSelected() {
-    return this.orgCode != 'undefined' && this.warehouseCode != 'undefined'
-      ? false
-      : true;
+
   }
 
   getNameFloc(

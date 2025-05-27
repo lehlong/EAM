@@ -4,6 +4,7 @@ using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
 using EAM.BUSINESS.Filter.MD;
 using EAM.BUSINESS.Filter.TRAN;
+using EAM.BUSINESS.Model;
 using EAM.CORE;
 using EAM.CORE.Entities.TRAN;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,57 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<byte[]> Export(BaseMdFilter filter);
         Task<NotiDto> Create(NotiDto dto);
         Task<PagedResponseDto> Search(NotiFilter filter);
+        Task<DashboardModel> GetDataDashboard();
     }
     
     public class NotiService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNoti, NotiDto>(dbContext, mapper), INotiService
     {
+
+        public async Task<DashboardModel> GetDataDashboard()
+        {
+            try
+            {
+                var data = new DashboardModel();
+                var lstEqGroup = await _dbContext.TblMdEqGroup.ToListAsync();
+                var lstActiveStatus = await _dbContext.TblMdActiveStatus.ToListAsync();
+                foreach(var i in lstEqGroup)
+                {
+                    data.ChartBar.Add(new Dashboard
+                    {
+                        Name = i.EqartTxt ?? "N/A",
+                        Value = _dbContext.TblMdEquip.Where(x => x.Eqart == i.Eqart).Count()
+                    });
+                }
+
+                foreach (var i in lstActiveStatus)
+                {
+                    data.ChartDonut.Add(new Dashboard
+                    {
+                        Name = i.Name ?? "N/A",
+                        Value = _dbContext.TblMdEquip.Where(x => x.StatusTh == i.Code).Count()
+                    });
+                }
+
+                var order = _dbContext.TblTranOrder.AsQueryable();
+                data.Order1 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "01").Count();
+                data.Order2 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "07" && x.Gltrs < DateTime.Now).Count();
+                data.Order3 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "07").Count();
+                data.Order4 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "04").Count();
+
+                var noti = _dbContext.TblTranNoti.AsQueryable();
+                data.Noti1 = noti.Count();
+                data.Noti2 = noti.Where(x => x.StatAct == "07" && x.Ltrmn < DateTime.Now).Count();
+                data.Noti3 = noti.Where(x => x.StatAct == "07").Count();
+                data.Noti4 = noti.Where(x => x.StatAct == "01").Count();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return new DashboardModel();
+            }
+        }
         public async Task<PagedResponseDto> Search(NotiFilter filter)
         {
             try
@@ -62,7 +110,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                return await Paging(query, filter);
+                return await Paging(query.OrderByDescending(x => x.Qmnum), filter);
 
             }
             catch (Exception ex)
@@ -112,7 +160,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                return await Paging(query, filter);
+                return await Paging(query.OrderByDescending(x => x.Qmnum), filter);
             }
             catch (Exception ex)
             {
@@ -139,7 +187,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                return await Paging(query.Where(x => x.StatAct == "01"), filter);
+                return await Paging(query.Where(x => x.StatAct == "01").OrderByDescending(x => x.Qmnum), filter);
             }
             catch (Exception ex)
             {
@@ -166,7 +214,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
-                return await Paging(query.Where(x => x.StatAct == "04"), filter);
+                return await Paging(query.Where(x => x.StatAct == "04").OrderByDescending(x => x.Qmnum), filter);
             }
             catch (Exception ex)
             {

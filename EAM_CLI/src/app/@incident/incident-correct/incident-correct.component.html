@@ -79,6 +79,7 @@
           <th>Tên thiết bị</th>
           <th>Mức độ ưu tiên</th>
           <th nzAlign="center">Trạng thái</th>
+          <th nzAlign="center">Thao tác</th>
         </tr>
       </thead>
       <tbody>
@@ -97,14 +98,28 @@
           <td>{{ _global.getNameEquip(lstEquip,data.equnr) }}</td>
           <td>{{ _global.getPriorityText(data.priok) }}</td>
           <td>
-            <nz-tag *ngIf="data.statAct == '01'" nzColor="processing">Chờ duyệt</nz-tag>
-            <nz-tag *ngIf="data.statAct == '02'" nzColor="success">Phê duyệt</nz-tag>
-            <nz-tag *ngIf="data.statAct == '03'" nzColor="error">Từ chối</nz-tag>
-            <nz-tag *ngIf="data.statAct == '04'" nzColor="success">Hoàn thành</nz-tag>
-            <nz-tag *ngIf="data.statAct == '05'" nzColor="default">Đóng</nz-tag>
-            <nz-tag *ngIf="data.statAct == '06'" nzColor="error">Từ chối đóng</nz-tag>
-            <nz-tag *ngIf="data.statAct == '07'" nzColor="processing">Đang thực hiện</nz-tag>
+            <nz-tag *ngIf="data.status == '01'" nzColor="default">Khởi tạo</nz-tag>
+            <nz-tag *ngIf="data.status == '02'" nzColor="processing">Đã phân công</nz-tag>
+            <nz-tag *ngIf="data.status == '04'" nzColor="success">Hoàn thành</nz-tag>
+            <nz-tag *ngIf="data.status == '07'" nzColor="processing">Đang thực hiện</nz-tag>
           </td>
+          <td nzAlign="center">
+            <button nzTooltipTitle="Phân công" nzTooltipPlacement="top" nz-button nz-tooltip nzType="default"
+              *ngIf="data.status == '01'" (click)="updateUserOrder(data)"><nz-icon nzType="user-add" nzTheme="outline" /></button>
+
+
+              <button nzTooltipTitle="Đang thực hiện" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
+                *ngIf="data.status == '02'" class="btn-check" (click)="updateStatusOrder(data, '07')">
+                <nz-icon nzType="right-circle" nzTheme="outline" />
+              </button>
+
+              <button nzTooltipTitle="Hoàn thành" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
+                *ngIf="data.status == '07'" class="btn-check" (click)="updateStatusOrder(data, '04')">
+                <nz-icon nzType="check" nzTheme="outline" />
+              </button>
+
+
+            </td>
 
         </tr>
       </tbody>
@@ -211,14 +226,14 @@
           <div nz-col class="gutter-row" [nzSpan]="6">
             <div class="inner-box">
               <label>Ngày thực tế bắt đầu</label>
-              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="model.gstri"
                 [nzDisabled]="true"></nz-date-picker>
             </div>
           </div>
           <div nz-col class="gutter-row" [nzSpan]="6">
             <div class="inner-box">
               <label>Ngày thực tế kết thúc</label>
-              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'"
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="model.gltri"
                 [nzDisabled]="true"></nz-date-picker>
             </div>
           </div>
@@ -607,3 +622,14 @@
   &nbsp;
   <button nz-button nzType="primary" (click)="updateOrder()">Cập nhật</button>
 </ng-template>
+
+<nz-modal [(nzVisible)]="isVisibleUserOrder" nzTitle="PHÂN CÔNG" (nzOnCancel)="userCancel()" (nzOnOk)="userOk()"
+  nzCancelText="Hủy" nzOkText="Phân công">
+  <ng-container *nzModalContent>
+    <label>Chọn người được phân công</label>
+    <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.staffSc">
+      <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
+        [nzLabel]="item.userName + ' - ' + item.fullName"></nz-option>
+    </nz-select>
+  </ng-container>
+</nz-modal>

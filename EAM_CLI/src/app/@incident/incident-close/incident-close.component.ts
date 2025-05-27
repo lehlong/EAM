@@ -205,7 +205,7 @@ export class IncidentCloseComponent implements OnInit, OnDestroy {
   updateStatusNoti(data: any, status: string) {
     Swal.fire({
       title: status == '05' ? 'Đóng sự cố?' : 'Từ chối đóng?',
-      text: 'Bạn sẽ không thể hoàn tác điều này!',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',

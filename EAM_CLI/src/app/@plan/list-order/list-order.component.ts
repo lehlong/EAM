@@ -108,8 +108,8 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   ) {
     this._global.setBreadcrumb([
       {
-        name: 'Danh sách lệnh',
-        path: 'incident/correct',
+        name: 'Danh sách lệnh bảo trì, bảo dưỡng',
+        path: 'plan/list-order',
       },
     ]);
     this.subscriptions.push(
@@ -250,6 +250,49 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     this.removedFiles = [];
 
     this.model = {};
+  }
+
+  isVisibleUserOrder: boolean = false;
+  updateUserOrder(data: any) {
+    this.isVisibleUserOrder = true;
+    this.model = data;
+  }
+  userCancel() {
+    this.isVisibleUserOrder = false;
+    this.model = new OrderModel();
+  }
+  userOk() {
+    this.model.status = '02';
+    this._sOrder.update(this.model).subscribe({
+      next: () => {
+        this.isVisibleUserOrder = false;
+        this.model = new OrderModel();
+        this.search();
+      },
+      error: (err) => {
+        console.error(err);
+        this.message.error('Cập nhật thất bại');
+      },
+    });
+  }
+
+  updateStatusOrder(data : any, status : any){
+    data.status = status;
+    if (status == '07') {
+      data.gstri = new Date();
+    } else {
+      data.gltri = new Date();
+    }
+
+    this._sOrder.update(data).subscribe({
+      next: () => {
+        this.search();
+      },
+      error: (err) => {
+        console.error(err);
+        this.message.error('Cập nhật thất bại');
+      },
+    });
   }
 
   updateOrder() {

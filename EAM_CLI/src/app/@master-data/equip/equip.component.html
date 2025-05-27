@@ -337,10 +337,19 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear placeholder="Object status" label="Object status"
-                  [control]="$any(validateForm).controls['statAct']"></app-input-clear>
+                <nz-form-item>
+                  <nz-form-label>Trạng thái sử dụng</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear  formControlName="statAct">
+                      <nz-option cdkScrollable *ngFor="let item of lstUsageStatus"
+                        [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
               </div>
             </div>
+
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
@@ -352,8 +361,16 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear placeholder="Trạng thái thực hiện" label="Trạng thái thực hiện"
-                  [control]="$any(validateForm).controls['statusTh']"></app-input-clear>
+                <nz-form-item>
+                  <nz-form-label>Trạng thái hoạt động</nz-form-label>
+                  <nz-form-control nzErrorTip="Không được để trống">
+                    <nz-select nzShowSearch nzAllowClear  formControlName="statusTh">
+                      <nz-option cdkScrollable *ngFor="let item of lstActiveStatus"
+                        [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
               </div>
             </div>
 

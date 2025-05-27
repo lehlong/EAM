@@ -205,7 +205,7 @@ export class IncidentApprovalComponent implements OnInit, OnDestroy {
   updateStatusNoti(data: any, status: string) {
     Swal.fire({
       title: status == '02' ? 'Phê duyệt?' : 'Từ chối?',
-      text: 'Bạn sẽ không thể hoàn tác điều này!',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
       icon: status == '02' ? 'success' : 'error',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',

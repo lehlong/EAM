@@ -6,7 +6,6 @@ export class AccountFilter extends BaseFilter {
   SortColumn: string = 'name';
   PartnerId! : number ;
   AccountType : string = '';
-  positionCode : string = '';
   IsActive! : boolean;
 }
 

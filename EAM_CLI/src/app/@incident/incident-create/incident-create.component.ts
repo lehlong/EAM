@@ -78,7 +78,6 @@ export class IncidentCreateComponent implements OnInit {
       if (params['tplnr']) {
         this.model.tplnr = params['tplnr'];
       }
-      //  if (params['eqktx']) {this.model.eqktx = params['eqktx'];}
       if (params['arbpl']) {
         this.model.arbpl = params['arbpl'];
       }
