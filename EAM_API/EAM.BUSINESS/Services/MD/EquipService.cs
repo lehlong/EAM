@@ -28,7 +28,7 @@ namespace EAM.BUSINESS.Services.MD
                 }
                 if (!string.IsNullOrWhiteSpace(filter.Equnr))
                 {
-                    query = query.Where(x => x.EqUnr == filter.Equnr);
+                    query = query.Where(x => x.Equnr == filter.Equnr);
                 }
                 if (!string.IsNullOrWhiteSpace(filter.Tplnr))
                 {
@@ -90,7 +90,7 @@ namespace EAM.BUSINESS.Services.MD
 
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x => x.Eqktx.Contains(filter.KeyWord) || x.EqUnr.Contains(filter.KeyWord));
+                    query = query.Where(x => x.Eqktx.Contains(filter.KeyWord) || x.Equnr.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {
@@ -136,7 +136,7 @@ namespace EAM.BUSINESS.Services.MD
         {
             try
             {
-                var entity = await _dbContext.TblMdEquip.Where(x => x.EqUnr == equnr).ToListAsync();
+                var entity = await _dbContext.TblMdEquip.Where(x => x.Equnr == equnr).ToListAsync();
                 if (entity == null)
                 {
                     Status = false;

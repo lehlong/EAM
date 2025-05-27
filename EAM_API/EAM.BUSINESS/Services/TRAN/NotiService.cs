@@ -94,14 +94,14 @@ namespace EAM.BUSINESS.Services.TRAN
             try
             {
                 var data = new DashboardModel();
-                var lstEqGroup = await _dbContext.TblMdEqGroup.ToListAsync();
+                var lstEqCat = await _dbContext.TblMdEqCat.ToListAsync();
                 var lstActiveStatus = await _dbContext.TblMdActiveStatus.ToListAsync();
-                foreach (var i in lstEqGroup)
+                foreach (var i in lstEqCat)
                 {
                     data.ChartBar.Add(new Dashboard
                     {
-                        Name = i.EqartTxt ?? "N/A",
-                        Value = _dbContext.TblMdEquip.Where(x => x.Eqart == i.Eqart).Count()
+                        Name = i.EqtypTxt ?? "N/A",
+                        Value = _dbContext.TblMdEquip.Where(x => x.Eqtyp == i.Eqtyp).Count()
                     });
                 }
 

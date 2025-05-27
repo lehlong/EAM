@@ -170,6 +170,14 @@ export class GlobalService {
     return data.find((item) => item.eqart === code)?.eqartTxt;
   }
 
+   getNameEqCat(
+    data: { eqtyp: string; eqtypTxt: string }[] = [],
+    code: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !code) return undefined;
+    return data.find((item) => item.eqtyp === code)?.eqtypTxt;
+  }
+
   getNamePlgrp(
     data: { ingrp: string; ingrpTxt: string }[] = [],
     code: string | null | undefined

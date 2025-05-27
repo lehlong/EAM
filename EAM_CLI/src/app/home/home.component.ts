@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
     var options = {
       chartArea: { width: '90%', height: '70%' },
       title: 'TRẠNG THÁI TÀI SẢN',
-      pieHole: 0.4,
+      pieHole: 0.5,
     };
 
     var chart = new google.visualization.PieChart(
@@ -115,49 +115,49 @@ export class HomeComponent implements OnInit {
   }
 
   drawChartBar() {
-    const filter = this.dataDashboard.chartBar.filter(
-      (x: { value: number }) => x.value != 0
-    );
-    const temp: any[] = filter.map((i: any) => [i.name, i.value]);
+  const filter = this.dataDashboard.chartBar;
+  const temp: any[] = filter.map((i: any) => [i.name, i.value, i.value.toString()]);
 
-    const data = new google.visualization.DataTable();
-    data.addColumn('string', 'Nhóm tài sản');
-    data.addColumn('number', 'Số lượng');
-    data.addRows(temp);
+  const data = new google.visualization.DataTable();
+  data.addColumn('string', 'Nhóm tài sản');
+  data.addColumn('number', 'Số lượng');
+  data.addColumn({ type: 'string', role: 'annotation' }); // 👈 Thêm annotation
 
-    const chartWidth = Math.max(600, temp.length * 80);
-    const chartHeight = 360;
+  data.addRows(temp);
 
-    const options = {
-      legend: 'none',
-      title: 'PHÂN LOẠI TÀI SẢN',
-      width: chartWidth,
-      height: chartHeight,
-      chartArea: {
-        width: '90%',
-        height: '70%',
+  const chartWidth = Math.max(400, temp.length * 72);
+  const chartHeight = 360;
+
+  const options = {
+    legend: 'none',
+    title: 'PHÂN LOẠI TÀI SẢN',
+    width: chartWidth,
+    height: chartHeight,
+    chartArea: {
+      width: '90%',
+      height: '70%',
+    },
+    hAxis: {
+      slantedText: false,
+      showTextEvery: 1,
+      textStyle: {
+        fontSize: 12,
       },
-      hAxis: {
-        title: '',
-        slantedText: false,
-        showTextEvery: 1,
-        textStyle: {
-          fontSize: 12,
-        },
+    },
+    vAxis: {
+      minValue: 0,
+      textStyle: {
+        fontSize: 12,
       },
-      vAxis: {
-        minValue: 0,
-        textStyle: {
-          fontSize: 12,
-        },
-      },
-    };
+    },
+  };
 
-    const chart = new google.visualization.ColumnChart(
-      document.getElementById('chart_div')
-    );
-    chart.draw(data, options);
-  }
+  const chart = new google.visualization.ColumnChart(
+    document.getElementById('chart_div')
+  );
+  chart.draw(data, options);
+}
+
 
   constructor(
     private router: Router,
