@@ -52,10 +52,10 @@ namespace EAM.BUSINESS.Services.TRAN
                 }
 
                 var order = _dbContext.TblTranOrder.AsQueryable();
-                data.Order1 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "01").Count();
-                data.Order2 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "07" && x.Gltrs < DateTime.Now).Count();
-                data.Order3 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "07").Count();
-                data.Order4 = order.Where(x => !string.IsNullOrEmpty(x.Qmnum) && x.Status == "04").Count();
+                data.Order1 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "01").Count();
+                data.Order2 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "07" && x.Gltrs < DateTime.Now).Count();
+                data.Order3 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "07").Count();
+                data.Order4 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "04").Count();
 
                 var noti = _dbContext.TblTranNoti.AsQueryable();
                 data.Noti1 = noti.Count();
