@@ -3,7 +3,8 @@
   <nz-page-header-subtitle>Danh sách sự cố phát sinh</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
-       <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
+      <button (click)="exportExcel()" class="!flex !items-center !border-l-0"
+        style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
     </div>
@@ -13,7 +14,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="sfilter.tplnr" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="sfilter.tplnr"
+            (ngModelChange)="search()">
             <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
               [nzValue]="item.tplnr">
             </nz-option>
@@ -23,7 +25,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Nhóm thiết bị</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị"  [(ngModel)]="sfilter.eqart" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị" [(ngModel)]="sfilter.eqart"
+            (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
               [nzValue]="item.eqart">
             </nz-option>
@@ -34,7 +37,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Đơn vị quản lý</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị quản lý" [(ngModel)]="sfilter.ingrp" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị quản lý" [(ngModel)]="sfilter.ingrp"
+            (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp+ ' - '+item.ingrpTxt"
               [nzValue]="item.ingrp">
             </nz-option>
@@ -45,7 +49,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Thiết bị</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="sfilter.equnr" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="sfilter.equnr"
+            (ngModelChange)="search()">
             <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
             </nz-option>
           </nz-select>
@@ -53,18 +58,20 @@
       </div>
 
       <div nz-col class="gutter-row" [nzSpan]="6">
-  <div class="inner-box">
-    <label>Ngày yêu cầu hoàn thành</label>
-    <nz-date-picker [(ngModel)]="sfilter.fromDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
-  </div>
-</div>
-<div nz-col class="gutter-row" [nzSpan]="6">
-  <div class="inner-box">
-    <label>đến ngày</label>
-    <nz-date-picker [(ngModel)]="sfilter.toDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
-  </div>
-</div>
-</div>
+        <div class="inner-box">
+          <label>Ngày yêu cầu hoàn thành</label>
+          <nz-date-picker [(ngModel)]="sfilter.fromDate" (ngModelChange)="search()"
+            [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>đến ngày</label>
+          <nz-date-picker [(ngModel)]="sfilter.toDate" (ngModelChange)="search()"
+            [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+        </div>
+      </div>
+    </div>
   </nz-page-header-content>
   <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">
     <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResult.data" class="auto-scroll-table"
@@ -127,9 +134,10 @@
 
             </div>
           </td>
-           <td>
-                <button nz-button nzType="default" (click)="exportNoti(data.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /></button>
-              </td>
+          <td>
+            <button nz-button nzType="default" (click)="exportNoti(data.qmnum)"><nz-icon nzType="printer"
+                nzTheme="outline" /></button>
+          </td>
         </tr>
       </tbody>
     </nz-table>
@@ -662,9 +670,27 @@
   </ng-container>
 </nz-drawer>
 <ng-template #extra>
-  <button nz-button nzType="default" (click)="closeDetail()">Đóng</button>
-  &nbsp;
-  <button nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>
+  <div class="action-td">
+    <button nz-button nzType="primary" *ngIf="model.statAct == '07'" class="btn-check"
+      (click)="updateStatusNoti(model, '04')"> <nz-icon nzType="check" nzTheme="outline" /> Hoàn thành
+    </button>
+    <button nz-button nzType="primary" *ngIf="model.statAct == '02'" class="btn-check"
+      (click)="updateStatusNoti(model, '07')">
+      <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
+    </button>
+    <button (click)="openAddOrder(model)" nz-button nzType="primary" *ngIf="model.statAct == '02'">
+      <nz-icon nzType="plus" nzTheme="outline" /> Tạo lệnh
+    </button>
+
+    <button nz-button nzType="default" (click)="exportNoti(model.qmnum)"><nz-icon nzType="printer" nzTheme="outline" />
+      In sự cố</button>
+
+    <button nz-button nzType="default" (click)="closeDetail()">Đóng</button>
+
+    <button nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>
+
+  </div>
+
 </ng-template>
 
 <!-- Tạo lệnh -->

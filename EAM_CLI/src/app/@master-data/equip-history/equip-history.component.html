@@ -1,6 +1,6 @@
 <nz-page-header nzBackIcon>
-  <nz-page-header-title>Thiết bị</nz-page-header-title>
-  <nz-page-header-subtitle>Danh sách thiết bị</nz-page-header-subtitle>
+  <nz-page-header-title>LÝ LỊCH THIẾT BỊ</nz-page-header-title>
+  <nz-page-header-subtitle>Danh sách thiết bị xem lý lịch</nz-page-header-subtitle>
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
       <nz-space>
@@ -14,9 +14,7 @@
           <span nz-icon nzType="redo"></span>
         </button>
       </nz-space>
-      <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
-        <span nz-icon nzType="plus-circle"></span> Thêm mới
-      </button>
+
       <button (click)="exportExcel()" class="!flex !items-center !border-l-0"
         style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
         <span nz-icon nzType="file-excel"></span>Xuất Excel
@@ -157,34 +155,33 @@
   </nz-page-header-content>
 </nz-page-header>
 
-<nz-drawer nzWidth="80%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
-  [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+<nz-drawer nzWidth="100%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+  [nzTitle]="'LÝ LỊCH CHI TIẾT CỦA THIẾT BỊ'" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
-    <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-
+    <form nz-form nzLayout="vertical" [formGroup]="validateForm">
       <nz-tabset>
         <nz-tab nzTitle="Thông tin">
           <div nz-row [nzGutter]="16">
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <app-input-clear label="Mã thiết bị"
                   [control]="$any(validateForm).controls['equnr']" [required]="true"
-                  [disabled]="edit ? true : false"></app-input-clear>
+                  [disabled]="true"></app-input-clear>
               </div>
             </div>
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <app-input-clear label="Tên thiết bị"
-                  [control]="$any(validateForm).controls['eqktx']"></app-input-clear>
+                  [control]="$any(validateForm).controls['eqktx']" [disabled]="true"></app-input-clear>
               </div>
             </div>
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Đơn vị bảo trì</nz-form-label>
                   <nz-form-control>
                     <nz-select nzShowSearch nzAllowClear
-                      formControlName="iwerk">
+                      formControlName="iwerk" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstPlant"
                         [nzLabel]="item.iwerk + ' - ' +item.iwerkTxt" [nzValue]="item.iwerk">
                       </nz-option>
@@ -193,12 +190,12 @@
                 </nz-form-item>
               </div>
             </div>
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Khu vực chức năng</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear formControlName="tplnr">
+                    <nz-select nzShowSearch nzAllowClear formControlName="tplnr" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstFloc"
                         [nzLabel]="item.tplnr + ' - ' + item.descript" [nzValue]="item.tplnr">
                       </nz-option>
@@ -208,20 +205,20 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <app-input-clear
                   label="Bộ phận lập kế hoạch"
-                  [control]="$any(validateForm).controls['ingrp']"></app-input-clear>
+                  [control]="$any(validateForm).controls['ingrp']" [disabled]="true"></app-input-clear>
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Loại thiết bị</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear formControlName="eqtyp">
+                    <nz-select nzShowSearch nzAllowClear formControlName="eqtyp" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstEqCat"
                         [nzLabel]="item.eqtyp + ' - '+item.eqtypTxt" [nzValue]="item.eqtyp">
                       </nz-option>
@@ -231,12 +228,12 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Nhóm thiết bị</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" formControlName="eqart">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Nhóm thiết bị" formControlName="eqart" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstEqGroup"
                         [nzLabel]="item.eqart+ ' - '+item.eqartTxt" [nzValue]="item.eqart">
                       </nz-option>
@@ -246,12 +243,12 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Nhóm phụ</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear
+                    <nz-select nzShowSearch nzAllowClear [nzDisabled]="true"
                       formControlName="eqartSub">
                       <nz-option cdkScrollable *ngFor="let item of lstEqGroup"
                         [nzLabel]="item.eqart+ ' - '+item.eqartTxt" [nzValue]="item.eqart">
@@ -262,12 +259,12 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Mã thiết bị cha</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear placeholder="Mã thiết bị cha" formControlName="hequi">
+                    <nz-select nzShowSearch nzAllowClear placeholder="Mã thiết bị cha" formControlName="hequi" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstEquip" [nzLabel]="item.equnr+' - '+item.eqktx"
                         [nzValue]="item.equnr">
                       </nz-option>
@@ -277,12 +274,12 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Bộ phận bảo trì</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear formControlName="arbpl">
+                    <nz-select nzShowSearch nzAllowClear formControlName="arbpl" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstEqWc"
                         [nzLabel]="item.arbpl + ' - ' + item.arbplTxt" [nzValue]="item.arbpl">
                       </nz-option>
@@ -292,12 +289,12 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Trạng thái sử dụng</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear  formControlName="statAct">
+                    <nz-select nzShowSearch nzAllowClear  formControlName="statAct" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstUsageStatus"
                         [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
                       </nz-option>
@@ -307,12 +304,12 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Trạng thái hoạt động</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear  formControlName="statusTh">
+                    <nz-select nzShowSearch nzAllowClear  formControlName="statusTh" [nzDisabled]="true">
                       <nz-option cdkScrollable *ngFor="let item of lstActiveStatus"
                         [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
                       </nz-option>
@@ -322,34 +319,34 @@
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
-                <app-input-clear placeholder="Main Asset Number" label="Main Asset Number"
+                <app-input-clear placeholder="Main Asset Number" label="Main Asset Number" [disabled]="true"
                   [control]="$any(validateForm).controls['anlnr']"></app-input-clear>
               </div>
             </div>
 
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
-                <app-input-clear placeholder="Asset Subnumber" label="Asset Subnumber"
+                <app-input-clear placeholder="Asset Subnumber" label="Asset Subnumber" [disabled]="true"
                   [control]="$any(validateForm).controls['anlun']"></app-input-clear>
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <app-input-clear label="Nhóm đặc tính"
-                  [control]="$any(validateForm).controls['class']"></app-input-clear>
+                  [control]="$any(validateForm).controls['class']" [disabled]="true"></app-input-clear>
               </div>
             </div>
 
-            <div nz-col class="gutter-row" [nzSpan]="12">
+            <div nz-col class="gutter-row" [nzSpan]="6">
               <div class="inner-box">
                 <nz-form-item>
                   <nz-form-label>Ngày sử dụng thiết bị</nz-form-label>
                   <nz-form-control>
-                    <nz-date-picker formControlName="inbdt" [nzPlaceHolder]="'Chọn ngày'"
+                    <nz-date-picker formControlName="inbdt" [nzPlaceHolder]="'Chọn ngày'" [nzDisabled]="true"
                       style="width: 100%;"></nz-date-picker>
                   </nz-form-control>
                 </nz-form-item>
@@ -358,51 +355,7 @@
 
           </div>
         </nz-tab>
-        <nz-tab nzTitle="Hình ảnh">
-          <div class="image-upload-container">
-            <div class="upload-section" *ngIf="edit || !edit">
-              <nz-upload nzType="drag"
-                [nzAction]="environment.apiUrl + '/EquipPic/Upload?equnr=' + (currentEquipCode || validateForm.get('equnr')?.value || '')"
-                [nzName]="'file'" [nzBeforeUpload]="beforePicUpload" [nzShowUploadList]="false"
-                (nzChange)="handlePicUploadChange($event)"
-                [nzDisabled]="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)">
-                <p class="ant-upload-drag-icon">
-                  <span nz-icon nzType="picture" nzTheme="outline"></span>
-                </p>
-                <p class="ant-upload-text">Nhấp hoặc kéo file ảnh để tải lên</p>
-                <p class="ant-upload-hint">Hỗ trợ các định dạng file ảnh: JPG, PNG, GIF...</p>
-                <nz-alert
-                  *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
-                  nzType="warning" nzMessage="Vui lòng nhập mã thiết bị trước khi tải ảnh lên" nzShowIcon></nz-alert>
-              </nz-upload>
-            </div>
 
-            <nz-divider *ngIf="equipPictures && equipPictures.length > 0" nzText="Danh sách hình ảnh đã đính kèm"
-              nzOrientation="left"></nz-divider>
-
-            <div class="image-gallery" *ngIf="equipPictures && equipPictures.length > 0">
-              <nz-card nzHoverable style="width: 220px;" class="image-card" *ngFor="let pic of equipPictures">
-                <img [src]="pic.path" alt="Equipment Image" (click)="previewImage = pic.path; previewVisible = true;" />
-                <div class="image-actions">
-                  <button nz-button nzType="text" nzDanger (click)="deletePicture(pic.id)">
-                    <span nz-icon nzType="delete" nzTheme="outline"></span>
-                  </button>
-                </div>
-              </nz-card>
-            </div>
-
-            <nz-empty *ngIf="!equipPictures || equipPictures.length === 0"
-              nzNotFoundContent="Chưa có hình ảnh cho thiết bị này"></nz-empty>
-          </div>
-
-          <!-- Image preview -->
-          <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
-            (nzOnCancel)="handlePreviewCancel()">
-            <ng-template #modalContent>
-              <img [src]="previewImage" style="width: 100%;" />
-            </ng-template>
-          </nz-modal>
-        </nz-tab>
         <nz-tab nzTitle="Thông số kỹ thuật">
           <nz-table #charTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEqChar">
             <thead>
@@ -418,117 +371,133 @@
               <tr *ngFor="let data of charTable.data; let i = index">
                 <td>{{ 1 + i}}</td>
                 <td>
-                  <nz-select nzShowSearch [(ngModel)]="data.classH" [ngModelOptions]="{ standalone: true }" (ngModelChange)="onChangeClassH($event)">
-                      <nz-option *ngFor="let item of lstClassH"
-                        [nzLabel]="item.class + ' - '+item.classTxt" [nzValue]="item.class">
-                      </nz-option>
-                    </nz-select>
+                  {{_global.getNameClassH(lstClassH, data.classH)}}
                 </td>
                 <td>
-                   <nz-select nzShowSearch  [(ngModel)]="data.classD" [ngModelOptions]="{ standalone: true }">
-                      <nz-option *ngFor="let item of lstClassDSelect"
-                        [nzLabel]="item.atnam + ' - '+item.aname" [nzValue]="item.id">
-                      </nz-option>
-                    </nz-select>
+                  {{_global.getNameClassD(lstClassD, data.classD)}}
                 </td>
-                <td><input type="text" nz-input [(ngModel)]="data.value" [ngModelOptions]="{ standalone: true }"></td>
-                <td><input type="text" nz-input [(ngModel)]="data.note" [ngModelOptions]="{ standalone: true }"></td>
+                <td>{{data.value}}</td>
+                <td>{{data.note}}</td>
               </tr>
             </tbody>
           </nz-table>
-          <div style="display: flex; justify-content: center; margin-top: 20px;">
-            <button type="button" nz-button nzType="dashed" (click)="addEqChar()">
-              <nz-icon nzType="plus" />
-              Thêm thông số
-            </button>
-          </div>
         </nz-tab>
+         <nz-tab nzTitle="Sự cố liên quan">
+<nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResultNoti.data" class="auto-scroll-table"
+      [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable>
+      <thead>
+        <tr>
+          <th>Mã yêu cầu</th>
+          <th>Nội dung</th>
+          <th>Ngày ghi nhận</th>
+          <th>Ngày hoàn thành</th>
+          <th>Bộ phận thực hiện</th>
+          <th>Người tạo sự cố</th>
+          <th>Người sửa chữa</th>
+          <th>Khu vực phát sinh</th>
+          <th>Tên thiết bị</th>
+          <th>Mức độ ưu tiên</th>
+          <th nzAlign="center">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tbody>
+        <tr *ngFor="let data of paginationResultNoti.data; let i = index">
+          <td>{{ data.qmnum }}</td>
+          <td>{{ data.qmtxt }}</td>
+          <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ _global.getNameWc(lstEqWc, data.arbpl) }}</td>
+          <td>{{ _global.getFullNameUser(lstAccount, data.qmnam) }}</td>
+          <td>{{ _global.getFullNameUser(lstAccount, data.staffSc) }}</td>
+          <td>{{ _global.getNameFloc(lstFloc, data.tplnr) }}</td>
+          <td>{{ _global.getNameEquip(lstEquip, data.equnr) }}</td>
+          <td>{{ _global.getPriorityText(data.priok) }}</td>
+          <td>
+            <nz-tag *ngIf="data.statAct == '01'" nzColor="processing">Chờ duyệt</nz-tag>
+            <nz-tag *ngIf="data.statAct == '02'" nzColor="success">Phê duyệt</nz-tag>
+            <nz-tag *ngIf="data.statAct == '03'" nzColor="error">Từ chối</nz-tag>
+            <nz-tag *ngIf="data.statAct == '04'" nzColor="success">Hoàn thành</nz-tag>
+            <nz-tag *ngIf="data.statAct == '05'" nzColor="default">Đóng</nz-tag>
+            <nz-tag *ngIf="data.statAct == '06'" nzColor="error">Từ chối đóng</nz-tag>
+            <nz-tag *ngIf="data.statAct == '07'" nzColor="processing">Đang thực hiện</nz-tag>
+          </td>
 
-        <nz-tab nzTitle="File đính kèm">
-          <div class="document-upload-container">
-            <div class="upload-section" *ngIf="edit || !edit">
+        </tr>
+      </tbody>
+    </nz-table>
 
-              <nz-upload nzType="drag"
-                [nzAction]="environment.apiUrl + '/EquipDoc/Upload?equnr=' + (currentEquipCode || validateForm.get('equnr')?.value || '') + (selectedDocType ? '&docType=' + selectedDocType : '')"
-                [nzName]="'file'" [nzBeforeUpload]="beforeDocUpload" [nzShowUploadList]="false"
-                (nzChange)="handleDocUploadChange($event)"
-                [nzDisabled]="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)">
-                <p class="ant-upload-drag-icon">
-                  <span nz-icon nzType="file" nzTheme="outline"></span>
-                </p>
-                <p class="ant-upload-text">Nhấp hoặc kéo file để tải lên</p>
-                <p class="ant-upload-hint">Hỗ trợ tất cả các loại tài liệu: PDF, DOCX, XLSX...</p>
-                <nz-alert
-                  *ngIf="!currentEquipCode && (!validateForm.get('equnr')?.value || validateForm.get('equnr')?.invalid)"
-                  nzType="warning" nzMessage="Vui lòng nhập mã thiết bị trước khi tải tài liệu lên"
-                  nzShowIcon></nz-alert>
-              </nz-upload>
-            </div>
+    <div style="float: right; margin: 12px;" *ngIf="paginationResultNoti?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+      <nz-pagination nzShowSizeChanger [nzShowTotal]="totalTemplate" [nzPageIndex]="filterNoti.currentPage"
+        [nzTotal]="paginationResultNoti.totalRecord" [nzPageSize]="filterNoti.pageSize"
+        (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+      <ng-template #totalTemplate let-total>Tổng số {{ paginationResultNoti.totalRecord }} mục</ng-template>
+    </div>
+        </nz-tab>
+         <nz-tab nzTitle="Lịch sử bảo trì, bảo dưỡng">
+<nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResultOrder.data" class="auto-scroll-table"
+      [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable>
+      <thead>
+        <tr>
+          <th>Mã lệnh</th>
+          <th>Nội dung</th>
+          <th>Mã yêu cầu</th>
+          <th>Ngày ghi nhận</th>
+          <th>Ngày hoàn thành</th>
+          <th>Bộ phận thực hiện</th>
+          <th>Người tạo sự cố</th>
+          <th>Người sửa chữa</th>
+          <th>Khu vực phát sinh</th>
+          <th>Tên thiết bị</th>
+          <th>Mức độ ưu tiên</th>
+          <th nzAlign="center">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tbody>
+        <tr *ngFor="let data of paginationResultOrder.data; let i = index">
+          <td>{{ data.aufnr }}</td>
+          <td>{{ data.ktext }}</td>
+          <td>{{ data.qmnum }}</td>
+          <td>{{ data.erdat | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.gltri | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ _global.getNameWc(lstEqWc, data.arbpl) }}</td>
+          <td>{{ _global.getFullNameUser(lstAccount, data.ernam) }}</td>
+          <td>{{ _global.getFullNameUser(lstAccount, data.staffSc) }}</td>
+          <td>{{ _global.getNameFloc(lstFloc,data.tplnr) }}</td>
+          <td>{{ _global.getNameEquip(lstEquip,data.equnr) }}</td>
+          <td>{{ _global.getPriorityText(data.priok) }}</td>
+          <td>
+            <nz-tag *ngIf="data.status == '01'" nzColor="default">Khởi tạo</nz-tag>
+            <nz-tag *ngIf="data.status == '02'" nzColor="processing">Đã phân công</nz-tag>
+            <nz-tag *ngIf="data.status == '04'" nzColor="success">Hoàn thành</nz-tag>
+            <nz-tag *ngIf="data.status == '07'" nzColor="processing">Đang thực hiện</nz-tag>
+          </td>
 
-            <nz-divider *ngIf="equipDocuments && equipDocuments.length > 0" nzText="Danh sách tài liệu đã đính kèm"
-              nzOrientation="left"></nz-divider>
+        </tr>
+      </tbody>
+    </nz-table>
 
-            <div class="document-list" *ngIf="equipDocuments && equipDocuments.length > 0">
-              <nz-table #docTable [nzData]="equipDocuments" [nzShowPagination]="false" nzSize="small">
-                <thead>
-                  <tr>
-                    <th>STT</th>
-                    <th>Tên tài liệu</th>
-                    <th>Loại</th>
-                    <th>Kích thước</th>
-                    <th>Ngày tải lên</th>
-                    <th nzWidth="100px" nzAlign="center">Thao tác</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let doc of docTable.data; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>
-                      <a [href]="doc.path" target="_blank">{{ doc.filename }}</a>
-                    </td>
-                    <td>{{ doc.filetype || 'N/A' }}</td>
-                    <td>{{ doc.filesize | number }} KB</td>
-                    <td>{{ doc.createDate | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td nzAlign="center">
-                      <a nz-tooltip nzTooltipTitle="Xóa" nz-button nzType="link" nzDanger
-                        (click)="deleteDocument(doc.id)">
-                        <span nz-icon nzType="delete" nzTheme="outline"></span>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </nz-table>
-            </div>
+    <div style="float: right; margin: 12px;" *ngIf="paginationResultOrder?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+      <nz-pagination nzShowSizeChanger [nzShowTotal]="totalTemplate" [nzPageIndex]="filterOrder.currentPage"
+        [nzTotal]="paginationResultOrder.totalRecord" [nzPageSize]="filterOrder.pageSize"
+        (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+      <ng-template #totalTemplate let-total>Tổng số {{ paginationResultOrder.totalRecord }} mục</ng-template>
+    </div>
 
-            <nz-empty *ngIf="!equipDocuments || equipDocuments.length === 0"
-              nzNotFoundContent="Chưa có tài liệu cho thiết bị này"></nz-empty>
-          </div>
+        </nz-tab>
+         <nz-tab nzTitle="Điều chuyển">
+
+        </nz-tab>
+         <nz-tab nzTitle="Chỉ số đo">
+
+        </nz-tab>
+         <nz-tab nzTitle="Vật tư thay thế">
+
         </nz-tab>
       </nz-tabset>
     </form>
   </ng-container>
 </nz-drawer>
 <ng-template #extra>
-  <nz-space>
-    <button *nzSpaceItem nz-button nzType="default" style="background-color: #ffa400; color: white;"
-      class="!flex !items-center" (click)="createIncident()">
-      <span nz-icon nzType="warning" nzTheme="outline"></span>Tạo sự cố
-    </button>
-    <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
-        (click)="submitForm()">
-        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
-      </button>
-    </ng-container>
-    <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
-        (click)="submitForm()">
-        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
-      </button>
-    </ng-container>
-    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
-      (click)="close()">
-      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
-    </button>
-  </nz-space>
 </ng-template>

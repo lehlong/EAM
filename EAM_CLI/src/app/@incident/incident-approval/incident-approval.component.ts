@@ -234,7 +234,10 @@ export class IncidentApprovalComponent implements OnInit, OnDestroy {
         data.statAct = status;
         this.subscriptions.push(
           this._sNoti.update(data).subscribe({
-            next: () => this.search(),
+            next: () => {
+              this.visibleDetail = false
+              this.search()
+            },
           })
         );
       }

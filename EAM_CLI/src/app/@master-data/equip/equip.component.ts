@@ -24,10 +24,14 @@ import { EquipFilter } from '../../filter/master-data/equiq-filter';
 import { EquipCharService } from '../../service/master-data/equiq-char.service';
 import { EquiqCharModel } from '../../models/master-data/eqchar.model';
 import { Router } from '@angular/router';
+import { ClassHService } from '../../service/master-data/class-h.service';
+import { ClassDService } from '../../service/master-data/class-d.service';
+import { EquipClassModel } from '../../models/master-data/equip-class.model';
 
 @Component({
   selector: 'app-equip',
   imports: [ShareModule],
+  standalone: true,
   templateUrl: './equip.component.html',
   styleUrl: './equip.component.scss',
 })
@@ -64,6 +68,9 @@ export class EquipComponent {
   picFileList: NzUploadFile[] = [];
   currentEquipCode: string = '';
   selectedDocType: string = '';
+  lstClassH : any[] = []
+  lstClassD : any[] = []
+  lstClassDSelect : any[] = []
 
   constructor(
     private _sAccount: AccountService,
@@ -82,41 +89,30 @@ export class EquipComponent {
     private message: NzMessageService,
     private commonService: CommonService,
     private _sEqChar: EquipCharService,
-    private router: Router
+    private router: Router,
+    private classH : ClassHService,
+    private classD : ClassDService
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
       eqktx: [''],
       iwerk: [''],
-      datab: [''],
-      datbi: [''],
       tplnr: [''],
       ingrp: [''],
       eqtyp: [''],
       eqart: [''],
       eqartSub: [''],
-      eqartTp: [''],
       hequi: [''],
-      parentFlg: [''],
-      childCnt: [0],
       arbpl: [''],
-      kostl: [''],
-      beber: [''],
       statAct: [''],
-      statActT: [''],
       statusTh: [''],
       anlnr: [''],
       anlun: [''],
-      klart: [''],
       class: [''],
-      auspFlg: [''],
-      delFlg: [''],
-      delDate: [''],
-      inactFlg: [''],
-      inactDate: [''],
-      inbdt: [''],
+      inbdt: [null],
       isActive: [true, [Validators.required]],
     });
+
     this._global.setBreadcrumb([
       {
         name: 'Thiết bị',
@@ -146,6 +142,12 @@ export class EquipComponent {
     this._serviceCat.getAll().subscribe((r) => (this.lstEqCat = r));
     this._serviceEqGroup.getAll().subscribe((r) => (this.lstEqGroup = r));
     this._serviceWc.getAll().subscribe((r) => (this.lstEqWc = r));
+    this.classD.getAll().subscribe((r) => {
+      this.lstClassD = r;
+      this.lstClassDSelect = r;
+
+    })
+    this.classH.getAll().subscribe((r) => (this.lstClassH = r))
   }
 
   onSortChange(tplnrTxt: string, value: any) {
@@ -171,9 +173,9 @@ export class EquipComponent {
       });
   }
   addEqChar() {
-    const EquipChar = new EquiqCharModel();
-    EquipChar.equnr = this.currentEquipCode;
-    this.lstEqChar = [...this.lstEqChar, EquipChar];
+    const eClass = new EquipClassModel();
+    eClass.equnr = this.currentEquipCode;
+    this.lstEqChar = [...this.lstEqChar, eClass];
   }
 
   search() {
@@ -186,6 +188,10 @@ export class EquipComponent {
         console.log(response);
       },
     });
+  }
+
+  onChangeClassH(e : any){
+    this.lstClassDSelect = this.lstClassD.filter(x => x.class == e)
   }
 
   getNameEquart(code: string) {

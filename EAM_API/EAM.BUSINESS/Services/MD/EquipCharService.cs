@@ -12,9 +12,9 @@ namespace EAM.BUSINESS.Services.MD
 {
     public interface IEquipCharService : IGenericService<TblMdEquipChar, EquipCharDto>
     {
-        Task<List<EquipCharDto>> Insert(List<EquipCharDto> dto);
+        Task<List<EquipClassDto>> Insert(List<EquipClassDto> dto);
         Task<byte[]> Export(BaseMdFilter filter);
-        Task<List<EquipCharDto>> GetDetail(string equnr);
+        Task<List<EquipClassDto>> GetDetail(string equnr);
     }
     
     public class EquipCharService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdEquipChar, EquipCharDto>(dbContext, mapper), IEquipCharService
@@ -73,18 +73,18 @@ namespace EAM.BUSINESS.Services.MD
             }
         }
 
-        public async Task<List<EquipCharDto>> GetDetail(string equnr)
+        public async Task<List<EquipClassDto>> GetDetail(string equnr)
         {
             try
             {
-                var entity = await _dbContext.TblMdEquipChar.Where(x => x.Equnr == equnr).ToListAsync();
+                var entity = await _dbContext.TblMdEquipClass.Where(x => x.Equnr == equnr).ToListAsync();
                 if (entity == null)
                 {
                     Status = false;
                     return null;
                 }
 
-                return _mapper.Map<List<EquipCharDto>>(entity);
+                return _mapper.Map<List<EquipClassDto>>(entity);
             }
             catch (Exception ex)
             {
@@ -93,36 +93,27 @@ namespace EAM.BUSINESS.Services.MD
                 return null;
             }
         }
-        public async Task<List<EquipCharDto>> Insert(List<EquipCharDto> dto)
+        public async Task<List<EquipClassDto>> Insert(List<EquipClassDto> dto)
         {
             try
             {
-                var result = new List<EquipCharDto>();
-
                 foreach (var d in dto)
                 {
-                    var existing = await _dbContext.Set<TblMdEquipChar>()
-                        .FirstOrDefaultAsync(x => x.Equnr == d.Equnr && x.Id == d.Id);
-
-                    if (string.IsNullOrEmpty(d.Id) || d.Id == "A")
+                    var e = _mapper.Map<TblMdEquipClass>(d);
+                    if(e.Id == "A")
                     {
-                        d.Id = Guid.NewGuid().ToString();
-                        var added = await Add(d);
-                        result.Add(added);
-                    }
-                    else if (existing != null)
-                    {
-                        await Update(d);
-                        result.Add(d);
+                        e.Id = Guid.NewGuid().ToString();
+                        e.Equnr = e.Equnr.Trim();
+                        _dbContext.TblMdEquipClass.Add(e);
                     }
                     else
                     {
-                        var added = await Add(d);
-                        result.Add(added);
+                        _dbContext.TblMdEquipClass.Update(e);
                     }
                 }
+                await _dbContext.SaveChangesAsync();
 
-                return result;
+                return new List<EquipClassDto>();
             }
             catch (Exception ex)
             {

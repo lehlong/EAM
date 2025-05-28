@@ -28,12 +28,13 @@ import { OrderAttService } from '../../service/tran/order-att.service';
 import { OrderService } from '../../service/tran/order.service';
 import { ItemService } from '../../service/warehouse/item.service';
 import { PriorityLevel, HTBTBD, LVTSD, ILART, TTTH } from '../../shared/constants/select.constants';
+import { TitleStrategy } from '@angular/router';
 
 @Component({
   selector: 'app-list-order',
   imports: [ShareModule],
   templateUrl: './list-order.component.html',
-  styleUrl: './list-order.component.scss'
+  styleUrl: './list-order.component.scss',
 })
 export class ListOrderComponent implements OnInit, OnDestroy {
   checked: boolean = false;
@@ -127,6 +128,48 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     this.getMasterData();
   }
 
+  fillDate: any = {
+    startDate: null,
+    toDate: null,
+  };
+  changeFillDate(type: string) {
+    if (
+      this.fillDate.startDate > this.fillDate.toDate &&
+      this.fillDate.startDate &&
+      this.fillDate.toDate
+    ) {
+      this.message.error(
+        'Ngày kết thúc phải lớn hơn ngày bắt đầu! Vui lòng kiểm tra lại!'
+      );
+      if (type == '1') {
+        this.fillDate.startDate = null;
+      } else if (type == '2') {
+        this.fillDate.toDate = null;
+      }
+      return;
+    }
+    if (this.model.lstOpe.length != 0) {
+      this.model.lstOpe.forEach((i: any) => {
+        i.dateCf = this.fillDate.startDate;
+        i.dateCt = this.fillDate.toDate;
+      });
+    }
+  }
+
+  changeDate(data: any, type: string) {
+    if (data.dateCf > data.dateCt && data.dateCf && data.dateCt) {
+      this.message.error(
+        'Ngày kết thúc phải lớn hơn ngày bắt đầu! Vui lòng kiểm tra lại!'
+      );
+      if (type == '1') {
+        data.dateCf = null;
+      } else if (type == '2') {
+        data.dateCt = null;
+      }
+      return;
+    }
+  }
+
   exportOrder(aufnr: string) {
     this.subscriptions.push(
       this._sOrder.exportExcelOrder(aufnr).subscribe({
@@ -218,7 +261,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this._sOrder.getDetail(e.aufnr).subscribe({
         next: (data) => {
-          console.log(data)
+          console.log(data);
           this.visibleOrder = true;
           this.model = data;
           this.model.equipName = this._global.getNameEquip(
@@ -230,10 +273,10 @@ export class ListOrderComponent implements OnInit, OnDestroy {
             data.tplnr
           );
           this.lstItemOrderS = data.lstVt.filter(
-            (item : any) => item.category === 'S'
+            (item: any) => item.category === 'S'
           );
           this.lstItemOrderM = data.lstVt.filter(
-            (item : any) => item.category === 'M'
+            (item: any) => item.category === 'M'
           );
         },
         error: (err) => {
@@ -247,6 +290,11 @@ export class ListOrderComponent implements OnInit, OnDestroy {
 
   closeOrder() {
     this.visibleOrder = false;
+
+    this.fillDate = {
+      startDate: '',
+      toDate: '',
+    };
 
     this.lstItemOrderS = [];
     this.lstItemOrderM = [];
@@ -272,7 +320,6 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   }
   userCancel() {
     this.isVisibleUserOrder = false;
-    this.model = new OrderModel();
   }
   userOk() {
     this.model.status = '02';
@@ -289,7 +336,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateStatusOrder(data : any, status : any){
+  updateStatusOrder(data: any, status: any) {
     data.status = status;
     if (status == '07') {
       data.gstri = new Date();
@@ -309,7 +356,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   }
 
   updateOrder() {
-    const data = this.model
+    const data = this.model;
     var lstItemOrderAll = [...this.lstItemOrderS, ...this.lstItemOrderM];
     this.model.lstVt = lstItemOrderAll;
     this.subscriptions.push(

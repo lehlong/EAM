@@ -18,6 +18,7 @@ import { UsageStatusComponent } from './usage-status/usage-status.component';
 import { ActiveStatusComponent } from './active-status/active-status.component';
 import { PlgrpComponent } from './plgrp/plgrp.component';
 import { UnitComponent } from './unit/unit.component';
+import { EquipHistoryComponent } from './equip-history/equip-history.component';
 
 export const masterDataRoutes: Routes = [
   { path: 'account-type', component: AccountTypeComponent },
@@ -39,4 +40,6 @@ export const masterDataRoutes: Routes = [
   { path: 'active-status', component: ActiveStatusComponent },
   { path: 'plgrp', component: PlgrpComponent },
   { path: 'unit', component: UnitComponent },
+  { path: 'equip-history', component: EquipHistoryComponent },
+
 ];

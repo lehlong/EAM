@@ -60,9 +60,10 @@
               </button>
             </div>
           </td>
-           <td>
-                <button nz-button nzType="default" (click)="exportNoti(data.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /></button>
-              </td>
+          <td>
+            <button nz-button nzType="default" (click)="exportNoti(data.qmnum)"><nz-icon nzType="printer"
+                nzTheme="outline" /></button>
+          </td>
         </tr>
       </tbody>
     </nz-table>
@@ -129,7 +130,7 @@
 
 
 
-         <div nz-col class="gutter-row" [nzSpan]="12">
+          <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Người phê duyệt | từ chối</label>
               <input nz-input [disabled]="true" [(ngModel)]="model.userPd">
@@ -597,6 +598,18 @@
   </ng-container>
 </nz-drawer>
 <ng-template #extra>
+  <button nz-button  nzType="primary" class="btn-check"
+    (click)="updateStatusNoti(model, '05')">
+    <nz-icon nzType="check" nzTheme="outline" /> Đóng
+  </button>
+  &nbsp;
+  <button nz-button  nzType="primary" nzDanger
+    (click)="updateStatusNoti(model, '07')">
+    <nz-icon nzType="close" nzTheme="outline" /> Từ chối đóng
+  </button>
+  &nbsp;
+  <button nz-button nzType="default" (click)="exportNoti(model.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /> In sự cố</button>
+   &nbsp;
   <button nz-button nzType="default" (click)="closeDetail()">Đóng</button>
   &nbsp;
   <button nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>

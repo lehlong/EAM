@@ -20,8 +20,7 @@ namespace EAM.BUSINESS.Services.MD
                 var query = _dbContext.TblMdEquipClass.AsQueryable();
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x => x.Equnr.Contains(filter.KeyWord) || 
-                                           x.Class.Contains(filter.KeyWord));
+                    query = query.Where(x => x.Equnr.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {

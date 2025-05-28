@@ -189,7 +189,6 @@ export class IncidentCloseComponent implements OnInit, OnDestroy {
   }
 
   updateDetail() {
-    console.log(this.lstNotiCatalog);
     this.subscriptions.push(
       this._sNoti.update(this.model).subscribe({
         error: (err) => console.error(err),
@@ -228,7 +227,10 @@ export class IncidentCloseComponent implements OnInit, OnDestroy {
         data.statAct = status;
         this.subscriptions.push(
           this._sNoti.update(data).subscribe({
-            next: () => this.search(),
+            next: () => {
+              this.visibleDetail = false;
+              this.search();
+            },
           })
         );
       }

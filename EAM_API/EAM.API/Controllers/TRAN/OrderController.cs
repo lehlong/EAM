@@ -2,6 +2,7 @@
 using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.TRAN;
+using EAM.BUSINESS.Filter.TRAN;
 using EAM.BUSINESS.Services.TRAN;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace EAM.API.Controllers.TRAN
         public readonly IOrderService _service = service;
 
         [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        public async Task<IActionResult> Search([FromQuery] NotiFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.Search(filter);
@@ -108,9 +109,10 @@ namespace EAM.API.Controllers.TRAN
         public async Task<IActionResult> Insert([FromBody] OrderDto Order)
         {
             var transferObject = new TransferObject();
-            await _service.InsertOrder(Order);
+            var aufnr = await _service.InsertOrder(Order);
             if (_service.Status)
             {
+                transferObject.Data = aufnr;
                 transferObject.Status = true;
                 transferObject.MessageObject.MessageType = MessageType.Success;
                 transferObject.GetMessage("0100", _service);

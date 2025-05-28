@@ -33,6 +33,7 @@ import { OrderModel } from '../../models/tran/order.model';
 import { NotiModel } from '../../models/tran/noti.model';
 import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
 import { NotiFilter } from '../../filter/incident/incident.filter';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-incident-list',
@@ -103,6 +104,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
     public _global: GlobalService,
     private message: NzMessageService,
     private modal: NzModalService,
+    private router : Router
   ) {
     this._global.setBreadcrumb([
       {
@@ -160,10 +162,8 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   createOrder(): void {
     this.subscriptions.push(
       this._sOrder.create(this.order).subscribe({
-        next: () => {
-          this.isVisibleAddOrder = false;
-          this.order = new OrderModel();
-          this.search();
+        next: (data) => {
+          this.router.navigate([`incident/correct/${data}`])
         },
         error: (err) => {
           console.error(err);

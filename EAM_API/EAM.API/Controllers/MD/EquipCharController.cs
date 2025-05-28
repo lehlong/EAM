@@ -72,7 +72,7 @@ namespace EAM.API.Controllers.MD
             return Ok(transferObject);
         }
         [HttpPost("Insert")]
-        public async Task<IActionResult> Insert([FromBody] List<EquipCharDto> dto)
+        public async Task<IActionResult> Insert([FromBody] List<EquipClassDto> dto)
         {
             var transferObject = new TransferObject();
             try

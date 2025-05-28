@@ -599,6 +599,16 @@
   </ng-container>
 </nz-drawer>
 <ng-template #extra>
+  <button nz-button nzType="primary" class="btn-check" (click)="updateStatusNoti(model, '02')">
+    <nz-icon nzType="check" nzTheme="outline" /> Phê duyệt
+  </button>
+  &nbsp;
+  <button nz-button nzType="primary" nzDanger (click)="updateStatusNoti(model, '03')">
+    <nz-icon nzType="close" nzTheme="outline" />Từ chối
+  </button>
+  &nbsp;
+  <button nz-button nzType="default" (click)="exportNoti(model.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /> In sự cố</button>
+   &nbsp;
   <button nz-button nzType="default" (click)="closeDetail()">Đóng</button>
   &nbsp;
   <button nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>

@@ -219,6 +219,22 @@ export class GlobalService {
     }
   }
 
+  getNameClassH(
+    data: { class: string; classTxt: string }[] = [],
+    code: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !code) return undefined;
+    return data.find((item) => item.class === code)?.classTxt;
+  }
+
+  getNameClassD(
+    data: { id: string; aname: string }[] = [],
+    code: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !code) return undefined;
+    return data.find((item) => item.id === code)?.aname;
+  }
+
   getMimeType(fileType: string): string {
     const lowerType = fileType.toLowerCase();
     if (['jpg', 'jpeg'].includes(lowerType)) return 'image/jpeg';

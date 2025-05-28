@@ -1,4 +1,4 @@
-import { saleType } from './../../shared/constants/partner.constants';
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ShareModule } from '../../shared/share-module';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -114,7 +114,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     private _sUsage: UsageStatusService,
     private _sActive: ActiveStatusService,
     private _sItem: ItemService,
-    private _sUnit: UnitService
+    private _sUnit: UnitService,
+    private route: ActivatedRoute
   ) {
     this._global.setBreadcrumb([
       {
@@ -135,6 +136,12 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.search();
     this.getMasterData();
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        const aufnr = params.get('aufnr');
+        if (aufnr != '0') this.openEditOrder(aufnr);
+      },
+    });
   }
   search() {
     this.subscriptions.push(
@@ -147,6 +154,44 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
         },
       })
     );
+  }
+
+  fillDate: any = {
+    startDate: null,
+    toDate: null,
+  };
+
+  changeFillDate(type: string) {
+    if (this.fillDate.startDate > this.fillDate.toDate && this.fillDate.startDate && this.fillDate.toDate) {
+      this.message.error(
+        'Ngày kết thúc phải lớn hơn ngày bắt đầu! Vui lòng kiểm tra lại!'
+      );
+      if (type == '1') {
+        this.fillDate.startDate = null;
+      } else if (type == '2') {
+        this.fillDate.toDate = null;
+      }
+      return;
+    }
+    if (this.model.lstOpe.length != 0) {
+      this.model.lstOpe.forEach((i: any) => {
+        i.dateCf = this.fillDate.startDate;
+        i.dateCt = this.fillDate.toDate;
+      });
+    }
+  }
+  changeDate(data: any, type: string) {
+    if (data.dateCf > data.dateCt && data.dateCf && data.dateCt) {
+      this.message.error(
+        'Ngày kết thúc phải lớn hơn ngày bắt đầu! Vui lòng kiểm tra lại!'
+      );
+      if (type == '1') {
+        data.dateCf = null;
+      } else if (type == '2') {
+        data.dateCt = null;
+      }
+      return;
+    }
   }
 
   addCatalogItem() {
@@ -218,17 +263,18 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   }
 
   openEditOrder(e: any) {
-    const tempCatalog = this.lstCatalog.filter((x) => x.catCode == e.eqart);
-    this.lstCatalogTypeA = tempCatalog.filter((x) => x.catType === 'A');
-    this.lstCatalogTypeB = tempCatalog.filter((x) => x.catType === 'B');
-    this.lstCatalogTypeC = tempCatalog.filter((x) => x.catType === 'C');
-    this.lstCatalogType2 = tempCatalog.filter((x) => x.catType === '2');
-    this.lstCatalogType5 = tempCatalog.filter((x) => x.catType === '5');
-
     this.subscriptions.push(
-      this._sOrder.getDetail(e.aufnr).subscribe({
+      this._sOrder.getDetail(e).subscribe({
         next: (data) => {
-          console.log(data);
+          const tempCatalog = this.lstCatalog.filter(
+            (x) => x.catCode == data.eqart
+          );
+          this.lstCatalogTypeA = tempCatalog.filter((x) => x.catType === 'A');
+          this.lstCatalogTypeB = tempCatalog.filter((x) => x.catType === 'B');
+          this.lstCatalogTypeC = tempCatalog.filter((x) => x.catType === 'C');
+          this.lstCatalogType2 = tempCatalog.filter((x) => x.catType === '2');
+          this.lstCatalogType5 = tempCatalog.filter((x) => x.catType === '5');
+
           this.visibleOrder = true;
           this.model = data;
           this.model.equipName = this._global.getNameEquip(
@@ -252,11 +298,16 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
         },
       })
     );
-    this.loadAttachments(e.aufnr);
+    this.loadAttachments(e);
   }
 
   closeOrder() {
     this.visibleOrder = false;
+
+    this.fillDate = {
+      startDate: '',
+      toDate: '',
+    };
 
     this.lstItemOrderS = [];
     this.lstItemOrderM = [];
@@ -282,7 +333,6 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   }
   userCancel() {
     this.isVisibleUserOrder = false;
-    this.model = new OrderModel();
   }
   userOk() {
     this.model.status = '02';
@@ -327,7 +377,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
         next: () => {
           this.processFiles();
           this.search();
-          this.openEditOrder(data);
+          this.openEditOrder(data.aufnr);
         },
         error: (err) => {
           console.error(err);

@@ -9,28 +9,22 @@ namespace EAM.CORE.Entities.MD
     public class TblMdEquipClass : SoftDeleteEntity
     {
         [Key]
+        [Column("ID")]
+        public string Id { get; set; }
+
         [Column("EQUNR")]
-        public string Equnr { get; set; } = null!;
+        public string? Equnr { get; set; }
 
-        [Column("CLASS")]
-        public string? Class { get; set; }
+        [Column("CLASS_H")]
+        public string? ClassH { get; set; }
+        [Column("CLASS_D")]
+        public string? ClassD { get; set; }
 
-        [Column("ADATU")]
-        public DateTime? Adatu { get; set; }
+        [Column("VALUE")]
+        public string? Value { get; set; }
 
-        [Column("VNAME")]
-        public string? Vname { get; set; }
+        [Column("NOTE")]
+        public string? Note { get; set; }
 
-        [Column("VDATU")]
-        public DateTime? Vdatu { get; set; }
-
-        [Column("VONDT")]
-        public DateTime? Vondt { get; set; }
-
-        [Column("BISDT")]
-        public DateTime? Bisdt { get; set; }
-
-        // Các trường IS_ACTIVE, CREATE_BY, UPDATE_BY, CREATE_DATE, UPDATE_DATE,
-        // IS_DELETED, DELETE_DATE, DELETE_BY được kế thừa từ SoftDeleteEntity
     }
 }

@@ -4,6 +4,7 @@ using EAM.CORE.Entities.MD;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace EAM.BUSINESS.Dtos.MD
@@ -14,20 +15,12 @@ namespace EAM.BUSINESS.Dtos.MD
         [Description("STT")]
         public int OrdinalNumber { get; set; }
         [Key]
-        [Description("Mã thiết bị")]
-        public string Equnr { get; set; } = null!;
-        [Description("Lớp")]
-        public string? Class { get; set; }
-        [Description("Ngày hiệu lực")]
-        public DateTime? Adatu { get; set; }
-        [Description("Tên phiên bản")]
-        public string? Vname { get; set; }
-        [Description("Ngày phiên bản")]
-        public DateTime? Vdatu { get; set; }
-        [Description("Ngày bắt đầu")]
-        public DateTime? Vondt { get; set; }
-        [Description("Ngày kết thúc")]
-        public DateTime? Bisdt { get; set; }
+        public string Id { get; set; }
+        public string? Equnr { get; set; }
+        public string? ClassH { get; set; }
+        public string? ClassD { get; set; }
+        public string? Value { get; set; }
+        public string? Note { get; set; }
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
         

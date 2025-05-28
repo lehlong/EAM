@@ -87,7 +87,7 @@
       <tbody>
         <tr *ngFor="let data of paginationResult.data; let i = index">
           <td [nzChecked]="false"></td>
-          <td (click)="openEditOrder(data)"><a>{{ data.aufnr }}</a></td>
+          <td (click)="openEditOrder(data.aufnr)"><a>{{ data.aufnr }}</a></td>
           <td>{{ data.ktext }}</td>
           <td>{{ data.qmnum }}</td>
           <td>{{ data.erdat | date:'dd/MM/yyyy hh:mm' }}</td>
@@ -390,6 +390,21 @@
         </nz-table>
       </nz-tab>
       <nz-tab nzTitle="Tác vụ theo lệnh">
+
+        <div nz-row [nzGutter]="16">
+          <div nz-col class="gutter-row" [nzSpan]="4">
+            <div class="inner-box">
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Từ ngày'" [(ngModel)]="fillDate.startDate"
+                [nzShowTime]="true" (ngModelChange)="changeFillDate('1')"></nz-date-picker>
+            </div>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="4">
+            <div class="inner-box">
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Đến ngày'" [(ngModel)]="fillDate.toDate"
+                [nzShowTime]="true" (ngModelChange)="changeFillDate('2')"></nz-date-picker>
+            </div>
+          </div>
+        </div>
         <nz-table #operationTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstOpe">
           <thead>
             <tr>
@@ -408,11 +423,11 @@
               <td>{{data.ltxa1}}</td>
               <td>
                 <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCf"
-                  [nzShowTime]="true"></nz-date-picker>
+                  [nzShowTime]="true" (ngModelChange)="changeDate(data, '1')"></nz-date-picker>
               </td>
               <td>
                 <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCt"
-                  [nzShowTime]="true"></nz-date-picker>
+                  [nzShowTime]="true"  (ngModelChange)="changeDate(data, '2')"></nz-date-picker>
               </td>
               <td>{{data.status}}</td>
               <td><input type="text" nz-input [(ngModel)]="data.ndxn"></td>
@@ -623,9 +638,22 @@
   </ng-container>
 </nz-drawer>
 <ng-template #extra>
-  <button nz-button nzType="default" (click)="closeOrder()">Đóng</button>
-  &nbsp;
-  <button nz-button nzType="primary" (click)="updateOrder()">Cập nhật</button>
+
+  <button class="button-template" nz-button nzType="default" *ngIf="model.status == '01'" (click)="updateUserOrder(model)"><nz-icon
+      nzType="user-add" nzTheme="outline" /> Phân công</button>
+  <button class="button-template" nz-button nzType="primary" *ngIf="model.status == '02'" class="btn-check"
+    (click)="updateStatusOrder(model, '07')">
+    <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
+  </button>
+  <button class="button-template" nz-button nzType="primary" *ngIf="model.status == '07'" class="btn-check"
+    (click)="updateStatusOrder(model, '04')">
+    <nz-icon nzType="check" nzTheme="outline" /> Hoàn thành
+  </button>
+  <button class="button-template" nz-button nzType="default" (click)="exportOrder(model.aufnr)"><nz-icon nzType="printer" nzTheme="outline" />In
+    lệnh</button>
+  <button class="button-template" nz-button nzType="primary" (click)="updateOrder()"><nz-icon nzType="save" nzTheme="outline" />Cập
+    nhật</button>
+  <button class="button-template" nz-button nzType="default" (click)="closeOrder()"><nz-icon nzType="close" nzTheme="outline" />Đóng</button>
 </ng-template>
 
 <nz-modal [(nzVisible)]="isVisibleUserOrder" nzTitle="PHÂN CÔNG" (nzOnCancel)="userCancel()" (nzOnOk)="userOk()"

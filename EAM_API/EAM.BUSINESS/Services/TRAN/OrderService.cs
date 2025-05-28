@@ -3,6 +3,7 @@ using ClosedXML.Excel;
 using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
+using EAM.BUSINESS.Filter.TRAN;
 using EAM.CORE;
 using EAM.CORE.Entities.TRAN;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +14,9 @@ namespace EAM.BUSINESS.Services.TRAN
 {
     public interface IOrderService : IGenericService<TblTranOrder, OrderDto>
     {
+        Task<PagedResponseDto> Search(NotiFilter filter);
         Task<string> ExportExcel(string aufnr);
-        Task InsertOrder(OrderDto data);
+        Task<string> InsertOrder(OrderDto data);
         Task UpdateOrder(OrderDto data);
         Task<OrderDto> GetDetail(string code);
         Task<PagedResponseDto> SearchPlanOrder(BaseFilter filter);
@@ -107,7 +109,7 @@ namespace EAM.BUSINESS.Services.TRAN
 
 
 
-        public override async Task<PagedResponseDto> Search(BaseFilter filter)
+        public async Task<PagedResponseDto> Search(NotiFilter filter)
         {
             try
             {
@@ -121,6 +123,10 @@ namespace EAM.BUSINESS.Services.TRAN
                                       x.Qmnum.Contains(filter.KeyWord) ||
                                       x.Equnr.Contains(filter.KeyWord) ||
                                       x.Tplnr.Contains(filter.KeyWord));
+                }
+                if (!string.IsNullOrEmpty(filter.Equnr))
+                {
+                    query = query.Where(x => x.Equnr == filter.Equnr);
                 }
                 if (filter.IsActive.HasValue)
                 {
@@ -167,7 +173,7 @@ namespace EAM.BUSINESS.Services.TRAN
             }
         }
 
-        public async Task InsertOrder(OrderDto data)
+        public async Task<string> InsertOrder(OrderDto data)
         {
             try
             {
@@ -192,11 +198,14 @@ namespace EAM.BUSINESS.Services.TRAN
 
                 await _dbContext.SaveChangesAsync();
 
+                return code.ToString();
+
             }
             catch (Exception ex)
             {
                 Status = false;
                 Exception = ex;
+                return "0";
             }
         }
 
@@ -282,7 +291,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 dto.lstCatalog = await _dbContext.TblTranNotiCatalog.Where(x => x.Qmnum == dto.Qmnum).ToListAsync();
                 dto.lstEquip = await _dbContext.TblTranOrderEq.Where(x => x.Aufnr == dto.Aufnr).ToListAsync();
                 dto.lstVt = await _dbContext.TblTranOrderVt.Where(x => x.Aufnr == dto.Aufnr).ToListAsync();
-                dto.lstOpe = await _dbContext.TblTranOrderOperation.Where(x => x.Aufnr == dto.Aufnr).ToListAsync();
+                dto.lstOpe = await _dbContext.TblTranOrderOperation.Where(x => x.Aufnr == dto.Aufnr).OrderBy(x => x.Vornr).ToListAsync();
                 return dto;
             }
             catch (Exception ex)

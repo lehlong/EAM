@@ -8,7 +8,7 @@ import { IncidentListComponent } from './incident-list/incident-list.component';
 export const incidentRoutes: Routes = [
   { path: 'approval', component: IncidentApprovalComponent },
   { path: 'close', component: IncidentCloseComponent },
-  { path: 'correct', component: IncidentCorrectComponent },
+  { path: 'correct/:aufnr', component: IncidentCorrectComponent },
   { path: 'create', component: IncidentCreateComponent },
   { path: 'list', component: IncidentListComponent },
 ];
