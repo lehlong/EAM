@@ -12,6 +12,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string? Aufnr { get; set; }
         public string? Iwerk { get; set; }
         public string? Auart { get; set; }
+        public string? Plnnr { get; set; }
         public string? Ktext { get; set; }
         public string? Ilart { get; set; }
         public string? Artpr { get; set; }

@@ -134,6 +134,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   fillDate: any = {
     startDate: null,
     toDate: null,
+    isWork : false
   };
   changeFillDate(type: string) {
     if (
@@ -157,6 +158,12 @@ export class ListOrderComponent implements OnInit, OnDestroy {
         i.dateCt = this.fillDate.toDate;
       });
     }
+  }
+
+  onChangeWork(){
+    this.model.lstOpe.forEach((i: any) => {
+        i.isWork = this.fillDate.isWork;
+      });
   }
 
   changeDate(data: any, type: string) {

@@ -17,6 +17,8 @@ namespace EAM.CORE.Entities.TRAN
 
         [Column("AUART")]
         public string? Auart { get; set; }
+        [Column("PLNNR")]
+        public string? Plnnr { get; set; }
 
         [Column("KTEXT")]
         public string? Ktext { get; set; }

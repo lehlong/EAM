@@ -72,6 +72,15 @@ namespace EAM.BUSINESS.Services.TRAN
                         mergedCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
                         mergedCell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
+                        if (task.IsWork == true)
+                        {
+                            worksheet.Cell(currentRow, 6).Value = "X";
+                        }
+                        else
+                        {
+                            worksheet.Cell(currentRow, 7).Value = "X";
+                        }
+
                         currentRow++;
                     }
 
@@ -296,6 +305,21 @@ namespace EAM.BUSINESS.Services.TRAN
                 if (data.lstOpe != null)
                 {
                     _dbContext.TblTranOrderOperation.UpdateRange(data.lstOpe);
+                }
+
+                if (!string.IsNullOrEmpty(data.Plnnr) && _dbContext.TblTranOrderOperation.Where(x => x.Aufnr == data.Aufnr).Count() == 0)
+                {
+                    var task = await _dbContext.TblMdTasklist.Where(x => x.Plnnr == data.Plnnr).ToListAsync();
+                    foreach (var t in task)
+                    {
+                        _dbContext.TblTranOrderOperation.Add(new TblTranOrderOperation
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Aufnr = data.Aufnr,
+                            Vornr = t.Vornr,
+                            Ltxa1 = t.Ltxa1
+                        });
+                    }
                 }
 
                 await _dbContext.SaveChangesAsync();

@@ -21,7 +21,6 @@ import {
   PriorityLevel,
   TTTH,
 } from '../../shared/constants/select.constants';
-import { NotiCatalogService } from '../../service/tran/not-catalog.service';
 import { CatalogService } from '../../service/master-data/catalog.service';
 import { OrderAttService } from '../../service/tran/order-att.service';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
@@ -31,13 +30,12 @@ import { environment } from '../../../environments/environment';
 import { EqCatService } from '../../service/master-data/eq-cat.service';
 import { UsageStatusService } from '../../service/master-data/usage-status.service';
 import { ActiveStatusService } from '../../service/master-data/active-status.service';
-import { OrderEqService } from '../../service/tran/orderEq.service';
-import { OrderVtService } from '../../service/tran/ordervt.service';
 import { ItemService } from '../../service/warehouse/item.service';
 import { OrderModel } from '../../models/tran/order.model';
 import { NotiCatalogModel } from '../../models/tran/noti-catalog.model';
 import { ItemOrder } from '../../models/tran/item-order.model';
 import { UnitService } from '../../service/master-data/unit.service';
+import { TasklistService } from '../../service/master-data/task-list.service';
 
 @Component({
   selector: 'app-incident-correct',
@@ -80,6 +78,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   lstOrderEq: any[] = [];
   lstEqCat: any = [];
   lstOrderOperation: any[] = [];
+  lstTasklist: any[] = [];
+  lstChecklist: any = [];
 
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];
@@ -115,7 +115,8 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     private _sActive: ActiveStatusService,
     private _sItem: ItemService,
     private _sUnit: UnitService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private _sTasklist: TasklistService
   ) {
     this._global.setBreadcrumb([
       {
@@ -159,10 +160,15 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   fillDate: any = {
     startDate: null,
     toDate: null,
+    isWork : false
   };
 
   changeFillDate(type: string) {
-    if (this.fillDate.startDate > this.fillDate.toDate && this.fillDate.startDate && this.fillDate.toDate) {
+    if (
+      this.fillDate.startDate > this.fillDate.toDate &&
+      this.fillDate.startDate &&
+      this.fillDate.toDate
+    ) {
       this.message.error(
         'Ngày kết thúc phải lớn hơn ngày bắt đầu! Vui lòng kiểm tra lại!'
       );
@@ -198,6 +204,12 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     const notiCatalog = new NotiCatalogModel();
     notiCatalog.qmnum = this.model.qmnum;
     this.model.lstCatalog = [...this.model.lstCatalog, notiCatalog];
+  }
+
+  onChangeWork(){
+    this.model.lstOpe.forEach((i: any) => {
+        i.isWork = this.fillDate.isWork;
+      });
   }
 
   addOrderItem() {
@@ -258,8 +270,23 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       this._sCatalog
         .getAll()
         .subscribe((data: any) => (this.lstCatalog = data)),
-      this._sUnit.getAll().subscribe((data: any) => (this.lstUnit = data))
+      this._sUnit.getAll().subscribe((data: any) => (this.lstUnit = data)),
+      this._sTasklist.getAll().subscribe((data: any) => {
+        this.lstTasklist = data;
+        this.lstChecklist = this.getUniqueByPlnnrAndKtext(data);
+      })
     );
+  }
+
+  getUniqueByPlnnrAndKtext(items: any[]): any[] {
+    const map = new Map<string, any>();
+    items.forEach((item) => {
+      const key = `${item.plnnr}-${item.ktext}`;
+      if (!map.has(key)) {
+        map.set(key, { plnnr: item.plnnr, ktext: item.ktext });
+      }
+    });
+    return Array.from(map.values());
   }
 
   openEditOrder(e: any) {

@@ -50,5 +50,7 @@ namespace EAM.CORE.Entities.TRAN
 
         [Column("STAFF_SD")]
         public string? StaffSd { get; set; }
+        [Column("IS_WORK")]
+        public bool? IsWork { get; set; }
     }
 }

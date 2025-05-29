@@ -325,7 +325,16 @@
               </nz-select>
             </div>
           </div>
-
+<div nz-col class="gutter-row" [nzSpan]="6">
+            <div class="inner-box">
+              <label>Mã Checklist</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.plnnr">
+                <nz-option *ngFor="let item of lstChecklist" [nzLabel]="item.plnnr + ' - ' + item.ktext"
+                  [nzValue]="item.plnnr">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
 
 
         </div>
@@ -390,7 +399,6 @@
         </nz-table>
       </nz-tab>
       <nz-tab nzTitle="Tác vụ theo lệnh">
-
         <div nz-row [nzGutter]="16">
           <div nz-col class="gutter-row" [nzSpan]="4">
             <div class="inner-box">
@@ -404,6 +412,9 @@
                 [nzShowTime]="true" (ngModelChange)="changeFillDate('2')"></nz-date-picker>
             </div>
           </div>
+          <div nz-col class="gutter-row" [nzSpan]="4">
+           <label nz-checkbox [(ngModel)]="fillDate.isWork" (ngModelChange)="onChangeWork()"> Thực hiện hàng loạt</label>
+          </div>
         </div>
         <nz-table #operationTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstOpe">
           <thead>
@@ -412,7 +423,7 @@
               <th>Tên tác vụ</th>
               <th>Từ ngày</th>
               <th>Tới ngày</th>
-              <th>Trạng thái</th>
+              <th>Thực hiện</th>
               <th>ND Xác nhận</th>
               <th>Kết quả</th>
             </tr>
@@ -429,7 +440,7 @@
                 <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCt"
                   [nzShowTime]="true"  (ngModelChange)="changeDate(data, '2')"></nz-date-picker>
               </td>
-              <td>{{data.status}}</td>
+              <td nzAlign="center"><label nz-checkbox [(ngModel)]="data.isWork"></label></td>
               <td><input type="text" nz-input [(ngModel)]="data.ndxn"></td>
               <td><input type="text" nz-input [(ngModel)]="data.note"></td>
             </tr>
