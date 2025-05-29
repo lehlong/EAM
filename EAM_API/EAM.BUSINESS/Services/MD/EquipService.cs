@@ -6,6 +6,7 @@ using EAM.BUSINESS.Filter.MD;
 using EAM.CORE;
 using EAM.CORE.Entities.MD;
 using Microsoft.EntityFrameworkCore;
+using NPOI.SS.Formula.Functions;
 
 namespace EAM.BUSINESS.Services.MD
 {
@@ -39,6 +40,30 @@ namespace EAM.BUSINESS.Services.MD
                 {
                     query = query.Where(x => x.Eqart == filter.Eqart);
                 }
+                if (!string.IsNullOrWhiteSpace(filter.StatAct))
+                {
+                    query = query.Where(x => x.StatAct == filter.StatAct);
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.StatusTh))
+                {
+                    query = query.Where(x => x.StatusTh == filter.StatusTh);
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Eqtyp))
+                {
+                    query = query.Where(x => x.Eqtyp == filter.Eqtyp);
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.Arbpl))
+                {
+                    query = query.Where(x => x.Arbpl == filter.Arbpl);
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Iwerk))
+                {
+                    query = query.Where(x => x.Iwerk == filter.Iwerk);
+                }
+                
+
 
                 if (filter.IsActive.HasValue)
                 {

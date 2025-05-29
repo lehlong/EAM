@@ -19,7 +19,7 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<string> InsertOrder(OrderDto data);
         Task UpdateOrder(OrderDto data);
         Task<OrderDto> GetDetail(string code);
-        Task<PagedResponseDto> SearchPlanOrder(BaseFilter filter);
+        Task<PagedResponseDto> SearchPlanOrder(OrderFilter filter);
     }
 
     public class OrderService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranOrder, OrderDto>(dbContext, mapper), IOrderService
@@ -143,7 +143,7 @@ namespace EAM.BUSINESS.Services.TRAN
             }
         }
 
-        public async Task<PagedResponseDto> SearchPlanOrder(BaseFilter filter)
+        public async Task<PagedResponseDto> SearchPlanOrder(OrderFilter filter)
         {
             try
             {

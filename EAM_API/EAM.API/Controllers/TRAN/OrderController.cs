@@ -34,7 +34,7 @@ namespace EAM.API.Controllers.TRAN
         }
 
         [HttpGet("SearchOrderPlan")]
-        public async Task<IActionResult> SearchOrderPlan([FromQuery] BaseFilter filter)
+        public async Task<IActionResult> SearchOrderPlan([FromQuery] OrderFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.SearchPlanOrder(filter);

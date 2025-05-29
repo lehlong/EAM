@@ -238,7 +238,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
       });
       const url = window.URL.createObjectURL(blob);
       var anchor = document.createElement('a');
-      anchor.download = 'danh-sach-trang-thai-hoat-dong.xlsx';
+      anchor.download = 'danh-sach-ke-hoach.xlsx';
       anchor.href = url;
       anchor.click();
     });

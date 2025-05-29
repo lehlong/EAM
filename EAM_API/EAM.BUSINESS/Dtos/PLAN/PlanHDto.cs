@@ -17,11 +17,18 @@ namespace EAM.BUSINESS.Dtos.PLAN
         public int OrdinalNumber { get; set; }
 
         [Key]
+        [Description("Mã kế hoạch")]
         public string Warpl { get; set; }
         public string? Iwerk { get; set; }
+        [Description("Tên kế hoạch")]
         public string? Wptxt { get; set; }
+        [Description("Loại kế hoạch")]
         public string? Mptyp { get; set; }
+        [Description("Khu vực chức năng")]
+
         public string? Mpgrp { get; set; }
+        [Description("Loại kế hoạch")]
+
         public string? Cyctype { get; set; }
         public string? Cycunit { get; set; }
         public decimal? Cycle { get; set; }

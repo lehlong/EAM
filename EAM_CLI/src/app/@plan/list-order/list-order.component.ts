@@ -29,6 +29,8 @@ import { OrderService } from '../../service/tran/order.service';
 import { ItemService } from '../../service/warehouse/item.service';
 import { PriorityLevel, HTBTBD, LVTSD, ILART, TTTH } from '../../shared/constants/select.constants';
 import { TitleStrategy } from '@angular/router';
+import { NotiFilter } from '../../filter/incident/incident.filter';
+import { OrderFilter } from '../../filter/plan/order.filter';
 
 @Component({
   selector: 'app-list-order',
@@ -39,6 +41,7 @@ import { TitleStrategy } from '@angular/router';
 export class ListOrderComponent implements OnInit, OnDestroy {
   checked: boolean = false;
   filter = new BaseFilter();
+  ofilter = new OrderFilter
   loading: boolean = false;
   paginationResult = new PaginationResult();
   lstItem: any[] = [];
@@ -184,7 +187,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   }
   search() {
     this.subscriptions.push(
-      this._sOrder.searchOrderPlan(this.filter).subscribe({
+      this._sOrder.searchOrderPlan(this.ofilter).subscribe({
         next: (data) => {
           this.paginationResult = data;
         },

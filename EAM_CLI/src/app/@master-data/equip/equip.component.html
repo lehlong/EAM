@@ -38,8 +38,19 @@
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
-          <label>Type of Technical Object</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Type of Technical Object" [(ngModel)]="filter.eqart"
+          <label>Loại thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Loại thiết bị" [(ngModel)]="filter.eqtyp"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstEqCat" [nzLabel]="item.eqtyp+ ' - '+item.eqtypTxt"
+              [nzValue]="item.eqtyp">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Nhóm thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị" [(ngModel)]="filter.eqart"
             (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
               [nzValue]="item.eqart">
@@ -49,20 +60,11 @@
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
-          <label>Sub Type Object</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Sub Type Object">
-            <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
-              [nzValue]="item.eqart">
-            </nz-option>
-          </nz-select>
-        </div>
-      </div>
-      <div nz-col class="gutter-row" [nzSpan]="6">
-        <div class="inner-box">
-          <label>Phòng ban sử dụng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Phòng ban sử dụng">
-            <nz-option option cdkScrollable *ngFor="let item of lstOrganize" [nzLabel]="item.id+ ' - '+item.name"
-              [nzValue]="item.id">
+          <label>Bộ phận bảo trì</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Bộ phận bảo trì" [(ngModel)]="filter.arbpl"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstEqWc" [nzLabel]="item.arbpl + ' - ' + item.arbplTxt"
+              [nzValue]="item.arbpl">
             </nz-option>
           </nz-select>
         </div>
@@ -70,10 +72,11 @@
 
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
-          <label>Người sử dụng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Người sử dụng">
-            <nz-option option cdkScrollable *ngFor="let item of lstAccount"
-              [nzLabel]="item.userName+ ' - '+item.fullName" [nzValue]="item.userName">
+          <label>Đơn vị bảo trì</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị bảo trì" [(ngModel)]="filter.iwerk"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstPlant"
+                        [nzLabel]="item.iwerk + ' - ' +item.iwerkTxt" [nzValue]="item.iwerk">
             </nz-option>
           </nz-select>
         </div>
@@ -82,7 +85,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Trạng thái sử dụng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái sử dụng">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái sử dụng" [(ngModel)]="filter.statAct"
+            (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstUsageStatus" [nzLabel]="item.code+ ' - '+item.name"
               [nzValue]="item.code">
             </nz-option>
@@ -93,7 +97,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Trạng thái hoạt động</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái hoạt động">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Trạng thái hoạt động" [(ngModel)]="filter.statusTh"
+            (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstActiveStatus" [nzLabel]="item.code+ ' - '+item.name"
               [nzValue]="item.code">
             </nz-option>
@@ -167,8 +172,7 @@
           <div nz-row [nzGutter]="16">
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear label="Mã thiết bị"
-                  [control]="$any(validateForm).controls['equnr']" [required]="true"
+                <app-input-clear label="Mã thiết bị" [control]="$any(validateForm).controls['equnr']" [required]="true"
                   [disabled]="edit ? true : false"></app-input-clear>
               </div>
             </div>
@@ -183,8 +187,7 @@
                 <nz-form-item>
                   <nz-form-label>Đơn vị bảo trì</nz-form-label>
                   <nz-form-control>
-                    <nz-select nzShowSearch nzAllowClear
-                      formControlName="iwerk">
+                    <nz-select nzShowSearch nzAllowClear formControlName="iwerk">
                       <nz-option cdkScrollable *ngFor="let item of lstPlant"
                         [nzLabel]="item.iwerk + ' - ' +item.iwerkTxt" [nzValue]="item.iwerk">
                       </nz-option>
@@ -210,8 +213,7 @@
 
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear
-                  label="Bộ phận lập kế hoạch"
+                <app-input-clear label="Bộ phận lập kế hoạch"
                   [control]="$any(validateForm).controls['ingrp']"></app-input-clear>
               </div>
             </div>
@@ -251,8 +253,7 @@
                 <nz-form-item>
                   <nz-form-label>Nhóm phụ</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear
-                      formControlName="eqartSub">
+                    <nz-select nzShowSearch nzAllowClear formControlName="eqartSub">
                       <nz-option cdkScrollable *ngFor="let item of lstEqGroup"
                         [nzLabel]="item.eqart+ ' - '+item.eqartTxt" [nzValue]="item.eqart">
                       </nz-option>
@@ -297,7 +298,7 @@
                 <nz-form-item>
                   <nz-form-label>Trạng thái sử dụng</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear  formControlName="statAct">
+                    <nz-select nzShowSearch nzAllowClear formControlName="statAct">
                       <nz-option cdkScrollable *ngFor="let item of lstUsageStatus"
                         [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
                       </nz-option>
@@ -312,7 +313,7 @@
                 <nz-form-item>
                   <nz-form-label>Trạng thái hoạt động</nz-form-label>
                   <nz-form-control nzErrorTip="Không được để trống">
-                    <nz-select nzShowSearch nzAllowClear  formControlName="statusTh">
+                    <nz-select nzShowSearch nzAllowClear formControlName="statusTh">
                       <nz-option cdkScrollable *ngFor="let item of lstActiveStatus"
                         [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
                       </nz-option>
@@ -418,18 +419,19 @@
               <tr *ngFor="let data of charTable.data; let i = index">
                 <td>{{ 1 + i}}</td>
                 <td>
-                  <nz-select nzShowSearch [(ngModel)]="data.classH" [ngModelOptions]="{ standalone: true }" (ngModelChange)="onChangeClassH($event)">
-                      <nz-option *ngFor="let item of lstClassH"
-                        [nzLabel]="item.class + ' - '+item.classTxt" [nzValue]="item.class">
-                      </nz-option>
-                    </nz-select>
+                  <nz-select nzShowSearch [(ngModel)]="data.classH" [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="onChangeClassH($event)">
+                    <nz-option *ngFor="let item of lstClassH" [nzLabel]="item.class + ' - '+item.classTxt"
+                      [nzValue]="item.class">
+                    </nz-option>
+                  </nz-select>
                 </td>
                 <td>
-                   <nz-select nzShowSearch  [(ngModel)]="data.classD" [ngModelOptions]="{ standalone: true }">
-                      <nz-option *ngFor="let item of lstClassDSelect"
-                        [nzLabel]="item.atnam + ' - '+item.aname" [nzValue]="item.id">
-                      </nz-option>
-                    </nz-select>
+                  <nz-select nzShowSearch [(ngModel)]="data.classD" [ngModelOptions]="{ standalone: true }">
+                    <nz-option *ngFor="let item of lstClassDSelect" [nzLabel]="item.atnam + ' - '+item.aname"
+                      [nzValue]="item.id">
+                    </nz-option>
+                  </nz-select>
                 </td>
                 <td><input type="text" nz-input [(ngModel)]="data.value" [ngModelOptions]="{ standalone: true }"></td>
                 <td><input type="text" nz-input [(ngModel)]="data.note" [ngModelOptions]="{ standalone: true }"></td>
