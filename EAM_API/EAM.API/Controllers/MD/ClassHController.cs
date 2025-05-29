@@ -1,4 +1,5 @@
 ﻿using Common;
+using EAM.API.AppCode.Attribute;
 using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
@@ -13,6 +14,7 @@ namespace EAM.API.Controllers.MD
     {
         public readonly IClassHService _service = service;
 
+        [CustomAuthorize(Right = "R2.5.1")]
         [HttpGet("Search")]
         public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
         {
@@ -47,6 +49,8 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
+        [CustomAuthorize(Right = "R2.5.3")]
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] ClassHDto time)
         {
@@ -67,6 +71,8 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
+        [CustomAuthorize(Right = "R2.5.2")]
         [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] ClassHDto time)
         {
@@ -105,6 +111,7 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [CustomAuthorize(Right = "R2.5.4")]
         [HttpGet("Export")]
         public async Task<IActionResult> Export([FromQuery] BaseMdFilter filter)
         {

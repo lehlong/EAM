@@ -71,6 +71,20 @@ export class PlgrpComponent {
     });
   }
 
+ exportExcel() {
+    return this._service
+      .exportExcel(this.filter)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'danh-sach-bo-phan-lap-ke-hoach.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
   isCodeExist(ingrp: string): boolean {
     return this.paginationResult.data?.some(
       (accType: any) => accType.ingrp === ingrp

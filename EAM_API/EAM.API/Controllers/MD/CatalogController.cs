@@ -1,4 +1,5 @@
 ﻿using Common;
+using EAM.API.AppCode.Attribute;
 using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
@@ -14,6 +15,7 @@ namespace EAM.API.Controllers.MD
     {
         public readonly ICatalogService _service = service;
 
+        [CustomAuthorize(Right = "R2.8.1")]
         [HttpGet("Search")]
         public async Task<IActionResult> Search([FromQuery] CatalogFilter filter)
         {
@@ -48,6 +50,8 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
+        [CustomAuthorize(Right = "R2.8.3")]
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] CatalogDto time)
         {
@@ -69,6 +73,8 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
+        [CustomAuthorize(Right = "R2.8.2")]
         [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] CatalogDto time)
         {
@@ -107,6 +113,8 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
+        [CustomAuthorize(Right = "R2.8.4")]
         [HttpGet("Export")]
         public async Task<IActionResult> Export([FromQuery] BaseMdFilter filter)
         {

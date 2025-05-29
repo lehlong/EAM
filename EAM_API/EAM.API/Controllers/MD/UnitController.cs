@@ -14,7 +14,7 @@ namespace EAM.API.Controllers.MD
     public class UnitController(IUnitService service) : ControllerBase
     {
         public readonly IUnitService _service = service;
-
+        [CustomAuthorize(Right = "R2.12.1")]
         [HttpGet("Search")]
         public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
         {
@@ -49,6 +49,7 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [CustomAuthorize(Right = "R2.12.3")]
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] UnitDto time)
         {
@@ -109,6 +110,7 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [CustomAuthorize(Right = "R2.12.4")]
         [HttpGet("Export")]
         public async Task<IActionResult> Export([FromQuery] BaseMdFilter filter)
         {
@@ -116,7 +118,7 @@ namespace EAM.API.Controllers.MD
             var result = await _service.Export(filter);
             if (_service.Status)
             {
-                return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Danh sách loại sửa chữa" + DateTime.Now.ToString() + ".xlsx");
+                return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Danh sách đơn vị tính" + DateTime.Now.ToString() + ".xlsx");
             }
             else
             {

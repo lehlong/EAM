@@ -1,4 +1,5 @@
 ﻿using Common;
+using EAM.API.AppCode.Attribute;
 using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
@@ -13,7 +14,7 @@ namespace EAM.API.Controllers.MD
     public class PlgrpController(IPlgrpService service) : ControllerBase
     {
         public readonly IPlgrpService _service = service;
-
+        [CustomAuthorize(Right = "R2.11.1")]
         [HttpGet("Search")]
         public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
         {
@@ -48,6 +49,7 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [CustomAuthorize(Right = "R2.11.3")]
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] PlgrpDto time)
         {
@@ -68,6 +70,7 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [CustomAuthorize(Right = "R2.11.2")]
         [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] PlgrpDto time)
         {
@@ -105,6 +108,25 @@ namespace EAM.API.Controllers.MD
                 transferObject.GetMessage("0106", _service);
             }
             return Ok(transferObject);
+        }
+
+        [CustomAuthorize(Right = "R2.11.4")]
+        [HttpGet("Export")]
+        public async Task<IActionResult> Export([FromQuery] BaseMdFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.Export(filter);
+            if (_service.Status)
+            {
+                return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Danh sách bộ phận lập kế hoạch" + DateTime.Now.ToString() + ".xlsx");
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("2000", _service);
+                return Ok(transferObject);
+            }
         }
     }
 }
