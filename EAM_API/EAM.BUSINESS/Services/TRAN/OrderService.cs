@@ -158,6 +158,25 @@ namespace EAM.BUSINESS.Services.TRAN
                                       x.Equnr.Contains(filter.KeyWord) ||
                                       x.Tplnr.Contains(filter.KeyWord));
                 }
+             
+                if (!string.IsNullOrWhiteSpace(filter.Equnr))
+                {
+                    query = query.Where(x => x.Equnr == filter.Equnr);
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Tplnr))
+                {
+                    query = query.Where(x => x.Tplnr == filter.Tplnr);
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.Eqart))
+                {
+                    query = query.Where(x => x.Eqart == filter.Eqart);
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Ingpr))
+                {
+                    query = query.Where(x => x.Ingpr == filter.Ingpr);
+                }
+
                 if (filter.IsActive.HasValue)
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
