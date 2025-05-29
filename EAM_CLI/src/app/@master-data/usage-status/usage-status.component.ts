@@ -25,7 +25,7 @@ export class UsageStatusComponent implements OnInit, OnDestroy {
   constructor(
     private _service: UsageStatusService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

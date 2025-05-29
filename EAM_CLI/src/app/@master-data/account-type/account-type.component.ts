@@ -27,7 +27,7 @@ export class AccountTypeComponent {
   constructor(
     private _service: AccountTypeService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

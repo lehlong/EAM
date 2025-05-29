@@ -15,7 +15,7 @@
         </button>
       </nz-space>
 
-      <button (click)="exportExcel()" class="!flex !items-center !border-l-0"
+      <button ( *ngIf="_global.checkPermissions('R3.8.2')"click)="exportExcel()" class="!flex !items-center !border-l-0"
         style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
@@ -107,7 +107,7 @@
 
 
   </nz-page-header-content>
-  <nz-page-header-content class="main-content" style="height: calc(-344px + 100vh);">
+  <nz-page-header-content class="main-content" style="height: calc(-344px + 100vh);"  *ngIf="_global.checkPermissions('R3.8.1')"   >
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false"
       nzBordered [nzSize]="'middle'">
       <thead>

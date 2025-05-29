@@ -24,7 +24,7 @@ export class OrderTypeComponent {
   constructor(
     private _service: OrderTypeService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

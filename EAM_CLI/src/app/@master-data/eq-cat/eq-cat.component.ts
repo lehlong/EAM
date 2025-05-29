@@ -24,7 +24,7 @@ export class EqCatComponent {
   constructor(
     private _service: EqCatService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

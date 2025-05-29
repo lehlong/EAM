@@ -31,7 +31,7 @@ export class ClassDComponent implements OnInit, OnDestroy {
     private _sChar: CharService,
     private _sClassH: ClassHService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

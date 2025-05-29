@@ -24,7 +24,7 @@ export class ClassHComponent implements OnInit, OnDestroy {
   constructor(
     private _service: ClassHService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

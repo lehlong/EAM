@@ -26,7 +26,7 @@ export class WcComponent {
   constructor(
     private _service: WcService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService,
     private plant: PlantService
   ) {

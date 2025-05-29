@@ -24,7 +24,7 @@ export class NotiTypeComponent {
   constructor(
     private _service: NotiTypeService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

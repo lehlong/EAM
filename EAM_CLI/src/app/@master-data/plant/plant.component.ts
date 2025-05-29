@@ -24,7 +24,7 @@ export class PlantComponent {
   constructor(
     private _service: PlantService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

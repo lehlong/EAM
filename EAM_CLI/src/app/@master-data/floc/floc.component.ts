@@ -28,7 +28,7 @@ export class FlocComponent {
     private _service: FlocService,
     private _servicePlant: PlantService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

@@ -24,7 +24,7 @@ export class PlgrpComponent {
   constructor(
     private _service: PlgrpService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

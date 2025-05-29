@@ -25,7 +25,7 @@ export class CataTypeComponent implements OnInit, OnDestroy {
   constructor(
     private _service: CataTypeService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

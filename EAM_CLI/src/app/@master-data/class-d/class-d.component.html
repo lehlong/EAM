@@ -14,15 +14,15 @@
           <span nz-icon nzType="redo"></span>
         </button>
       </nz-space>
-      <button (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
+      <button *ngIf="globalService.checkPermissions('R2.6.3')"  (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
         <span nz-icon nzType="plus-circle"></span> Thêm mới
       </button>
-      <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
+      <button *ngIf="globalService.checkPermissions('R2.6.4')"  (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
     </div>
   </nz-page-header-extra>
-  <nz-page-header-content class="main-content">
+  <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R2.6.1')" >
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
       <thead>
         <tr>
@@ -113,7 +113,7 @@
 </nz-drawer>
 <ng-template #extra>
   <nz-space>
-    <ng-container *ngIf="edit">
+    <ng-container *ngIf="edit && globalService.checkPermissions('R2.6.2')">
       <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
         (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu

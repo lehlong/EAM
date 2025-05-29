@@ -24,7 +24,7 @@ export class EqGroupComponent {
   constructor(
     private _service: EqGroupService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

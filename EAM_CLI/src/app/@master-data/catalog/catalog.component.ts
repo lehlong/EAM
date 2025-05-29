@@ -28,7 +28,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
     private _service: CatalogService,
     private _sCataType: CataTypeService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({
