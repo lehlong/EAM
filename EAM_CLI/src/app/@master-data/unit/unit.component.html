@@ -87,7 +87,7 @@
 </nz-drawer>
 <ng-template #extra>
   <nz-space>
-    <ng-container *ngIf="edit">
+    <ng-container *ngIf="edit && globalService.checkPermissions('R2.12.2')">
       <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
         (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu

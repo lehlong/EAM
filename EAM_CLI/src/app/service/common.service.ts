@@ -85,22 +85,23 @@ export class CommonService {
       this.globalService.incrementApiCallCount() // Tăng bộ đếm
     }
     return this.http.post<any>(`${this.baseUrl}/${endpoint}`, data).pipe(
-
       tap((response) => {
         if (response.status) {
-          this.showSuccess('Thêm mới thông tin thành công')
-        }else{
-          this.showError(response.messageObject.message)
+          if (showSuccess) {
+            this.showSuccess('Thêm mới thông tin thành công');
+          }
+        } else {
+          this.showError(response.messageObject.message);
         }
       }),
       map(this.handleApiResponse),
       catchError((error) =>
         this.handleError(error, () =>
-          this.post<T>(endpoint, data, showSuccess, showLoading),
-        ),
+          this.post<T>(endpoint, data, showSuccess, showLoading)
+        )
       ),
-      finalize(() => this.globalService.decrementApiCallCount()), // Giảm bộ đếm khi hoàn thành
-    )
+      finalize(() => this.globalService.decrementApiCallCount()) // Giảm bộ đếm khi hoàn thành
+    );
   }
 
   put<T>(

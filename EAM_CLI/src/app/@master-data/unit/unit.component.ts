@@ -24,7 +24,7 @@ export class UnitComponent {
   constructor(
     private _service: UnitService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService
   ) {
     this.validateForm = this.fb.group({

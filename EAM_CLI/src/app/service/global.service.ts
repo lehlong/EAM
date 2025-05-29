@@ -17,7 +17,6 @@ export class GlobalService {
   breadcrumbSubject: Subject<boolean> = new Subject<boolean>();
   breadcrumb: any = [];
 
-
   constructor(private message: NzMessageService) {
     this.loading = new BehaviorSubject<boolean>(false);
     this.rightSubject.subscribe((value) => {
@@ -134,9 +133,7 @@ export class GlobalService {
     this.apiCallCount--;
   }
 
-  isValidSelected() {
-
-  }
+  isValidSelected() {}
 
   getNameFloc(
     data: { tplnr: string; descript: string }[] = [],
@@ -170,7 +167,7 @@ export class GlobalService {
     return data.find((item) => item.eqart === code)?.eqartTxt;
   }
 
-   getNameEqCat(
+  getNameEqCat(
     data: { eqtyp: string; eqtypTxt: string }[] = [],
     code: string | null | undefined
   ): string | undefined {

@@ -23,28 +23,7 @@
             [control]="$any(validateForm).controls['userName']"
           ></app-input-clear>
         </div>
-        <div nz-col [nzXs]="24" [nzMd]="12">
-          <nz-form-item>
-            <nz-form-label>Mật khẩu</nz-form-label>
-            <nz-form-control nzErrorTip="Không được để trống">
-              <nz-input-group [nzSuffix]="suffixTemplatePassword">
-                <input
-                  nz-input
-                  placeholder="Nhập mật khẩu"
-                  formControlName="password"
-                  [type]="passwordVisible ? 'text' : 'password'"
-                />
-              </nz-input-group>
-              <ng-template #suffixTemplatePassword>
-                <span
-                  nz-icon
-                  [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                  (click)="passwordVisible = !passwordVisible"
-                ></span>
-              </ng-template>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
+
         <div nz-col [nzXs]="24" [nzMd]="12">
           <app-input-clear
             placeholder="Nhập tên đầy đủ"
@@ -88,7 +67,7 @@
                   cdkScrollable
                   *ngFor="let item of accountType"
                   [nzLabel]="item.name"
-                  [nzValue]="item.id"
+                  [nzValue]="item.code"
                 >
                 </nz-option>
               </nz-select>
