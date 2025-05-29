@@ -41,7 +41,7 @@ import { OrderFilter } from '../../filter/plan/order.filter';
 export class ListOrderComponent implements OnInit, OnDestroy {
   checked: boolean = false;
   filter = new BaseFilter();
-  ofilter = new OrderFilter
+  ofilter = new OrderFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
   lstItem: any[] = [];
@@ -186,8 +186,15 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     );
   }
   search() {
+    const filter : any = { ...this.ofilter };
+    if (filter.fromDate) {
+      filter.fromDate = this._global.formatDatePlanFilter(filter.fromDate);
+    }
+    if (filter.toDate) {
+      filter.toDate = this._global.formatDatePlanFilter(filter.toDate);
+    }
     this.subscriptions.push(
-      this._sOrder.searchOrderPlan(this.ofilter).subscribe({
+      this._sOrder.searchOrderPlan(filter).subscribe({
         next: (data) => {
           this.paginationResult = data;
         },
@@ -417,8 +424,8 @@ export class ListOrderComponent implements OnInit, OnDestroy {
           const attachmentData = Array.isArray(result)
             ? result
             : result && result.data
-            ? result.data
-            : [];
+              ? result.data
+              : [];
 
           const uniqueAttachments = Array.from(
             new Map(

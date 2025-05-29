@@ -162,11 +162,11 @@ namespace EAM.BUSINESS.Services.TRAN
                 }
                 if (filter.FromDate.HasValue)
                 {
-                    query = query.Where(x => x.Ltrmn >= filter.FromDate);
+                    query = query.Where(x => x.Qmdat >= filter.FromDate);
                 }
                 if (filter.ToDate.HasValue)
                 {
-                    query = query.Where(x => x.Ltrmn <= filter.ToDate);
+                    query = query.Where(x => x.Qmdat <= filter.ToDate);
                 }
 
                 if (filter.IsActive.HasValue)

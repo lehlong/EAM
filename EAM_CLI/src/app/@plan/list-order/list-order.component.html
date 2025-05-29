@@ -47,14 +47,14 @@
 
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
-          <label>Ngày yêu cầu hoàn thành</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <label>Ngày dự kiến hoàn thành</label>
+          <nz-date-picker [(ngModel)]="ofilter.fromDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>đến ngày</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <nz-date-picker [(ngModel)]="ofilter.toDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
         </div>
       </div>
     </div>

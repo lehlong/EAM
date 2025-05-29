@@ -252,8 +252,15 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   search() {
+    const filter : any = { ...this.sfilter };
+    if (filter.fromDate) {
+      filter.fromDate = this._global.formatDatePlanFilter(filter.fromDate);
+    }
+    if (filter.toDate) {
+      filter.toDate = this._global.formatDatePlanFilter(filter.toDate);
+    }
     this.subscriptions.push(
-      this._sNoti.search(this.sfilter).subscribe({
+      this._sNoti.search(filter).subscribe({
         next: (data) => (this.paginationResult = data),
         error: (err) => console.log(err),
       })

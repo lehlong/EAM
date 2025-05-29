@@ -176,7 +176,14 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.Ingpr == filter.Ingpr);
                 }
-
+                if (filter.FromDate.HasValue)
+                {
+                    query = query.Where(x => x.Gltrs >= filter.FromDate);
+                }
+                if (filter.ToDate.HasValue)
+                {
+                    query = query.Where(x => x.Gltrs <= filter.ToDate);
+                }
                 if (filter.IsActive.HasValue)
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
