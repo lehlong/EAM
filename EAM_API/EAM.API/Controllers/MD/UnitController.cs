@@ -1,4 +1,5 @@
 ﻿using Common;
+using EAM.API.AppCode.Attribute;
 using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
@@ -68,6 +69,8 @@ namespace EAM.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
+        [CustomAuthorize(Right = "R2.12.2")]
         [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] UnitDto time)
         {
