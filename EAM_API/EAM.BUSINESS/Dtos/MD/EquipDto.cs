@@ -74,6 +74,10 @@ namespace EAM.BUSINESS.Dtos.MD
         public string? InactFlg { get; set; }
         public DateTime? InactDate { get; set; }
         public DateTime? Inbdt { get; set; }
+        public double? Long { get; set; }
+
+        public double? Lat { get; set; }
+
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }

@@ -58,6 +58,8 @@ export class EquipComponent {
   lstAccount: any = [];
   lstEqChar: any = [];
   loading: boolean = false;
+  lat: number = 0;
+  lng: number = 0;
 
   environment = environment;
 
@@ -112,6 +114,8 @@ export class EquipComponent {
       anlnr: [''],
       anlun: [''],
       class: [''],
+      lat: [null],
+      long: [null],
       inbdt: [null],
       isActive: [true, [Validators.required]],
     });
@@ -145,17 +149,16 @@ export class EquipComponent {
     }
   }
   private initMap(): void {
-    const lat = 10.762622;
-    const lng = 106.660172;
-
-    this.map = L.map('equip-map').setView([lat, lng], 16);
+   // const lat = 10.762622;
+   // const lng = 106.660172;
+    this.map = L.map('equip-map').setView([this.lat, this.lng], 16);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
     }).addTo(this.map);
 
-    L.marker([lat, lng]).addTo(this.map)
-      .bindPopup(`Van thở [Bể A001]`)
+    L.marker([this.lat, this.lng]).addTo(this.map)
+      .bindPopup(`Thiết bị: ${this.validateForm.get('eqktx')?.value || 'Chưa có tọa độ'}`)
       .openPopup();
   }
 
@@ -209,6 +212,7 @@ export class EquipComponent {
     this.isSubmit = false;
     this._service.search(this.filter).subscribe({
       next: (data) => {
+       console.log('data', data);
         this.paginationResult = data;
       },
       error: (response) => {
@@ -371,6 +375,8 @@ export class EquipComponent {
     this.resetForm();
     this.validateForm.patchValue(data);
     this.currentEquipCode = data.equnr;
+    this.lat = data.lat || 0;
+    this.lng = data.long || 0;
     this._sEqChar.getDetail(data.equnr).subscribe({
       next: (data) => {
         this.lstEqChar = data;

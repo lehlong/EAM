@@ -356,6 +356,18 @@
                 </nz-form-item>
               </div>
             </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear label="Vĩ độ"
+                  [control]="$any(validateForm).controls['lat']"></app-input-clear>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear label="Kinh độ"
+                  [control]="$any(validateForm).controls['long']"></app-input-clear>
+              </div>
+            </div>
 
           </div>
         </nz-tab>

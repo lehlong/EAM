@@ -99,6 +99,12 @@ namespace EAM.CORE.Entities.MD
         [Column("INBDT")]
         public DateTime? Inbdt { get; set; }
 
+        [Column("LONG")]
+        public double? Long { get; set; }
+
+        [Column("LAT")]
+        public double? Lat { get; set; }
+
         // IS_ACTIVE, CREATE_BY, UPDATE_BY, etc. are inherited from SoftDeleteEntity
     }
 }
