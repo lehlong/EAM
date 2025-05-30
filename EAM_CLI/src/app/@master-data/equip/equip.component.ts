@@ -27,6 +27,7 @@ import { Router } from '@angular/router';
 import { ClassHService } from '../../service/master-data/class-h.service';
 import { ClassDService } from '../../service/master-data/class-d.service';
 import { EquipClassModel } from '../../models/master-data/equip-class.model';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-equip',
@@ -36,6 +37,8 @@ import { EquipClassModel } from '../../models/master-data/equip-class.model';
   styleUrl: './equip.component.scss',
 })
 export class EquipComponent {
+
+  private map: L.Map | undefined;
   validateForm: FormGroup;
   isSubmit: boolean = false;
   visible: boolean = false;
@@ -130,6 +133,30 @@ export class EquipComponent {
   ngOnInit(): void {
     this.search();
     this.getMasterData();
+  }
+
+  onTabChange(index: number): void {
+    if (index === 4) {
+      if (!this.map) {
+        this.initMap();
+      } else {
+        setTimeout(() => this.map!.invalidateSize(), 0);
+      }
+    }
+  }
+  private initMap(): void {
+    const lat = 10.762622;
+    const lng = 106.660172;
+
+    this.map = L.map('equip-map').setView([lat, lng], 16);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+    }).addTo(this.map);
+
+    L.marker([lat, lng]).addTo(this.map)
+      .bindPopup(`Van thở [Bể A001]`)
+      .openPopup();
   }
 
   getMasterData() {

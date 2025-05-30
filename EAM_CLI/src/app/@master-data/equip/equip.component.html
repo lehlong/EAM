@@ -167,7 +167,7 @@
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
 
-      <nz-tabset>
+      <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
         <nz-tab nzTitle="Thông tin">
           <div nz-row [nzGutter]="16">
             <div nz-col class="gutter-row" [nzSpan]="12">
@@ -505,6 +505,10 @@
             <nz-empty *ngIf="!equipDocuments || equipDocuments.length === 0"
               nzNotFoundContent="Chưa có tài liệu cho thiết bị này"></nz-empty>
           </div>
+        </nz-tab>
+
+        <nz-tab nzTitle="Vị trí thiết bị">
+          <div id="equip-map" style="height: calc(100vh - 200px);"></div>
         </nz-tab>
       </nz-tabset>
     </form>
