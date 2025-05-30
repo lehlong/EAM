@@ -185,6 +185,10 @@ namespace EAM.BUSINESS.Services.TRAN
                 {
                     query = query.Where(x => x.Ingpr == filter.Ingpr);
                 }
+                if (!string.IsNullOrWhiteSpace(filter.Status))
+                {
+                    query = query.Where(x => x.Status == filter.Status);
+                }
                 if (filter.FromDate.HasValue)
                 {
                     query = query.Where(x => x.Gltrs >= filter.FromDate);

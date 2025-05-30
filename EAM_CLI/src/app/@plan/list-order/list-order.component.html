@@ -6,7 +6,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Khu vực chức năng</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng"  [(ngModel)]="ofilter.tplnr" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="ofilter.tplnr"
+            (ngModelChange)="search()">
             <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
               [nzValue]="item.tplnr">
             </nz-option>
@@ -16,7 +17,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Nhóm thiết bị</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị" [(ngModel)]="ofilter.eqart" (ngModelChange)="search()" >
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị" [(ngModel)]="ofilter.eqart"
+            (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
               [nzValue]="item.eqart">
             </nz-option>
@@ -27,7 +29,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Đơn vị quản lý</label>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị quản lý"  [(ngModel)]="ofilter.ingpr" (ngModelChange)="search()">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị quản lý" [(ngModel)]="ofilter.ingpr"
+            (ngModelChange)="search()">
             <nz-option option cdkScrollable *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp+ ' - '+item.ingrpTxt"
               [nzValue]="item.ingrp">
             </nz-option>
@@ -38,7 +41,8 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Thiết bị</label>
-          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="ofilter.equnr" (ngModelChange)="search()" >
+          <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="ofilter.equnr"
+            (ngModelChange)="search()">
             <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
             </nz-option>
           </nz-select>
@@ -48,16 +52,29 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Ngày dự kiến hoàn thành</label>
-          <nz-date-picker [(ngModel)]="ofilter.fromDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <nz-date-picker [(ngModel)]="ofilter.fromDate" (ngModelChange)="search()"
+            [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>đến ngày</label>
-          <nz-date-picker [(ngModel)]="ofilter.toDate" (ngModelChange)="search()" [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <nz-date-picker [(ngModel)]="ofilter.toDate" (ngModelChange)="search()"
+            [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Trạng thái</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="ofilter.status" (ngModelChange)="search()">
+            <nz-option *ngFor="let item of lstOrderStatus" [nzLabel]="item.name" [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
         </div>
       </div>
     </div>
+
+
 
 
   </nz-page-header-content>
@@ -88,11 +105,11 @@
           <td>{{ data.ktext }}</td>
           <td>{{ data.gstrs | date:'dd/MM/yyyy hh:mm' }}</td>
           <td>{{ data.gltrs | date:'dd/MM/yyyy hh:mm' }}</td>
-           <td>{{ data.gstri | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.gstri | date:'dd/MM/yyyy hh:mm' }}</td>
           <td>{{ _global.getNameWc(lstWc, data.arbpl) }}</td>
           <td>{{ _global.getFullNameUser(lstUser, data.staffSc) }}</td>
           <td>{{ _global.getNameFloc(lstFloc,data.tplnr) }}</td>
-           <td>
+          <td>
             <nz-tag *ngIf="data.status == '01'" nzColor="default">Khởi tạo</nz-tag>
             <nz-tag *ngIf="data.status == '02'" nzColor="processing">Đã phân công</nz-tag>
             <nz-tag *ngIf="data.status == '04'" nzColor="success">Hoàn thành</nz-tag>
@@ -100,20 +117,21 @@
           </td>
           <td nzAlign="center">
             <button nzTooltipTitle="Phân công" nzTooltipPlacement="top" nz-button nz-tooltip nzType="default"
-              *ngIf="data.status == '01'" (click)="updateUserOrder(data)"><nz-icon nzType="user-add" nzTheme="outline" /></button>
+              *ngIf="data.status == '01'" (click)="updateUserOrder(data)"><nz-icon nzType="user-add"
+                nzTheme="outline" /></button>
 
 
-              <button nzTooltipTitle="Đang thực hiện" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
-                *ngIf="data.status == '02'" class="btn-check" (click)="updateStatusOrder(data, '07')">
-                <nz-icon nzType="right-circle" nzTheme="outline" />
-              </button>
+            <button nzTooltipTitle="Đang thực hiện" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
+              *ngIf="data.status == '02'" class="btn-check" (click)="updateStatusOrder(data, '07')">
+              <nz-icon nzType="right-circle" nzTheme="outline" />
+            </button>
 
-              <button nzTooltipTitle="Hoàn thành" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
-                *ngIf="data.status == '07'" class="btn-check" (click)="updateStatusOrder(data, '04')">
-                <nz-icon nzType="check" nzTheme="outline" />
-              </button>
-            </td>
-             <td>
+            <button nzTooltipTitle="Hoàn thành" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
+              *ngIf="data.status == '07'" class="btn-check" (click)="updateStatusOrder(data, '04')">
+              <nz-icon nzType="check" nzTheme="outline" />
+            </button>
+          </td>
+          <td>
             <button nz-button nzType="default" (click)="exportOrder(data.aufnr)"><nz-icon nzType="printer"
                 nzTheme="outline" /></button>
           </td>
@@ -227,7 +245,7 @@
                 [nzDisabled]="true"></nz-date-picker>
             </div>
           </div>
-           <div nz-col class="gutter-row" [nzSpan]="6">
+          <div nz-col class="gutter-row" [nzSpan]="6">
             <div class="inner-box">
               <label>Ngày thực tế bắt đầu</label>
               <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="model.gstri"
@@ -386,8 +404,9 @@
         <div nz-row [nzGutter]="16">
           <div nz-col class="gutter-row" [nzSpan]="4">
             <div class="inner-box">
-              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Từ ngày'" [(ngModel)]="fillDate.startDate"
-                [nzShowTime]="true" (ngModelChange)="changeFillDate('1')"></nz-date-picker>
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Từ ngày'"
+                [(ngModel)]="fillDate.startDate" [nzShowTime]="true"
+                (ngModelChange)="changeFillDate('1')"></nz-date-picker>
             </div>
           </div>
           <div nz-col class="gutter-row" [nzSpan]="4">
@@ -397,7 +416,8 @@
             </div>
           </div>
           <div nz-col class="gutter-row" [nzSpan]="4">
-           <label nz-checkbox [(ngModel)]="fillDate.isWork" (ngModelChange)="onChangeWork()"> Thực hiện hàng loạt</label>
+            <label nz-checkbox [(ngModel)]="fillDate.isWork" (ngModelChange)="onChangeWork()"> Thực hiện hàng
+              loạt</label>
           </div>
         </div>
         <nz-table #operationTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstOpe">
@@ -422,7 +442,7 @@
               </td>
               <td>
                 <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCt"
-                  [nzShowTime]="true"  (ngModelChange)="changeDate(data, '2')"></nz-date-picker>
+                  [nzShowTime]="true" (ngModelChange)="changeDate(data, '2')"></nz-date-picker>
               </td>
               <td nzAlign="center"><label nz-checkbox [(ngModel)]="data.isWork"></label></td>
               <td><input type="text" nz-input [(ngModel)]="data.ndxn"></td>
@@ -554,7 +574,8 @@
                 <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.meins">
                   <nz-option *ngFor="let item of lstUnit" [nzValue]="item.code"
                     [nzLabel]="item.code + ' - ' + item.name"></nz-option>
-                </nz-select></td>
+                </nz-select>
+              </td>
 
               <td><input type="text" nz-input [(ngModel)]="data.price" (ngModelChange)="calculateTotal(data)" /></td>
               <td>
@@ -633,8 +654,8 @@
 </nz-drawer>
 <ng-template #extra>
 
-  <button class="button-template" nz-button nzType="default" *ngIf="model.status == '01'" (click)="updateUserOrder(model)"><nz-icon
-      nzType="user-add" nzTheme="outline" /> Phân công</button>
+  <button class="button-template" nz-button nzType="default" *ngIf="model.status == '01'"
+    (click)="updateUserOrder(model)"><nz-icon nzType="user-add" nzTheme="outline" /> Phân công</button>
   <button class="button-template" nz-button nzType="primary" *ngIf="model.status == '02'" class="btn-check"
     (click)="updateStatusOrder(model, '07')">
     <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
@@ -643,11 +664,14 @@
     (click)="updateStatusOrder(model, '04')">
     <nz-icon nzType="check" nzTheme="outline" /> Hoàn thành
   </button>
-  <button class="button-template" nz-button nzType="default" (click)="exportOrder(model.aufnr)"><nz-icon nzType="printer" nzTheme="outline" />In
+  <button class="button-template" nz-button nzType="default" (click)="exportOrder(model.aufnr)"><nz-icon
+      nzType="printer" nzTheme="outline" />In
     lệnh</button>
-  <button class="button-template" nz-button nzType="primary" (click)="updateOrder()"><nz-icon nzType="save" nzTheme="outline" />Cập
+  <button class="button-template" nz-button nzType="primary" (click)="updateOrder()"><nz-icon nzType="save"
+      nzTheme="outline" />Cập
     nhật</button>
-  <button class="button-template" nz-button nzType="default" (click)="closeOrder()"><nz-icon nzType="close" nzTheme="outline" />Đóng</button>
+  <button class="button-template" nz-button nzType="default" (click)="closeOrder()"><nz-icon nzType="close"
+      nzTheme="outline" />Đóng</button>
 </ng-template>
 
 <nz-modal [(nzVisible)]="isVisibleUserOrder" nzTitle="PHÂN CÔNG" (nzOnCancel)="userCancel()" (nzOnOk)="userOk()"

@@ -7,4 +7,5 @@ export class OrderFilter extends BaseFilter {
   equnr?: string;
 fromDate?: Date;
   toDate?: Date;
+  status?: string;
 }

@@ -60,3 +60,11 @@ export const TTTH = [
   { name: 'Dời lịch', value: '06' },
   { name: 'Đã đóng', value: '07' },
 ];
+
+
+export const OrderStatus = [
+  { name: 'Khởi tạo', value: '01' },
+  { name: 'Đã phân công', value: '02' },
+  { name: 'Đang thực hiện', value: '07' },
+  { name: 'Hoàn thành', value: '04' },
+];

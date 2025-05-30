@@ -29,15 +29,9 @@ var logger = LogManager.Setup()
 
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.Services.AddHangfire(configuration =>
-//            configuration.UseStorage(new OracleStorage(config.GetConnectionString("Connection"), new OracleStorageOptions())));
-
-// Thêm dịch vụ Hangfire
-//builder.Services.AddHangfireServer();
 
 builder.Services.AddControllers();
 builder.Services.AddDIServices(builder.Configuration);
-//builder.Services.AddDIXHTDServices(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMvc();
@@ -109,14 +103,6 @@ builder.Services.AddSignalR(options =>
 
 builder.Services.AddMemoryCache();
 
-//builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
-//        builder =>
-//        {
-//            builder.AllowAnyHeader()
-//                    .AllowAnyMethod()
-//                    .AllowCredentials()
-//                    .SetIsOriginAllowed((host) => true);
-//        }));
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
         builder =>
         {
@@ -127,44 +113,14 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
 
 var app = builder.Build();
 
-//if (!app.Environment.IsDevelopment())
-//{
-//    //app.UseHangfireDashboard();
-//   // using var scope = app.Services.CreateScope();
-//   // using var server = new BackgroundJobServer();
-//   // await scope.ServiceProvider.GetRequiredService<ISystemTraceService>().StartService();
-//   // var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//   // var lstMessage = dbContext.TblAdMessage.ToList();
-//    foreach (var message in lstMessage)
-//    {
-//        MessageUtil.AddToCache(new MessageObject()
-//        {
-//            Code = message.Code,
-//            Language = message.Lang,
-//            Message = message.Value
-//        });
-//    }
-//}
-
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI(options =>
-//    {
-//        options.SwaggerEndpoint("/swagger/V1/swagger.json", "PROJECT WebAPI");
-//    });
-//}
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/V1/swagger.json", "PROJECT WebAPI");
+    options.SwaggerEndpoint("/swagger/V1/swagger.json", "EAM API");
 });
 
 TransferObjectExtension.SetHttpContextAccessor(app.Services.GetRequiredService<IHttpContextAccessor>());
 app.EnableRequestBodyRewind();
-
-//app.UseHttpsRedirection();
 
 
 app.UseRouting();

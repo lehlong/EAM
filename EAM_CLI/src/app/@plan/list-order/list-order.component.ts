@@ -27,7 +27,7 @@ import { AccountService } from '../../service/system-manager/account.service';
 import { OrderAttService } from '../../service/tran/order-att.service';
 import { OrderService } from '../../service/tran/order.service';
 import { ItemService } from '../../service/warehouse/item.service';
-import { PriorityLevel, HTBTBD, LVTSD, ILART, TTTH } from '../../shared/constants/select.constants';
+import { PriorityLevel, HTBTBD, LVTSD, ILART, TTTH, OrderStatus } from '../../shared/constants/select.constants';
 import { TitleStrategy } from '@angular/router';
 import { NotiFilter } from '../../filter/incident/incident.filter';
 import { OrderFilter } from '../../filter/plan/order.filter';
@@ -74,6 +74,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   lstOrderEq: any[] = [];
   lstEqCat: any = [];
   lstOrderOperation: any[] = [];
+  lstOrderStatus = OrderStatus
 
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];
