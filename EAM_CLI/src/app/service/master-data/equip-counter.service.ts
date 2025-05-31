@@ -12,6 +12,10 @@ export class EqCounterService {
     return this.commonService.get('EqCounter/Search', params)
   }
 
+   searchWithoutLoading(params: any): Observable<any> {
+    return this.commonService.get('EqCounter/Search', params, false)
+  }
+
   getAll(): Observable<any> {
     return this.commonService.get('EqCounter/GetAll')
   }

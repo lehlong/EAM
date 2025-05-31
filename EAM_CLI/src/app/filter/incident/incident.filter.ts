@@ -4,7 +4,6 @@ export class NotiFilter extends BaseFilter {
   tplnr?: string;
   eqart?: string;
   ingrp?: string;
-  equnr?: string;
 fromDate?: Date;
   toDate?: Date;
 }

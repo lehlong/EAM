@@ -5,6 +5,5 @@ export class PlanFilter extends BaseFilter {
   arbpl: any;
   eqart: any;
   tplnr: any;
-  equnr: any;
   warpl: any;
 }

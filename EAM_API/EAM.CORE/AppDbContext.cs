@@ -156,6 +156,7 @@ namespace EAM.CORE
         #endregion
 
         #region Transaction Data
+        public DbSet<TblTranEqCounter> TblTranEqCounter { get; set; }
         public DbSet<TblTranNoti> TblTranNoti { get; set; }
         public DbSet<TblTranNotiAtt> TblTranNotiAtt { get; set; }
         public DbSet<TblTranNotiReport> TblTranNotiReport { get; set; }

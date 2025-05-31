@@ -28,6 +28,10 @@ namespace EAM.BUSINESS.Services.MD
                 {
                     query = query.Where(x => x.Point.ToString().Contains(filter.KeyWord) || x.Pttxt.Contains(filter.KeyWord));
                 }
+                if (!string.IsNullOrEmpty(filter.Equnr))
+                {
+                    query = query.Where(x => x.Equnr == filter.Equnr);
+                }
                 if (filter.IsActive.HasValue)
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);

@@ -1,0 +1,180 @@
+<nz-page-header nzBackIcon>
+    <nz-page-header-title>BỘ ĐẾM THIẾT BỊ</nz-page-header-title>
+    <nz-page-header-subtitle>Danh sách bộ đếm cho thiết bị</nz-page-header-subtitle>
+    <nz-page-header-extra>
+        <div class="flex-grow-2 flex">
+            <nz-space>
+                <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
+                    [(value)]="filter.keyWord"></app-input-clear>
+                <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                    nzType="default">
+                    <span nz-icon nzType="search"></span>
+                </button>
+                <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                    nzType="default">
+                    <span nz-icon nzType="redo"></span>
+                </button>
+            </nz-space>
+            <button *ngIf="globalService.checkPermissions('R8.1.3')" (click)="openCreate()"
+                class="!flex !items-center space-btn" nzType="primary" nz-button>
+                <span nz-icon nzType="plus-circle"></span> Thêm mới
+            </button>
+            <button *ngIf="globalService.checkPermissions('R8.1.4')" (click)="exportExcel()"
+                class="!flex !items-center !border-l-0"
+                style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
+                <span nz-icon nzType="file-excel"></span>Xuất Excel
+            </button>
+        </div>
+    </nz-page-header-extra>
+    <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R8.1.1')">
+        <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data"
+            [nzFrontPagination]="false">
+            <thead>
+                <tr>
+                    <th nzWidth="60px">STT</th>
+                    <th>Mã điểm đo</th>
+                    <th>Mã thiết bị</th>
+                    <th>Tên điểm đo</th>
+                    <th>Loại điểm đo</th>
+                    <th>Đơn vị tính</th>
+                    <th>Giá trị đo tối đa</th>
+                    <th>Tổng chỉ số ước tính trên năm</th>
+                    <th nzAlign="center">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
+                    <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
+                    </td>
+                    <td> <a (click)="openEdit(data)">{{ data.point }}</a></td>
+                    <td>{{ data.equnr }} - {{globalService.getNameEquip(lstEquip, data.equnr)}}</td>
+                    <td>{{ data.pttxt }}</td>
+                    <td>{{ data.mptyp == '1' ? 'Giá trị luỹ kế' : 'Chỉ số đo' }}</td>
+                    <td>{{ data.dvt }} - {{globalService.getNameUnit(lstUnit, data.dvt)}}</td>
+                    <td>{{ data.maxCount }}</td>
+                    <td>{{ data.yearCount }}</td>
+                    <td nzAlign="center">
+                        <nz-tag nzColor="success" *ngIf="data.isActive">
+                            <nz-icon nzType="check-circle" />
+                            <span>Kích hoạt</span>
+                        </nz-tag>
+                        <nz-tag nzColor="error" *ngIf="!data.isActive">
+                            <nz-icon nzType="close-circle" />
+                            <span>Khoá</span>
+                        </nz-tag>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-page-header-content>
+    <nz-page-header-content class="footer-content">
+        <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+            <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+                [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+                (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+        </div>
+    </nz-page-header-content>
+</nz-page-header>
+
+<!--Create Update-->
+<nz-drawer nzWidth="65%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+    [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+
+        <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+            <div nz-row [nzGutter]="16">
+                <div nz-col [nzSpan]="12">
+                    <app-input-clear placeholder="Mã điểm đo" [required]="true" label="Mã điểm đo"
+                        [control]="$any(validateForm).controls['point']" [required]="true"
+                        [disabled]="edit ? true : false"></app-input-clear>
+                </div>
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div class="inner-box">
+                        <nz-form-item>
+                            <nz-form-label>Thiết bị</nz-form-label>
+                            <nz-form-control nzErrorTip="Không được để trống">
+                                <nz-select nzShowSearch nzAllowClear formControlName="equnr">
+                                    <nz-option cdkScrollable *ngFor="let item of lstEquip"
+                                        [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <app-input-clear placeholder="Tên điểm đo" [required]="true" label="Tên điểm đo"
+                        [control]="$any(validateForm).controls['pttxt']"></app-input-clear>
+                </div>
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div class="inner-box">
+                        <nz-form-item>
+                            <nz-form-label>Loại điểm đo</nz-form-label>
+                            <nz-form-control nzErrorTip="Không được để trống">
+                                <nz-select nzShowSearch nzAllowClear formControlName="mptyp">
+                                    <nz-option cdkScrollable *ngFor="let item of lstMptyp"
+                                        [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div class="inner-box">
+                        <nz-form-item>
+                            <nz-form-label>Đơn vị tính</nz-form-label>
+                            <nz-form-control nzErrorTip="Không được để trống">
+                                <nz-select nzShowSearch nzAllowClear formControlName="dvt">
+                                    <nz-option cdkScrollable *ngFor="let item of lstUnit"
+                                        [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <app-input-clear placeholder="Giá trị đo tối đa" [required]="true" label="Giá trị đo tối đa"
+                        [control]="$any(validateForm).controls['maxCount']"></app-input-clear>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <app-input-clear placeholder="Tổng chỉ số ước tính trên năm" [required]="true"
+                        label="Tổng chỉ số ước tính trên năm" [control]="$any(validateForm).controls['yearCount']"
+                       ></app-input-clear>
+                </div>
+
+                <nz-form-item>
+                    <nz-form-label>Trạng thái</nz-form-label>
+                    <nz-form-control>
+                        <nz-radio-group formControlName="isActive">
+                            <label nz-radio [nzValue]="true">Kích hoạt</label>
+                            <label nz-radio [nzValue]="false">Khoá</label>
+                        </nz-radio-group>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </form>
+
+    </ng-container>
+</nz-drawer>
+<ng-template #extra>
+    <nz-space>
+        <ng-container *ngIf="edit && globalService.checkPermissions('R8.1.2')">
+            <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+                (click)="submitForm()">
+                <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+            </button>
+        </ng-container>
+        <ng-container *ngIf="!edit">
+            <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+                (click)="submitForm()">
+                <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+            </button>
+        </ng-container>
+        <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+            (click)="close()">
+            <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+        </button>
+    </nz-space>
+</ng-template>

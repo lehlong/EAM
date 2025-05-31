@@ -7,6 +7,8 @@
         public int PageSize { get; set; } = 50;
 
         public string? KeyWord { get; set; }
+        public string? Equnr { get; set; }
+        public string? Point { get; set; }
 
         public bool? IsActive { get; set; }
 

@@ -151,12 +151,28 @@ export class GlobalService {
     return data.find((item) => item.equnr === code)?.eqktx;
   }
 
+   getNameUnit(
+    data: { code: string; name: string }[] = [],
+    code: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !code) return undefined;
+    return data.find((item) => item.code === code)?.name;
+  }
+
   getNameWc(
     data: { arbpl: string; arbplTxt: string }[] = [],
     code: string | null | undefined
   ): string | undefined {
     if (!Array.isArray(data) || !code) return undefined;
     return data.find((item) => item.arbpl === code)?.arbplTxt;
+  }
+
+  getNamePoint(
+    data: { point: string; pttxt: string }[] = [],
+    code: string | null | undefined
+  ): string | undefined {
+    if (!Array.isArray(data) || !code) return undefined;
+    return data.find((item) => item.point === code)?.pttxt;
   }
 
   getNameEqGroup(

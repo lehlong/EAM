@@ -11,6 +11,7 @@ import { masterDataRoutes } from './@master-data/master-data.routes';
 import { incidentRoutes } from './@incident/incident.routes';
 import { warehouseRoutes } from './@warehouse/warehouse.route';
 import { planRoutes } from './@plan/plan.route';
+import { counterRoutes } from './@counter/counter.route';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,11 @@ export const routes: Routes = [
       {
         path: 'master-data',
         children: masterDataRoutes,
+        canActivate: [AuthGuard],
+      },
+       {
+        path: 'counter',
+        children: counterRoutes,
         canActivate: [AuthGuard],
       },
       { path: 'incident', children: incidentRoutes, canActivate: [AuthGuard] },
