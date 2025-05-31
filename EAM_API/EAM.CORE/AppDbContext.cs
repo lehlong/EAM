@@ -152,6 +152,7 @@ namespace EAM.CORE
         public DbSet<TblMdClassD> TblMdClassD { get; set; }
         public DbSet<TblMdCatalog> TblMdCatalog { get; set; }
         public DbSet<TblMdAsset> TblMdAsset { get; set; }
+        public DbSet<TblMdEqCounter> TblMdEqCounter { get; set; }
         #endregion
 
         #region Transaction Data

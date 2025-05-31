@@ -68,3 +68,7 @@ export const OrderStatus = [
   { name: 'Đang thực hiện', value: '07' },
   { name: 'Hoàn thành', value: '04' },
 ];
+export const mptyp = [
+  { name: 'Giá trị lũy kế', value: '01' },
+  { name: 'Chỉ số đo', value: '02' },
+];

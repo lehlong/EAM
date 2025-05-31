@@ -156,4 +156,10 @@ export class DropdownService {
       IsActive,
     })
   }
+   getAllEquip(params: any = {}, IsActive: boolean = true): Observable<any> {
+    return this.commonService.get('Equip/GetAll', {
+      ...params,
+      IsActive,
+    })
+  }
 }

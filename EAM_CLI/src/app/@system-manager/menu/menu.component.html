@@ -76,7 +76,7 @@
     </button>
   </nz-space> -->
     <nz-space>
-    <ng-container *ngIf="globalService.checkPermissions('R1.3.2')">
+    <ng-container *ngIf="edit && globalService.checkPermissions('R1.3.2')">
       <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
         (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
