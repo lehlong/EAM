@@ -33,7 +33,7 @@ export class AccountGroupEditComponent implements OnInit {
     private fb: FormBuilder,
     private dropdownService: DropdownService,
     private authService: AuthService,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
   ) {
     this.validateForm = this.fb.group({
       name: ['', [Validators.required]],

@@ -20,7 +20,7 @@
       </button>
     </div>
   </nz-page-header-extra>
-  <nz-page-header-content class="main-content">
+  <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R6.2.1')">
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
       <thead>
         <tr>

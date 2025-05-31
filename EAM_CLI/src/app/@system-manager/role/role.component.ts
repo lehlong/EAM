@@ -31,7 +31,7 @@ export class RoleComponent implements OnInit {
   constructor(
     private _service: RightService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
   ) {

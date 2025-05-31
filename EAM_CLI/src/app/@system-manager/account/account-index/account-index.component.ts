@@ -48,7 +48,7 @@ export class AccountIndexComponent {
   constructor(
     private dropdownService: DropdownService,
     private _as: AccountService,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private route: ActivatedRoute,
     private router: Router,
     private _sAccountType : AccountTypeService

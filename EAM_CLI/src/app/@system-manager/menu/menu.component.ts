@@ -36,7 +36,7 @@ export class MenuComponent {
   constructor(
     private _service: MenuService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
   ) {
@@ -156,7 +156,12 @@ export class MenuComponent {
     }
     if (this.tabIndex == 0) {
       if (this.edit) {
-        this._service.Update(this.validateForm.getRawValue()).subscribe({
+        const formData = this.validateForm.getRawValue()
+        const updateData = {
+        ...formData,
+        RightReferences: this.menuRight,
+      }
+        this._service.Update(updateData).subscribe({
           next: (data) => {
             this.getMenus()
           },

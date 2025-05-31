@@ -81,12 +81,14 @@
   </nz-tabset>
 </nz-drawer>
 <ng-template #extra>
-  <nz-space>
+  <nz-space >
+    <ng-container *ngIf=" globalService.checkPermissions('R1.4.2')">
     <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
       (click)="submitForm()">
       <!-- [appPermission]="ACCOUNT_GROUP_RIGHTS.EDIT" -->
       <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
     </button>
+    </ng-container>
     <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
       (click)="close()">
       <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ

@@ -20,7 +20,7 @@
     </div>
   </nz-page-header-extra>
 
-  <nz-page-header-content class="main-content">
+  <nz-page-header-content class="main-content"  *ngIf="globalService.checkPermissions('R1.2.1')">
     <nz-tree #treeCom class="!pl-[10px] overflow-auto" [nzData]="nodes" nzDraggable nzBlockNode
       (nzOnDrop)="nzEvent($event)" [nzSearchValue]="searchValue" (nzExpandChange)="nzEvent($event)"
       (nzSearchValueChange)="nzEvent($event)" (nzOnDrop)="onDrop($event)" (nzOnDragStart)="onDragStart($event)"
@@ -28,7 +28,7 @@
       <ng-template #nzTreeTemplate let-node>
         <div class="flex justify-between pr-8 note_title">
           <div class="flex-1" (click)="onClick(node)">{{ node.title }}</div>
-          <div>
+          <div  *ngIf="globalService.checkPermissions('R1.2.3')">
             <span nz-icon (click)="openCreateChild(node)" nzType="plus-circle" nzTheme="twotone"></span>
             <nz-divider nzType="vertical"></nz-divider>
             <span nz-popconfirm nzPopconfirmTitle="Bạn có muốn xóa quyền này?" nzPopconfirmPlacement="bottom"
@@ -62,11 +62,29 @@
 </nz-drawer>
 
 <ng-template #extra>
-  <nz-space>
+  <!-- <nz-space>
     <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center" (click)="submitForm()">
       <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
     </button>
     <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center" nzDanger (click)="close()">
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
+  </nz-space> -->
+   <nz-space>
+    <ng-container *ngIf="globalService.checkPermissions('R1.2.2')">
+      <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!edit">
+      <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+      (click)="close()">
       <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
     </button>
   </nz-space>

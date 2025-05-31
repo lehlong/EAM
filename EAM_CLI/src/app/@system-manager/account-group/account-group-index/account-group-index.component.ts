@@ -25,7 +25,7 @@ export class AccountGroupIndexComponent {
   idDetail: number | string = 0;
   loading: boolean = false;
   ADMIN_RIGHTS = ADMIN_RIGHTS
-  constructor(private _service: AccountGroupService, private globalService: GlobalService) {
+  constructor(private _service: AccountGroupService, public globalService: GlobalService) {
     this.globalService.setBreadcrumb([
       {
         name: 'Danh sách nhóm tài khoản',

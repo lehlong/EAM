@@ -30,7 +30,7 @@ export class ItemComponent {
   constructor(
     private _service: ItemService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService,
     private dropdown: DropdownService
   ) {

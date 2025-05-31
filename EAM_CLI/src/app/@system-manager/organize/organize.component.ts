@@ -33,7 +33,7 @@ export class OrganizeComponent implements OnInit {
   constructor(
     private _service: OrganizeService,
     private fb: NonNullableFormBuilder,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private message: NzMessageService,
   ) {
     this.validateForm = this.fb.group({

@@ -61,7 +61,7 @@
             </div>
           </td>
            <td>
-                <button nz-button nzType="default" (click)="exportNoti(data.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /></button>
+                <button  *ngIf="_global.checkPermissions('R5.3.2')" nz-button nzType="default" (click)="exportNoti(data.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /></button>
               </td>
         </tr>
       </tbody>
@@ -607,9 +607,9 @@
     <nz-icon nzType="close" nzTheme="outline" />Từ chối
   </button>
   &nbsp;
-  <button nz-button nzType="default" (click)="exportNoti(model.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /> In sự cố</button>
+  <button *ngIf="_global.checkPermissions('R5.3.2')" nz-button nzType="default" (click)="exportNoti(model.qmnum)"><nz-icon nzType="printer" nzTheme="outline" /> In sự cố</button>
    &nbsp;
   <button nz-button nzType="default" (click)="closeDetail()">Đóng</button>
   &nbsp;
-  <button nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>
+  <button *ngIf="_global.checkPermissions('R5.3.1')" nz-button nzType="primary" (click)="updateDetail()">Cập nhật</button>
 </ng-template>

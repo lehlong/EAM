@@ -61,7 +61,7 @@ export class AccountEditComponent {
     private accountGroupService: AccountGroupService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private _sAccountType: AccountTypeService
   ) {
     this.validateForm = this.fb.group({
