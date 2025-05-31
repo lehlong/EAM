@@ -19,7 +19,7 @@ export class EquipCharService {
   }
 
   create(params: any): Observable<any> {
-    return this.commonService.post('EquipChar/Insert', params)
+    return this.commonService.post('EquipChar/Insert', params, false)
   }
 
   update(params: any): Observable<any> {

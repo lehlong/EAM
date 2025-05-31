@@ -14,11 +14,13 @@
           <span nz-icon nzType="redo"></span>
         </button>
       </nz-space>
-      <button *ngIf="_global.checkPermissions('R.3.7.3')"   (click)="openCreate()" class="!flex !items-center space-btn" nzType="primary" nz-button>
+      <button *ngIf="_global.checkPermissions('R.3.7.3')" (click)="openCreate()" class="!flex !items-center space-btn"
+        nzType="primary" nz-button>
         <span nz-icon nzType="plus-circle"></span> Thêm mới
       </button>
-      <button *ngIf="_global.checkPermissions('R.3.7.4')"   (click)="exportExcel()" class="!flex !items-center !border-l-0"
-        style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button>
+      <button *ngIf="_global.checkPermissions('R.3.7.4')" (click)="exportExcel()"
+        class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;"
+        nz-button>
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
     </div>
@@ -75,8 +77,8 @@
           <label>Đơn vị bảo trì</label>
           <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Đơn vị bảo trì" [(ngModel)]="filter.iwerk"
             (ngModelChange)="search()">
-            <nz-option option cdkScrollable *ngFor="let item of lstPlant"
-                        [nzLabel]="item.iwerk + ' - ' +item.iwerkTxt" [nzValue]="item.iwerk">
+            <nz-option option cdkScrollable *ngFor="let item of lstPlant" [nzLabel]="item.iwerk + ' - ' +item.iwerkTxt"
+              [nzValue]="item.iwerk">
             </nz-option>
           </nz-select>
         </div>
@@ -109,9 +111,10 @@
 
 
   </nz-page-header-content>
-  <nz-page-header-content class="main-content" style="height: calc(-344px + 100vh);" *ngIf="_global.checkPermissions('R.3.7.1')"   >
+  <nz-page-header-content class="main-content" style="height: calc(-344px + 100vh);"
+    *ngIf="_global.checkPermissions('R.3.7.1')">
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false"
-      nzBordered [nzSize]="'middle'" >
+      nzBordered [nzSize]="'middle'">
       <thead>
         <tr>
           <th nzWidth="60px">STT</th>
@@ -358,19 +361,63 @@
             </div>
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear label="Vĩ độ"
-                  [control]="$any(validateForm).controls['lat']"></app-input-clear>
+                <app-input-clear label="Vĩ độ" [control]="$any(validateForm).controls['lat']"></app-input-clear>
               </div>
             </div>
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <app-input-clear label="Kinh độ"
-                  [control]="$any(validateForm).controls['long']"></app-input-clear>
+                <app-input-clear label="Kinh độ" [control]="$any(validateForm).controls['long']"></app-input-clear>
               </div>
             </div>
 
           </div>
         </nz-tab>
+
+        <nz-tab nzTitle="Thông số kỹ thuật">
+          <nz-table #charTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEqChar">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th style="width: 20%">Nhóm đặc tính</th>
+                <th style="width: 20%">Đặc tính</th>
+                <th>Giá trị</th>
+                <th>Mô tả thêm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of charTable.data; let i = index">
+                <td>{{ 1 + i}}</td>
+                <td *ngIf="data.id != 'A'">{{_global.getNameClassH(lstClassH, data.classH)}}
+                </td>
+                <td *ngIf="data.id != 'A'">{{_global.getNameClassD(lstClassD, data.classD)}}</td>
+                <td *ngIf="data.id == 'A'">
+                  <nz-select nzShowSearch [(ngModel)]="data.classH" [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="onChangeClassH($event)">
+                    <nz-option *ngFor="let item of lstClassH" [nzLabel]="item.class + ' - '+item.classTxt"
+                      [nzValue]="item.class">
+                    </nz-option>
+                  </nz-select>
+                </td>
+                <td *ngIf="data.id == 'A'">
+                  <nz-select nzShowSearch [(ngModel)]="data.classD" [ngModelOptions]="{ standalone: true }">
+                    <nz-option *ngFor="let item of lstClassDSelect" [nzLabel]="item.atnam + ' - '+item.aname"
+                      [nzValue]="item.id">
+                    </nz-option>
+                  </nz-select>
+                </td>
+                <td><input type="text" nz-input [(ngModel)]="data.value" [ngModelOptions]="{ standalone: true }"></td>
+                <td><input type="text" nz-input [(ngModel)]="data.note" [ngModelOptions]="{ standalone: true }"></td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <button type="button" nz-button nzType="dashed" (click)="addEqChar()">
+              <nz-icon nzType="plus" />
+              Thêm thông số
+            </button>
+          </div>
+        </nz-tab>
+
         <nz-tab nzTitle="Hình ảnh">
           <div class="image-upload-container">
             <div class="upload-section" *ngIf="edit || !edit">
@@ -407,55 +454,12 @@
             <nz-empty *ngIf="!equipPictures || equipPictures.length === 0"
               nzNotFoundContent="Chưa có hình ảnh cho thiết bị này"></nz-empty>
           </div>
-
-          <!-- Image preview -->
           <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
             (nzOnCancel)="handlePreviewCancel()">
             <ng-template #modalContent>
               <img [src]="previewImage" style="width: 100%;" />
             </ng-template>
           </nz-modal>
-        </nz-tab>
-        <nz-tab nzTitle="Thông số kỹ thuật">
-          <nz-table #charTable [nzShowPagination]="false" nzSize="small" [nzData]="lstEqChar">
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th style="width: 20%">Nhóm đặc tính</th>
-                <th style="width: 20%">Đặc tính</th>
-                <th>Giá trị</th>
-                <th>Mô tả thêm</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of charTable.data; let i = index">
-                <td>{{ 1 + i}}</td>
-                <td>
-                  <nz-select nzShowSearch [(ngModel)]="data.classH" [ngModelOptions]="{ standalone: true }"
-                    (ngModelChange)="onChangeClassH($event)">
-                    <nz-option *ngFor="let item of lstClassH" [nzLabel]="item.class + ' - '+item.classTxt"
-                      [nzValue]="item.class">
-                    </nz-option>
-                  </nz-select>
-                </td>
-                <td>
-                  <nz-select nzShowSearch [(ngModel)]="data.classD" [ngModelOptions]="{ standalone: true }">
-                    <nz-option *ngFor="let item of lstClassDSelect" [nzLabel]="item.atnam + ' - '+item.aname"
-                      [nzValue]="item.id">
-                    </nz-option>
-                  </nz-select>
-                </td>
-                <td><input type="text" nz-input [(ngModel)]="data.value" [ngModelOptions]="{ standalone: true }"></td>
-                <td><input type="text" nz-input [(ngModel)]="data.note" [ngModelOptions]="{ standalone: true }"></td>
-              </tr>
-            </tbody>
-          </nz-table>
-          <div style="display: flex; justify-content: center; margin-top: 20px;">
-            <button type="button" nz-button nzType="dashed" (click)="addEqChar()">
-              <nz-icon nzType="plus" />
-              Thêm thông số
-            </button>
-          </div>
         </nz-tab>
 
         <nz-tab nzTitle="File đính kèm">

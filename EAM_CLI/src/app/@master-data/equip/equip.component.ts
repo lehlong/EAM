@@ -16,13 +16,11 @@ import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { CommonService } from '../../service/common.service';
 import { environment } from '../../../environments/environment';
-import { OrganizeService } from '../../service/system-manager/organize.service';
 import { UsageStatusService } from '../../service/master-data/usage-status.service';
 import { ActiveStatusService } from '../../service/master-data/active-status.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { EquipFilter } from '../../filter/master-data/equiq-filter';
 import { EquipCharService } from '../../service/master-data/equiq-char.service';
-import { EquiqCharModel } from '../../models/master-data/eqchar.model';
 import { Router } from '@angular/router';
 import { ClassHService } from '../../service/master-data/class-h.service';
 import { ClassDService } from '../../service/master-data/class-d.service';
@@ -37,7 +35,6 @@ import * as L from 'leaflet';
   styleUrl: './equip.component.scss',
 })
 export class EquipComponent {
-
   private map: L.Map | undefined;
   validateForm: FormGroup;
   isSubmit: boolean = false;
@@ -56,7 +53,6 @@ export class EquipComponent {
   lstUsageStatus: any = [];
   lstActiveStatus: any = [];
   lstAccount: any = [];
-  lstEqChar: any = [];
   loading: boolean = false;
   lat: number = 0;
   lng: number = 0;
@@ -73,9 +69,10 @@ export class EquipComponent {
   picFileList: NzUploadFile[] = [];
   currentEquipCode: string = '';
   selectedDocType: string = '';
-  lstClassH : any[] = []
-  lstClassD : any[] = []
-  lstClassDSelect : any[] = []
+  lstEqChar: any[] = []
+  lstClassH: any[] = []
+  lstClassD: any[] = []
+  lstClassDSelect: any[] = []
 
   constructor(
     private _sAccount: AccountService,
@@ -95,8 +92,8 @@ export class EquipComponent {
     private commonService: CommonService,
     private _sEqChar: EquipCharService,
     private router: Router,
-    private classH : ClassHService,
-    private classD : ClassDService
+    private classH: ClassHService,
+    private classD: ClassDService
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
@@ -139,6 +136,25 @@ export class EquipComponent {
     this.getMasterData();
   }
 
+  close() {
+    this.isSubmit = false;
+    this.visible = false;
+    this.map = undefined;
+    this.lat = 0;
+    this.lng = 0;
+    this.equipDocuments = [];
+    this.equipPictures = [];
+    this.uploadingDoc = false;
+    this.uploadingPic = false;
+    this.previewImage = '';
+    this.previewVisible = false;
+    this.docFileList = [];
+    this.picFileList = [];
+    this.currentEquipCode = '';
+    this.selectedDocType = '';
+    this.resetForm();
+  }
+
   onTabChange(index: number): void {
     if (index === 4) {
       if (!this.map) {
@@ -149,8 +165,6 @@ export class EquipComponent {
     }
   }
   private initMap(): void {
-   // const lat = 10.762622;
-   // const lng = 106.660172;
     this.map = L.map('equip-map').setView([this.lat, this.lng], 16);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -212,7 +226,6 @@ export class EquipComponent {
     this.isSubmit = false;
     this._service.search(this.filter).subscribe({
       next: (data) => {
-       console.log('data', data);
         this.paginationResult = data;
       },
       error: (response) => {
@@ -221,23 +234,8 @@ export class EquipComponent {
     });
   }
 
-  onChangeClassH(e : any){
+  onChangeClassH(e: any) {
     this.lstClassDSelect = this.lstClassD.filter(x => x.class == e)
-  }
-
-  getNameEquart(code: string) {
-    return this.lstEqGroup.find((x: { eqart: string }) => x.eqart == code)
-      ?.eqartTxt;
-  }
-
-  getNameFloc(code: string) {
-    return this.lstFloc.find((x: { tplnr: string }) => x.tplnr == code)
-      ?.descript;
-  }
-
-  getEquipmentCategoryName(code: string) {
-    return this.lstEqCat.find((x: { eqtyp: string }) => x.eqtyp == code)
-      ?.eqtypTxt;
   }
 
   setValueCat(code: any) {
@@ -258,7 +256,6 @@ export class EquipComponent {
       if (this.edit) {
         this._service.update(this.validateForm.getRawValue()).subscribe({
           next: (data) => {
-            this.message.success('Cập nhật thiết bị thành công!');
             this.search();
           },
           error: (response) => {
@@ -266,7 +263,7 @@ export class EquipComponent {
           },
         });
         this._sEqChar.create(this.lstEqChar).subscribe({
-          next: (data) => {},
+          next: (data) => { },
           error: (response) => {
             console.log(response);
           },
@@ -281,7 +278,6 @@ export class EquipComponent {
         }
         this._service.create(this.validateForm.getRawValue()).subscribe({
           next: (data) => {
-            this.message.success('Tạo thiết bị mới thành công!');
             this.currentEquipCode = this.validateForm.get('equnr')?.value;
             this.edit = true;
             this.search();
@@ -291,7 +287,7 @@ export class EquipComponent {
           },
         });
         this._sEqChar.create(this.lstEqChar).subscribe({
-          next: (data) => {},
+          next: (data) => { },
           error: (response) => {
             console.log(response);
           },
@@ -307,15 +303,6 @@ export class EquipComponent {
     }
   }
 
-  close() {
-    this.visible = false;
-    this.selectedDocType = '';
-    this.equipDocuments = [];
-    this.equipPictures = [];
-    this.currentEquipCode = '';
-    this.lstEqChar = [];
-  }
-
   reset() {
     this.filter = new BaseFilter();
     this.search();
@@ -324,8 +311,6 @@ export class EquipComponent {
   openCreate() {
     this.edit = false;
     this.visible = true;
-    this.resetForm();
-
     this.equipDocuments = [];
     this.equipPictures = [];
     this.docFileList = [];
@@ -343,7 +328,6 @@ export class EquipComponent {
       this.message.warning('Vui lòng chọn thiết bị trước khi tạo sự cố');
       return;
     }
-
     const queryParams = {
       equnr: this.currentEquipCode,
       eqart: this.validateForm.value.eqart,
@@ -372,7 +356,6 @@ export class EquipComponent {
   openEdit(data: any) {
     this.edit = true;
     this.visible = true;
-    this.resetForm();
     this.validateForm.patchValue(data);
     this.currentEquipCode = data.equnr;
     this.lat = data.lat || 0;
@@ -385,8 +368,8 @@ export class EquipComponent {
         console.log(response);
       },
     });
-    this.loadEquipDocuments(data.equnr);
-    this.loadEquipPictures(data.equnr);
+    this.loadEquipFiles(this._serviceEquipDoc, 'equipDocuments', data.equnr);
+    this.loadEquipFiles(this._serviceEquipPic, 'equipPictures', data.equnr);
   }
 
   pageSizeChange(size: number): void {
@@ -399,264 +382,121 @@ export class EquipComponent {
     this.filter.currentPage = index;
     this.search();
   }
-  loadEquipDocuments(equnr: string) {
-    this._serviceEquipDoc.getByEqunr(equnr).subscribe({
+
+  loadEquipFiles(
+    service: { getByEqunr: (equnr: string) => Observable<any[]> },
+    target: 'equipDocuments' | 'equipPictures',
+    equnr: string,
+  ) {
+    service.getByEqunr(equnr).subscribe({
       next: (data) => {
-        this.equipDocuments = data;
-        this.equipDocuments.forEach((i) => {
-          i.path = environment.urlFiles + '/' + i.path;
-        });
+        this[target] = data.map(i => ({
+          ...i,
+          path: `${environment.urlFiles}/${i.path}`
+        }));
       },
       error: (error) => {
-        console.error('Error loading equipment documents:', error);
+        console.error(error);
       },
     });
   }
 
-  loadEquipPictures(equnr: string) {
-    this._serviceEquipPic.getByEqunr(equnr).subscribe({
-      next: (data) => {
-        this.equipPictures = data;
-        this.equipPictures.forEach((i) => {
-          i.path = environment.urlFiles + '/' + i.path;
-        });
-      },
-      error: (error) => {
-        console.error('Error loading equipment pictures:', error);
-      },
-    });
-  }
-
-  // Document upload beforeUpload handler
-  beforeDocUpload = (file: NzUploadFile): Observable<boolean> => {
+  private validateUploadFile(file: NzUploadFile, isImage: boolean = false): Observable<boolean> {
     return new Observable((observer: Observer<boolean>) => {
       try {
-        console.log('Document beforeUpload:', {
-          file: 'File object exists: ' + (file !== null && file !== undefined),
-          filename: file?.name || 'N/A',
-          filetype: file?.type || 'N/A',
-        });
-
-        if (!file || !file.name) {
+        if (!file?.name) {
           this.message.error('Lỗi: File không hợp lệ');
           observer.next(false);
-          observer.complete();
-          return;
-        }
-
-        observer.next(true);
-        observer.complete();
-      } catch (err) {
-        console.error('Error in beforeDocUpload:', err);
-        observer.next(false);
-        observer.complete();
-      }
-    });
-  };
-
-  // Picture upload beforeUpload handler
-  beforePicUpload = (file: NzUploadFile): Observable<boolean> => {
-    return new Observable((observer: Observer<boolean>) => {
-      try {
-        console.log('Picture beforeUpload:', {
-          file: 'File object exists: ' + (file !== null && file !== undefined),
-          filename: file?.name || 'N/A',
-          filetype: file?.type || 'N/A',
-        });
-
-        if (!file || !file.name) {
-          this.message.error('Lỗi: File không hợp lệ');
+        } else if (typeof file.size !== 'number' || file.size > 10 * 1024 * 1024) {
+          this.message.error('Dung lượng file vượt quá 10MB');
           observer.next(false);
-          observer.complete();
-          return;
-        }
-
-        const isImageType = file.type?.startsWith('image/');
-        if (!isImageType) {
+        } else if (isImage && !file.type?.startsWith('image/')) {
           this.message.error('Bạn chỉ có thể tải lên file hình ảnh!');
           observer.next(false);
-          observer.complete();
-          return;
+        } else {
+          observer.next(true);
         }
-
-        observer.next(true);
-        observer.complete();
       } catch (err) {
-        console.error('Error in beforePicUpload:', err);
+        console.error(`Lỗi khi kiểm tra file ${isImage ? 'ảnh' : 'tài liệu'}:`, err);
         observer.next(false);
+      } finally {
         observer.complete();
       }
     });
-  };
+  }
 
-  // Handle document upload custom request
-  handleDocUpload = (item: NzUploadXHRArgs): Subscription => {
+  beforeDocUpload = (file: NzUploadFile): Observable<boolean> => this.validateUploadFile(file);
+  beforePicUpload = (file: NzUploadFile): Observable<boolean> => this.validateUploadFile(file, true);
+
+  private handleUpload = (
+    item: NzUploadXHRArgs,
+    type: 'doc' | 'pic'
+  ): Subscription => {
     try {
-      // Check if item and file exist
-      if (!item || !item.file) {
-        this.message.error('Lỗi khi tải lên: Không tìm thấy file');
-        return new Subscription();
-      }
-
-      // Get the actual File object (not the NzUploadFile wrapper)
-      const file = item.file.originFileObj as File;
-
-      // Check if file is valid
+      const file = item?.file?.originFileObj as File;
       if (!file) {
         this.message.error('Lỗi khi tải lên: File không hợp lệ');
-        item.onError!(new Error('Invalid file object'), item.file);
+        item?.onError?.(new Error('Invalid file object'), item.file);
         return new Subscription();
       }
 
-      // Check if we have a valid equipment code
-      if (!this.currentEquipCode) {
-        // If creating a new equipment, use the form value
-        this.currentEquipCode = this.validateForm.get('equnr')?.value;
-
-        if (!this.currentEquipCode) {
-          this.message.error(
-            'Bạn cần nhập mã thiết bị trước khi tải lên tài liệu!'
-          );
-          item.onError!(new Error('Missing equipment code'), item.file);
-          return new Subscription();
-        }
+      const equnr = (this.currentEquipCode || this.validateForm.get('equnr')?.value)?.trim().replace(/[\r\n]+/g, '');
+      if (!equnr) {
+        this.message.error(`Bạn cần nhập mã thiết bị trước khi tải lên ${type === 'doc' ? 'tài liệu' : 'hình ảnh'}!`);
+        item.onError?.(new Error('Missing equipment code'), item.file);
+        return new Subscription();
       }
 
-      // Clean the equnr value by removing any whitespace and newline characters
-      const cleanEqunr = this.currentEquipCode.trim().replace(/[\r\n]+/g, '');
-
-      // Log the values being sent to help debug
-      console.log('Uploading document with params:', {
-        file: 'File object exists: ' + (file !== null && file !== undefined),
-        filename: file?.name || 'N/A',
-        filesize: file?.size || 'N/A',
-        filetype: file?.type || 'N/A',
-        equnr: cleanEqunr,
-        docType: this.selectedDocType,
-      });
-
-      this.uploadingDoc = true;
-
-      // Directly create FormData to ensure it's constructed correctly
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('equnr', cleanEqunr);
-      if (this.selectedDocType) {
+      formData.append('equnr', equnr);
+      if (type === 'doc' && this.selectedDocType) {
         formData.append('docType', this.selectedDocType);
       }
 
-      // Use the CommonService directly with the constructed FormData
-      return this.commonService.post('EquipDoc/Upload', formData).subscribe({
+      if (type === 'doc') this.uploadingDoc = true;
+      else this.uploadingPic = true;
+
+      const apiPath = type === 'doc' ? 'EquipDoc/Upload' : 'EquipPic/Upload';
+
+      return this.commonService.post(apiPath, formData).subscribe({
         next: (data) => {
-          this.uploadingDoc = false;
-          this.message.success('Tải lên tài liệu thành công!');
-          this.loadEquipDocuments(cleanEqunr);
-          item.onSuccess!(data, item.file, null);
+          if (type === 'doc') {
+            this.uploadingDoc = false;
+            this.message.success('Tải lên tài liệu thành công!');
+            this.loadEquipFiles(this._serviceEquipDoc, 'equipDocuments', equnr);
+          } else {
+            this.uploadingPic = false;
+            this.message.success('Tải lên hình ảnh thành công!');
+            this.loadEquipFiles(this._serviceEquipPic, 'equipPictures', equnr);
+          }
+          item.onSuccess?.(data, item.file, null);
         },
         error: (error) => {
-          this.uploadingDoc = false;
+          if (type === 'doc') this.uploadingDoc = false;
+          else this.uploadingPic = false;
           console.error('Upload error:', error);
-          this.message.error(
-            'Tải lên tài liệu thất bại: ' + (error.message || error.status)
-          );
-          item.onError!(error, item.file);
-        },
-      });
-    } catch (err) {
-      console.error('Exception during document upload:', err);
-      this.message.error('Lỗi không xác định khi tải lên tài liệu');
-      if (item && item.onError) {
-        item.onError(err as Error, item.file);
-      }
-      return new Subscription();
-    }
-  };
-
-  // Handle picture upload custom request
-  handlePicUpload = (item: NzUploadXHRArgs): Subscription => {
-    try {
-      // Check if item and file exist
-      if (!item || !item.file) {
-        this.message.error('Lỗi khi tải lên: Không tìm thấy file');
-        return new Subscription();
-      }
-
-      // Get the actual File object (not the NzUploadFile wrapper)
-      const file = item.file.originFileObj as File;
-
-      // Check if file is valid
-      if (!file) {
-        this.message.error('Lỗi khi tải lên: File không hợp lệ');
-        item.onError!(new Error('Invalid file object'), item.file);
-        return new Subscription();
-      }
-
-      // Check if we have a valid equipment code
-      if (!this.currentEquipCode) {
-        // If creating a new equipment, use the form value
-        this.currentEquipCode = this.validateForm.get('equnr')?.value;
-
-        if (!this.currentEquipCode) {
-          this.message.error(
-            'Bạn cần nhập mã thiết bị trước khi tải lên hình ảnh!'
-          );
-          item.onError!(new Error('Missing equipment code'), item.file);
-          return new Subscription();
+          this.message.error(`Tải lên ${type === 'doc' ? 'tài liệu' : 'hình ảnh'} thất bại: ${error.message || error.status}`);
+          item.onError?.(error, item.file);
         }
-      }
-
-      // Clean the equnr value by removing any whitespace and newline characters
-      const cleanEqunr = this.currentEquipCode.trim().replace(/[\r\n]+/g, '');
-
-      // Log the values being sent to help debug
-      console.log('Uploading picture with params:', {
-        file: 'File object exists: ' + (file !== null && file !== undefined),
-        filename: file?.name || 'N/A',
-        filesize: file?.size || 'N/A',
-        filetype: file?.type || 'N/A',
-        equnr: cleanEqunr,
-      });
-
-      this.uploadingPic = true;
-
-      // Directly create FormData to ensure it's constructed correctly
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('equnr', cleanEqunr);
-
-      // Use the CommonService directly with the constructed FormData
-      return this.commonService.post('EquipPic/Upload', formData).subscribe({
-        next: (data) => {
-          this.uploadingPic = false;
-          this.message.success('Tải lên hình ảnh thành công!');
-          this.loadEquipPictures(cleanEqunr);
-          item.onSuccess!(data, item.file, null);
-        },
-        error: (error) => {
-          this.uploadingPic = false;
-          console.error('Upload error:', error);
-          this.message.error(
-            'Tải lên hình ảnh thất bại: ' + (error.message || error.status)
-          );
-          item.onError!(error, item.file);
-        },
       });
     } catch (err) {
-      console.error('Exception during picture upload:', err);
-      this.message.error('Lỗi không xác định khi tải lên hình ảnh');
-      if (item && item.onError) {
-        item.onError(err as Error, item.file);
-      }
+      console.error('Exception during upload:', err);
+      this.message.error(`Lỗi không xác định khi tải lên ${type === 'doc' ? 'tài liệu' : 'hình ảnh'}`);
+      item?.onError?.(err as Error, item.file);
       return new Subscription();
     }
   };
 
-  // Delete equipment document
+  handleDocUpload = (item: NzUploadXHRArgs): Subscription => this.handleUpload(item, 'doc');
+  handlePicUpload = (item: NzUploadXHRArgs): Subscription => this.handleUpload(item, 'pic');
+
+
   deleteDocument(id: string): void {
     this._serviceEquipDoc.delete(id).subscribe({
       next: () => {
         this.message.success('Xóa tài liệu thành công!');
-        this.loadEquipDocuments(this.currentEquipCode);
+        this.loadEquipFiles(this._serviceEquipDoc, 'equipDocuments', this.currentEquipCode);
       },
       error: (error) => {
         this.message.error('Xóa tài liệu thất bại!');
@@ -665,12 +505,11 @@ export class EquipComponent {
     });
   }
 
-  // Delete equipment picture
   deletePicture(id: string): void {
     this._serviceEquipPic.delete(id).subscribe({
       next: () => {
         this.message.success('Xóa hình ảnh thành công!');
-        this.loadEquipPictures(this.currentEquipCode);
+        this.loadEquipFiles(this._serviceEquipPic, 'equipPictures', this.currentEquipCode);
       },
       error: (error) => {
         this.message.error('Xóa hình ảnh thất bại!');
@@ -679,83 +518,55 @@ export class EquipComponent {
     });
   }
 
-  // Preview image
   handlePreview = async (file: NzUploadFile): Promise<void> => {
     if (!file.url && !file['preview']) {
-      file['preview'] = await this.getBase64(file.originFileObj!);
+      file['preview'] = await this._global.getBase64(file.originFileObj!);
     }
     this.previewImage = file.url || file['preview'];
     this.previewVisible = true;
   };
 
-  getBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result!.toString());
-      reader.onerror = (error) => reject(error);
-    });
-
-  // Close image preview
   handlePreviewCancel = (): void => {
     this.previewVisible = false;
     this.previewImage = '';
   };
 
-  handlePicUploadChange(info: any): void {
-    if (info.file.status === 'uploading') {
-      this.uploadingPic = true;
+  handleUploadChange(info: any, type: 'pic' | 'doc'): void {
+    const isUploading = info.file.status === 'uploading';
+    const isDone = info.file.status === 'done';
+    const isError = info.file.status === 'error';
+
+    if (isUploading) {
+      type === 'pic' ? this.uploadingPic = true : this.uploadingDoc = true;
       return;
     }
 
-    if (info.file.status === 'done') {
-      this.uploadingPic = false;
-      if (info.file.response && info.file.response.status) {
-        this.message.success('Tải lên hình ảnh thành công!');
-        info.file.url = info.file.response.data?.path;
-        this.loadEquipPictures(
-          this.currentEquipCode || this.validateForm.get('equnr')?.value
-        );
+    if (isDone) {
+      type === 'pic' ? this.uploadingPic = false : this.uploadingDoc = false;
+
+      if (info.file.response?.status) {
+        this.message.success(`Tải lên ${type === 'pic' ? 'hình ảnh' : 'tài liệu'} thành công!`);
+        if (type === 'pic') {
+          info.file.url = info.file.response.data?.path;
+          this.loadEquipFiles(this._serviceEquipPic, 'equipPictures', this.currentEquipCode || this.validateForm.get('equnr')?.value);
+        } else {
+          this.loadEquipFiles(this._serviceEquipDoc, 'equipDocuments', this.currentEquipCode || this.validateForm.get('equnr')?.value);
+        }
       } else {
-        this.message.error(
-          'Tải lên hình ảnh thất bại: ' +
-            (info.file.response?.messageObject?.message || 'Lỗi không xác định')
-        );
+        this.message.error(`Tải lên ${type === 'pic' ? 'hình ảnh' : 'tài liệu'} thất bại: ${info.file.response?.messageObject?.message || 'Lỗi không xác định'}`);
       }
-    } else if (info.file.status === 'error') {
-      this.uploadingPic = false;
-      this.message.error(
-        'Tải lên hình ảnh thất bại: ' +
-          (info.file.error?.status || 'Lỗi không xác định')
-      );
+
+    } else if (isError) {
+      type === 'pic' ? this.uploadingPic = false : this.uploadingDoc = false;
+      this.message.error(`Tải lên ${type === 'pic' ? 'hình ảnh' : 'tài liệu'} thất bại: ${info.file.error?.status || 'Lỗi không xác định'}`);
     }
   }
 
-  handleDocUploadChange(info: any): void {
-    if (info.file.status === 'uploading') {
-      this.uploadingDoc = true;
-      return;
-    }
+  handlePicUploadChange(info: any): void {
+    this.handleUploadChange(info, 'pic');
+  }
 
-    if (info.file.status === 'done') {
-      this.uploadingDoc = false;
-      if (info.file.response && info.file.response.status) {
-        this.message.success('Tải lên tài liệu thành công!');
-        this.loadEquipDocuments(
-          this.currentEquipCode || this.validateForm.get('equnr')?.value
-        );
-      } else {
-        this.message.error(
-          'Tải lên tài liệu thất bại: ' +
-            (info.file.response?.messageObject?.message || 'Lỗi không xác định')
-        );
-      }
-    } else if (info.file.status === 'error') {
-      this.uploadingDoc = false;
-      this.message.error(
-        'Tải lên tài liệu thất bại: ' +
-          (info.file.error?.status || 'Lỗi không xác định')
-      );
-    }
+  handleDocUploadChange(info: any): void {
+    this.handleUploadChange(info, 'doc');
   }
 }
