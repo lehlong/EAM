@@ -45,7 +45,7 @@
   </nz-page-header-content>
 </nz-page-header>
 
-<nz-drawer [nzMask]="!edit" [nzVisible]="visible" nzPlacement="right" [nzTitle]="edit ? 'Chỉnh sửa ' : 'Tạo mới '"
+<nz-drawer [nzClosable]="false" [nzMask]="!edit" [nzVisible]="visible" nzPlacement="right" [nzTitle]="edit ? 'Chỉnh sửa ' : 'Tạo mới '"
   [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">

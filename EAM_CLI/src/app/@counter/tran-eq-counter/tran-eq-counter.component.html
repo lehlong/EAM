@@ -2,86 +2,52 @@
     <nz-page-header-title>CẬP NHẬT CHỈ SỐ HOẠT ĐỘNG</nz-page-header-title>
     <nz-page-header-extra>
         <div class="flex-grow-2 flex">
-           
-            <button *ngIf="globalService.checkPermissions('R8.1.3')" (click)="onCreateCounter()"
-                class="!flex !items-center space-btn" nzType="primary" nz-button>
-                <span nz-icon nzType="plus-circle"></span> Thêm mới
-            </button>
-
         </div>
     </nz-page-header-extra>
     <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R8.1.1')">
 
         <div nz-row [nzGutter]="16">
-            <div nz-col class="gutter-row" [nzSpan]="8">
+            <div nz-col class="gutter-row" [nzSpan]="12">
                 <div class="inner-box">
 
                     <label>Thiết bị</label>
-                    <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.equnr" (ngModelChange)="onChangeEquip($event)">
-                        <nz-option *ngFor="let item of lstEquip"
-                            [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
+                    <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.equnr"
+                        (ngModelChange)="onChangeEquip($event)">
+                        <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx"
+                            [nzValue]="item.equnr">
                         </nz-option>
                     </nz-select>
 
                     <label>Bộ đếm | Loại chỉ số hoạt động</label>
-                    <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.point" (ngModelChange)="onChangePoint($event)" [nzDisabled]="lstEqCounter.length == 0 ? true : false">
+                    <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.point"
+                        (ngModelChange)="onChangePoint($event)" [nzDisabled]="lstEqCounter.length == 0 ? true : false">
                         <nz-option cdkScrollable *ngFor="let item of lstEqCounter"
                             [nzLabel]="item.point + ' - ' + item.pttxt" [nzValue]="item.point">
                         </nz-option>
                     </nz-select>
 
                     <label>Ngày đo</label>
-                    <nz-date-picker [(ngModel)]="model.iDate" nzPlaceHolder="Chọn ngày" [nzShowTime]="true" [nzDisabled]="model.point == '' ? true : false"></nz-date-picker>
-    
+                    <nz-date-picker [(ngModel)]="model.iDate" nzPlaceHolder="Chọn ngày" [nzShowTime]="true"
+                        [nzDisabled]="model.point == '' ? true : false"></nz-date-picker>
+
                     <label>Chỉ số đo</label>
-                    <input nz-input [(ngModel)]="model.reading" type="number"  [disabled]="model.point == '' ? true : false"/>
-    
+                    <input nz-input [(ngModel)]="model.reading" type="number"
+                        [disabled]="model.point == '' ? true : false" />
+
+                    <label>Đơn vị tính</label>
+                    <input nz-input [(ngModel)]="model.dvt" [disabled]="model.point == '' ? true : false" />
+
                     <label>Mô tả chi tiết</label>
-                    <textarea rows="4" nz-input [(ngModel)]="model.readText"  [disabled]="model.point == '' ? true : false"></textarea>
+                    <textarea rows="4" nz-input [(ngModel)]="model.readText"
+                        [disabled]="model.point == '' ? true : false"></textarea>
 
+                    <button *ngIf="globalService.checkPermissions('R8.1.3')" (click)="onCreateCounter()"
+                       style="margin-top: 12px;" nzType="primary" nz-button>
+                        <span nz-icon nzType="plus-circle"></span> Thêm mới
+                    </button>
                 </div>
             </div>
-            <div nz-col class="gutter-row" [nzSpan]="16">
-                <div class="inner-box">
-
-                    <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data"
-                        [nzFrontPagination]="false">
-                        <thead>
-                            <tr>
-                                <th>Mã chứng từ</th>
-                                <th>Mã thiết bị</th>
-                                <th>Tên điểm đo</th>
-                                <th>Ngày đo</th>
-                                <th>Giá trị đo</th>
-                                <th>Chênh lệch</th>
-                                <th>Mô tả</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
-                                <td> {{data.mdocm}}
-                                </td>
-                                <td>{{ data.equnr }} - {{globalService.getNameEquip(lstEquip, data.equnr)}}</td>
-                                <td>{{ globalService.getNamePoint(lstEqCounter, data.point) }}</td>
-                                <td>{{data.iDate | date: 'dd/MM/yyyy hh:mm'}}</td>
-                                <td>{{data.reading | number}}</td>
-                                <td>{{ data.difValue | number }}</td>
-                                <td>{{ data.readText }}</td>
-                               
-                            </tr>
-                        </tbody>
-                    </nz-table>
-                </div>
-            </div>
-
-        </div>
-
-    </nz-page-header-content>
-    <nz-page-header-content class="footer-content">
-        <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
-            <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
-                [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
-                (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
         </div>
     </nz-page-header-content>
+
 </nz-page-header>

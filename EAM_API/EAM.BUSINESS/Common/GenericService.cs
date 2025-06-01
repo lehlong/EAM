@@ -57,7 +57,7 @@ namespace EAM.BUSINESS.Common
             try
             {
                 var query = _dbContext.Set<TEntity>();
-                var lstEntity = await _dbContext.Set<TEntity>().ToListAsync();
+                var lstEntity = await _dbContext.Set<TEntity>().Where(x => x.IsActive == true).ToListAsync();
                 return _mapper.Map<List<TDto>>(lstEntity);
             }
             catch (Exception ex)

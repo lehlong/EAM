@@ -78,7 +78,7 @@
     </div>
   </nz-page-header-content>
 </nz-page-header>
-<nz-drawer nzWidth="80%" [nzVisible]="visibleDetail" nzPlacement="right"
+<nz-drawer [nzClosable]="false" nzWidth="80%" [nzVisible]="visibleDetail" nzPlacement="right"
   [nzTitle]="`CHI TIẾT SỰ CỐ ${model.qmnum} - ${model.qmtxt}`" [nzExtra]="extra" (nzOnClose)="closeDetail()">
   <ng-container *nzDrawerContent>
     <nz-tabset>

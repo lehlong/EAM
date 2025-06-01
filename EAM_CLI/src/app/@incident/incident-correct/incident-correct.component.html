@@ -142,7 +142,7 @@
 
 
 <!-- Chi tiết lệnh -->
-<nz-drawer nzWidth="100%" [nzVisible]="visibleOrder" nzPlacement="right"
+<nz-drawer [nzClosable]="false" nzWidth="100%" [nzVisible]="visibleOrder" nzPlacement="right"
   [nzTitle]="`CHI TIẾT LỆNH ${model.aufnr} - ${model.ktext}`" [nzExtra]="extra" (nzOnClose)="closeOrder()">
   <ng-container *nzDrawerContent>
 

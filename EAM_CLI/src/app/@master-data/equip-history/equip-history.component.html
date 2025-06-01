@@ -160,7 +160,7 @@
   </nz-page-header-content>
 </nz-page-header>
 
-<nz-drawer nzWidth="100%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer [nzClosable]="false" nzWidth="100%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="'LÝ LỊCH CHI TIẾT CỦA THIẾT BỊ'" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm">

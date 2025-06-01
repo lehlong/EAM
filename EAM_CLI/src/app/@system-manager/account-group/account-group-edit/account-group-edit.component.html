@@ -1,4 +1,4 @@
-<nz-drawer [nzVisible]="visible" nzTitle="Cập nhật thông tin kế hoạch" (nzOnClose)="closeDrawer()" [nzWidth]="400">
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" nzTitle="Cập nhật thông tin kế hoạch" (nzOnClose)="closeDrawer()" [nzWidth]="400">
   <form [formGroup]="validateForm" (ngSubmit)="submitForm()">
     <div nz-row [nzGutter]="16"></div>
 
@@ -17,7 +17,7 @@
   </form>
 </nz-drawer>
 
-<nz-drawer [nzMask]="false" nzWidth="60%" [nzVisible]="visible" nzPlacement="right" nzTitle="Chỉnh sửa"
+<nz-drawer [nzClosable]="false" [nzMask]="false" nzWidth="60%" [nzVisible]="visible" nzPlacement="right" nzTitle="Chỉnh sửa"
   [nzExtra]="extra" (nzOnClose)="closeDrawer()">
   <nz-tabset *nzDrawerContent>
     <nz-tab nzTitle="Thông tin">

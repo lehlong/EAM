@@ -61,7 +61,7 @@
 
 
 
-<nz-drawer *ngIf="dataDetail" [nzMask]="!edit" nzSize="large" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer [nzClosable]="false" *ngIf="dataDetail" [nzMask]="!edit" nzSize="large" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="'Chi tiết hành động'" (nzOnClose)="close()" [nzExtra]="extra">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical">

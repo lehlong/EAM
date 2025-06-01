@@ -62,7 +62,7 @@
 </nz-page-header>
 
 
-<nz-drawer nzWidth="80%"  [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer [nzClosable]="false" nzWidth="80%"  [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' CHI TIẾT KẾ HOẠCH  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <div nz-row [nzGutter]="16" style="margin: 0;">
