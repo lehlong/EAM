@@ -15,6 +15,11 @@ export class TranEqCounterService {
     return this.commonService.get(`TranEqCounter/GetByAufnr/${aufnr}`)
   }
 
+   GetMaxPoint(equnr: string, point : string): Observable<any> {
+    return this.commonService.get(`TranEqCounter/GetMaxPoint?point=${point}&equnr=${equnr}`)
+  }
+
+
   getAll(): Observable<any> {
     return this.commonService.get('TranEqCounter/GetAll')
   }

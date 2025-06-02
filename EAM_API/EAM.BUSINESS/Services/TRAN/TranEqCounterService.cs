@@ -12,6 +12,7 @@ namespace EAM.BUSINESS.Services.TRAN
     public interface ITranEqCounterService : IGenericService<TblTranEqCounter, TranEqCounterDto>
     {
         Task Insert(TranEqCounterDto dto);
+        Task<decimal?> GetMaxPoint(string point, string equnr);
         Task<PagedResponseDto> Search(TranEqFilter filter);
     }
 
@@ -21,24 +22,38 @@ namespace EAM.BUSINESS.Services.TRAN
         {
             try
             {
- var count = _dbContext.TblTranEqCounter.Count().ToString("D12");
-            dto.Mdocm = count;
-            await this.Add(dto);
+                var count = _dbContext.TblTranEqCounter.Count().ToString("D12");
+                dto.Mdocm = count;
+                await this.Add(dto);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Status = false;
                 Exception = ex;
             }
-           
         }
 
-        public  async Task<PagedResponseDto> Search(TranEqFilter filter)
+        public async Task<decimal?> GetMaxPoint(string point, string equnr)
+        {
+            try
+            {
+                var p = _dbContext.TblTranEqCounter.Where(x => x.Equnr == equnr && x.Point == point).ToList();
+                return p.Count() == 0 ? 0 : p.OrderByDescending(x => x.Reading).FirstOrDefault().Reading;
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return 0;
+            }
+        }
+
+        public async Task<PagedResponseDto> Search(TranEqFilter filter)
         {
             try
             {
                 var query = _dbContext.TblTranEqCounter.AsQueryable();
-               
+
                 if (!string.IsNullOrEmpty(filter.Equnr))
                 {
                     query = query.Where(x => x.Equnr == filter.Equnr);

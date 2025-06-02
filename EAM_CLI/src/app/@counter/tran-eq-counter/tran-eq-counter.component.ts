@@ -19,6 +19,7 @@ export class TranEqCounterComponent {
   loading: boolean = false;
   lstEquip: any = [];
   lstEqCounter: any[] = []
+  lstUnit: any[]= []
 
   model: any = {
     mdocm: 'A',
@@ -31,6 +32,9 @@ export class TranEqCounterComponent {
     readText: '',
     isActive: true
   }
+
+  maxValue : any = '';
+  type : any = '';
 
   constructor(
     private _sCounter: EqCounterService,
@@ -61,7 +65,7 @@ export class TranEqCounterComponent {
     this.filter.equnr = e;
     this._sCounter.search(this.filter).subscribe({
       next: (data) => {
-        this.lstEqCounter = data.data;
+        this.lstEqCounter = data.data.filter((x : any) => x.isActive == true);
         this.model.point = '';
         if (this.lstEqCounter.length == 0) {
           this.message.error('Không có bộ đếm nào cho thiết bị này!')
@@ -86,6 +90,11 @@ export class TranEqCounterComponent {
         return;
       }
     }
+    if(this.model.reading < this.maxValue){
+      this.message.error(`Vui lòng nhập Chỉ số đo >= ${this.maxValue}`);
+      return;
+    }
+    this.model.difValue = this.model.reading - this.maxValue
     this.model.iDate = this.globalService.formatDateToSendServer(this.model.iDate);
     this._sTranCounter.create(this.model).subscribe({
       next: (data) => {
@@ -100,7 +109,18 @@ export class TranEqCounterComponent {
 
   onChangePoint(e: any) {
     var counter = this.lstEqCounter.find(x => x.point == e)
-    console.log(counter)
+    this.model.dvt = counter.dvt
+    this.type = counter.mptyp;
+    if (counter.mptyp == '01') {
+      this._sTranCounter.GetMaxPoint(counter.equnr, counter.point).subscribe({
+        next : (data) => {
+          this.maxValue = data
+        }
+      })
+    } else {
+      this.type = '02';
+      this.maxValue = 0;
+    }
   }
 
   getAllEquip() {

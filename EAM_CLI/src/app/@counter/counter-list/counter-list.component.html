@@ -76,8 +76,8 @@
                 <tr *ngFor="let data of headerTable.data; let i = index">
                     <td>{{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}</td>
                     <td>{{data.mdocm}}</td>
-                    <td>{{data.point}}</td>
-                    <td>{{data.equnr}}</td>
+                    <td>{{data.point}} - {{globalService.getNamePoint(lstEqCounter, data.point)}}</td>
+                    <td>{{data.equnr}} - {{globalService.getNameEquip(lstEquip, data.equnr)}}</td>
                     <td>{{data.iDate | date: 'dd/MM/yyyy'}}</td>
                     <td>{{data.iDate | date: 'HH:mm:ss' }}</td>
                     <td>{{data.reading}}</td>

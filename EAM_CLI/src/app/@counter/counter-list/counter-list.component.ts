@@ -7,6 +7,8 @@ import { DropdownService } from '../../service/dropdown/dropdown.service';
 import { NonNullableFormBuilder } from '@angular/forms';
 import { TranEqCounterService } from '../../service/tran/tran-eq-counter.service';
 import { TranEqFilter } from '../../filter/tran/tran-eq.filter';
+import { EquipService } from '../../service/master-data/equip.service';
+import { EqCounterService } from '../../service/master-data/equip-counter.service';
 
 @Component({
   selector: 'app-counter-list',
@@ -24,13 +26,16 @@ export class CounterListComponent {
   loading: boolean = false;
   lstUnit: any = [];
   lstEquip: any = [];
+  lstEqCounter : any[] = []
 
   constructor(
     private _service: TranEqCounterService,
     private fb: NonNullableFormBuilder,
     public globalService: GlobalService,
     private message: NzMessageService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    private _sEquip : EquipService,
+    private _sCounter : EqCounterService
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -50,6 +55,7 @@ export class CounterListComponent {
     this.search();
     this.getallUnit();
     this.getAllEquip();
+    this.getEqCounter();
   }
 
   onSortChange(eqtypTxt: string, value: any) {
@@ -71,9 +77,20 @@ export class CounterListComponent {
     });
   }
   getAllEquip() {
-    this.dropdownService.getAllEquip().subscribe({
+    this._sEquip.getAll().subscribe({
       next: (data) => {
         this.lstEquip = data;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
+
+  getEqCounter() {
+    this._sCounter.getAll().subscribe({
+      next: (data) => {
+        this.lstEqCounter = data;
       },
       error: (response) => {
         console.log(response);

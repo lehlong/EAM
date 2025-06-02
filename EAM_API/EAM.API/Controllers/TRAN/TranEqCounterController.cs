@@ -53,6 +53,24 @@ namespace EAM.API.Controllers.TRAN
             return Ok(transferObject);
         }
 
+        [HttpGet("GetMaxPoint")]
+        public async Task<IActionResult> GetMaxPoint([FromQuery] string point, [FromQuery] string equnr)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetMaxPoint(point, equnr);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         //[CustomAuthorize(Right = "R2.4.3")]
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] TranEqCounterDto time)
