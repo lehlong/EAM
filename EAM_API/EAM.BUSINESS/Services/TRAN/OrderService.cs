@@ -44,8 +44,6 @@ namespace EAM.BUSINESS.Services.TRAN
                 using (var workbook = new XLWorkbook(templatePath))
                 {
                     var worksheet = workbook.Worksheet(1);
-
-                    // Gán thông tin chung
                     worksheet.Cell("F1").Value = $"Số lệnh: {order.Aufnr}";
                     if (!string.IsNullOrEmpty(order.Equnr))
                     {
@@ -256,12 +254,14 @@ namespace EAM.BUSINESS.Services.TRAN
                 _dbContext.TblTranOrder.Update(entity);
                 if (!string.IsNullOrEmpty(data.Qmnum))
                 {
+                    var noti = _dbContext.TblTranNoti.Find(data.Qmnum);
                     if (data.Status == "07" || data.Status == "04")
-                    {
-                        var noti = _dbContext.TblTranNoti.Find(data.Qmnum);
-                        noti.StatAct = data.Status;
-                        _dbContext.TblTranNoti.Update(noti);
+                    {                       
+                       noti.StatAct = data.Status;                     
                     }
+                    noti.Lvtsd = data.LoaivtSd;
+                    noti.Htbtbd = data.HtBtbd;
+                    _dbContext.TblTranNoti.Update(noti);
                 }
 
 

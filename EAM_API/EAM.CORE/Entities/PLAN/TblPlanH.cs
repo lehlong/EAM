@@ -54,6 +54,9 @@ namespace EAM.CORE.Entities.PLAN
         [Column("EQUNR")]
         public string? Equnr { get; set; }
 
+        [Column("POINT")]
+        public string? Point { get; set; }
+
         [Column("PLNNR")]
         public string? Plnnr { get; set; }
 

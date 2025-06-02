@@ -11,6 +11,7 @@ export class PlanHModel {
   stdate: Date | null = null;
   measure: string | null = null;
   measvalue: number | null = 0;
+  point : string | null = '';
   mix: string | null = null;
   tplnr: string | null = null;
   equnr: string | null = null;

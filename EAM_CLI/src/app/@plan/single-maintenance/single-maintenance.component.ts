@@ -17,6 +17,8 @@ import { EquipPlanModel } from '../../models/plan/equip-plan.model';
 import { GlobalService } from '../../service/global.service';
 import { PlanHModel } from '../../models/plan/plan-h.model';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { EqCounterService } from '../../service/master-data/equip-counter.service';
+import { BaseFilter } from '../../models/base.model';
 
 @Component({
   selector: 'app-single-maintenance',
@@ -39,6 +41,7 @@ export class SingleMaintenanceComponent implements OnInit {
   lstTask: any[] = [];
   lstPlan: any[] = [];
   lstEqGroup: any[] = [];
+  lstEqCounter : any[] = [];
 
   lstEquipPlan: any[] = [];
   model: any = new PlanHModel();
@@ -53,7 +56,8 @@ export class SingleMaintenanceComponent implements OnInit {
     private _sTasklist: TasklistService,
     private _sWc: WcService,
     private _sOrderType: OrderTypeService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private _sEqCounter : EqCounterService,
   ) {}
   ngOnInit(): void {
     this.getMasterData();
@@ -199,6 +203,7 @@ export class SingleMaintenanceComponent implements OnInit {
   }
 
   onChangeFloc(e: any) {
+    this.model.equnr = ''
     this.lstPlan.forEach((i) => {
       i.tplnr = e;
     });
@@ -216,6 +221,23 @@ export class SingleMaintenanceComponent implements OnInit {
   onChangeName(e: any) {
     this.lstPlan.forEach((i) => {
       i.wptxt = e;
+    });
+  }
+
+  searchEqCounter(e: any){
+    var f = new BaseFilter();
+    f.equnr = e;
+    this._sEqCounter.search(f).subscribe({
+      next: (data) => {
+        this.lstEqCounter = data.data.filter((x : any) => x.isActive == true);
+        this.model.point = '';
+        if (this.lstEqCounter.length == 0) {
+          this.message.error('Không có bộ đếm nào cho thiết bị này!')
+        }
+      },
+      error: (response) => {
+        console.log(response);
+      },
     });
   }
 

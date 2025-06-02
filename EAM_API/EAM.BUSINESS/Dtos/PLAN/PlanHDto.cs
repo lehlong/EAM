@@ -29,6 +29,7 @@ namespace EAM.BUSINESS.Dtos.PLAN
         public string? Mpgrp { get; set; }
         [Description("Loại kế hoạch")]
 
+        public string? Point { get; set; }
         public string? Cyctype { get; set; }
         public string? Cycunit { get; set; }
         public decimal? Cycle { get; set; }

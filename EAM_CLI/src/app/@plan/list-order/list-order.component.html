@@ -78,7 +78,8 @@
 
 
   </nz-page-header-content>
-  <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);" *ngIf="_global.checkPermissions('R6.5.1')">
+  <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);"
+    *ngIf="_global.checkPermissions('R6.5.1')">
     <nz-table nzBordered [nzSize]="'middle'" [nzData]="paginationResult.data" class="auto-scroll-table"
       [nzShowPagination]="false" [nzFrontPagination]="false" #headerTable>
       <thead>
@@ -117,23 +118,25 @@
           </td>
           <td nzAlign="center">
             <button nzTooltipTitle="Phân công" nzTooltipPlacement="top" nz-button nz-tooltip nzType="default"
-              *ngIf="data.status == '01' && _global.checkPermissions('R6.5.3')" (click)="updateUserOrder(data)"><nz-icon nzType="user-add"
-                nzTheme="outline" /></button>
+              *ngIf="data.status == '01' && _global.checkPermissions('R6.5.3')" (click)="updateUserOrder(data)"><nz-icon
+                nzType="user-add" nzTheme="outline" /></button>
 
 
             <button nzTooltipTitle="Đang thực hiện" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
-              *ngIf="data.status == '02' && _global.checkPermissions('R6.5.4')" class="btn-check" (click)="updateStatusOrder(data, '07')">
+              *ngIf="data.status == '02' && _global.checkPermissions('R6.5.4')" class="btn-check"
+              (click)="updateStatusOrder(data, '07')">
               <nz-icon nzType="right-circle" nzTheme="outline" />
             </button>
 
             <button nzTooltipTitle="Hoàn thành" nzTooltipPlacement="top" nz-button nz-tooltip nzType="primary"
-              *ngIf="data.status == '07' && _global.checkPermissions('R6.5.5')" class="btn-check" (click)="updateStatusOrder(data, '04')">
+              *ngIf="data.status == '07' && _global.checkPermissions('R6.5.5')" class="btn-check"
+              (click)="updateStatusOrder(data, '04')">
               <nz-icon nzType="check" nzTheme="outline" />
             </button>
           </td>
           <td>
-            <button  *ngIf="_global.checkPermissions('R6.5.6')" nz-button nzType="default" (click)="exportOrder(data.aufnr)"><nz-icon nzType="printer"
-                nzTheme="outline" /></button>
+            <button *ngIf="_global.checkPermissions('R6.5.6')" nz-button nzType="default"
+              (click)="exportOrder(data.aufnr)"><nz-icon nzType="printer" nzTheme="outline" /></button>
           </td>
 
         </tr>
@@ -654,24 +657,29 @@
 </nz-drawer>
 <ng-template #extra>
 
-  <button class="button-template" nz-button nzType="default" *ngIf="model.status == '01' && _global.checkPermissions('R6.5.3')"
-    (click)="updateUserOrder(model)"><nz-icon nzType="user-add" nzTheme="outline" /> Phân công</button>
-  <button class="button-template" nz-button nzType="primary" *ngIf="model.status == '02' && _global.checkPermissions('R6.5.4')" class="btn-check"
+  <button class="button-template" nz-button nzType="default"
+    *ngIf="model.status == '01' && _global.checkPermissions('R6.5.3')" (click)="updateUserOrder(model)"><nz-icon
+      nzType="user-add" nzTheme="outline" /> Phân công</button>
+  <button class="button-template" nz-button nzType="primary"
+    *ngIf="model.status == '02' && _global.checkPermissions('R6.5.4')" class="btn-check"
     (click)="updateStatusOrder(model, '07')">
     <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
   </button>
-  <button class="button-template" nz-button nzType="primary" *ngIf="model.status == '07' && _global.checkPermissions('R6.5.5')" class="btn-check"
+  <button class="button-template" nz-button nzType="primary"
+    *ngIf="model.status == '07' && _global.checkPermissions('R6.5.5')" class="btn-check"
     (click)="updateStatusOrder(model, '04')">
     <nz-icon nzType="check" nzTheme="outline" /> Hoàn thành
   </button>
-  <button *ngIf="_global.checkPermissions('R6.5.6')" class="button-template" nz-button nzType="default" (click)="exportOrder(model.aufnr)"><nz-icon
-      nzType="printer" nzTheme="outline" />In
+  <button *ngIf="_global.checkPermissions('R6.5.6')" class="button-template" nz-button nzType="default"
+    (click)="exportOrder(model.aufnr)"><nz-icon nzType="printer" nzTheme="outline" />In
     lệnh</button>
-  <button *ngIf="_global.checkPermissions('R6.5.2')" class="button-template" nz-button nzType="primary" (click)="updateOrder()"><nz-icon nzType="save"
-      nzTheme="outline" />Cập
+  <button *ngIf="_global.checkPermissions('R6.5.2')" class="button-template" nz-button nzType="primary"
+    (click)="updateOrder()"><nz-icon nzType="save" nzTheme="outline" />Cập
     nhật</button>
-  <button class="button-template" nz-button nzType="default" (click)="closeOrder()"><nz-icon nzType="close"
+
+  <button class="button-template" nz-button nzType="primary" nzDanger (click)="closeOrder()"><nz-icon nzType="close"
       nzTheme="outline" />Đóng</button>
+
 </ng-template>
 
 <nz-modal [(nzVisible)]="isVisibleUserOrder" nzTitle="PHÂN CÔNG" (nzOnCancel)="userCancel()" (nzOnOk)="userOk()"

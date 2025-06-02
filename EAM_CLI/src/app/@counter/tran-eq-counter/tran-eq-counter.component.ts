@@ -115,9 +115,11 @@ export class TranEqCounterComponent {
       this._sTranCounter.GetMaxPoint(counter.equnr, counter.point).subscribe({
         next : (data) => {
           this.maxValue = data
+          this.model.reading = data
         }
       })
     } else {
+      this.model.reading = 0;
       this.type = '02';
       this.maxValue = 0;
     }
