@@ -41,7 +41,7 @@ export class SingleMaintenanceComponent implements OnInit {
   lstTask: any[] = [];
   lstPlan: any[] = [];
   lstEqGroup: any[] = [];
-  lstEqCounter : any[] = [];
+  lstEqCounter: any[] = [];
 
   lstEquipPlan: any[] = [];
   model: any = new PlanHModel();
@@ -57,8 +57,8 @@ export class SingleMaintenanceComponent implements OnInit {
     private _sWc: WcService,
     private _sOrderType: OrderTypeService,
     private message: NzMessageService,
-    private _sEqCounter : EqCounterService,
-  ) {}
+    private _sEqCounter: EqCounterService,
+  ) { }
   ngOnInit(): void {
     this.getMasterData();
   }
@@ -140,6 +140,15 @@ export class SingleMaintenanceComponent implements OnInit {
   }
 
   changeEquip(selectedValue: any, rowData: any): void {
+    if (this.lstEquipPlan.filter(x => x.equnr == selectedValue).length > 1) {
+      rowData.equnr = '';
+      rowData.tplnr = ''
+      rowData.eqart = ''
+      rowData.ingrp = ''
+      this.message.error('Thiết bị đã được chọn! Vui lòng chọn thiết bị khác!');
+      return;
+    }
+
     const selectedEquip = this.lstEquipSelect.find(
       (item) => item.equnr === selectedValue
     );
@@ -224,12 +233,12 @@ export class SingleMaintenanceComponent implements OnInit {
     });
   }
 
-  searchEqCounter(e: any){
+  searchEqCounter(e: any) {
     var f = new BaseFilter();
     f.equnr = e;
     this._sEqCounter.search(f).subscribe({
       next: (data) => {
-        this.lstEqCounter = data.data.filter((x : any) => x.isActive == true);
+        this.lstEqCounter = data.data.filter((x: any) => x.isActive == true);
         this.model.point = '';
         if (this.lstEqCounter.length == 0) {
           this.message.error('Không có bộ đếm nào cho thiết bị này!')

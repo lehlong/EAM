@@ -185,7 +185,7 @@
           <tbody>
             <tr *ngFor="let data of equipTable.data; let i = index">
               <td>
-                <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="data.equnr"
+                <nz-select nzShowSearch [(ngModel)]="data.equnr"
                   (ngModelChange)="changeEquip($event, data)">
                   <nz-option *ngFor="let item of lstEquipSelect" [nzLabel]="item.equnr + ' - ' + item.eqktx"
                     [nzValue]="item.equnr">
