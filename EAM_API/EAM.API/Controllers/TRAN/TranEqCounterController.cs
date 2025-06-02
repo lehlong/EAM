@@ -4,6 +4,7 @@ using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
 using EAM.BUSINESS.Dtos.TRAN;
+using EAM.BUSINESS.Filter.TRAN;
 using EAM.BUSINESS.Services.MD;
 using EAM.BUSINESS.Services.TRAN;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace EAM.API.Controllers.TRAN
 
         [CustomAuthorize(Right = "R2.4.1")]
         [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        public async Task<IActionResult> Search([FromQuery] TranEqFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.Search(filter);

@@ -1,0 +1,108 @@
+<nz-page-header nzBackIcon>
+    <nz-page-header-title>DANH SÁCH CHỈ SỐ HOẠT ĐỘNG</nz-page-header-title>
+    <nz-page-header-extra>
+        <div class="flex-grow-2 flex">
+            <nz-space>
+                <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
+                    [(value)]="filter.keyWord"></app-input-clear>
+                <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                    nzType="default">
+                    <span nz-icon nzType="search"></span>
+                </button>
+                <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                    nzType="default">
+                    <span nz-icon nzType="redo"></span>
+                </button>
+            </nz-space>
+
+        </div>
+    </nz-page-header-extra>
+    <nz-page-header-content>
+        <div nz-row [nzGutter]="12" style="margin: 0;">
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <div class="inner-box">
+                    <label>Thiết bị</label>
+                    <nz-select nzShowSearch nzAllowClear placeholder="Thiết bị" [(ngModel)]="filter.equnr"
+                        (ngModelChange)="search()">
+                        <nz-option *ngFor="let item of lstEquip" [nzLabel]="item.equnr + ' - ' + item.eqktx"
+                            [nzValue]="item.equnr">
+                        </nz-option>
+                    </nz-select>
+                </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <div class="inner-box">
+                    <label>Điểm đo</label>
+                    <app-input-clear placeholder="Mã điểm đo" (enterEvent)="search()"
+                    [(value)]="filter.point"></app-input-clear>
+                </div>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <div class="inner-box">
+                    <label>Ngày đo</label>
+                    <nz-date-picker [(ngModel)]="filter.fromDate" (ngModelChange)="search()"
+                        [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+                </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <div class="inner-box">
+                    <label>đến ngày</label>
+                    <nz-date-picker [(ngModel)]="filter.toDate" (ngModelChange)="search()"
+                        [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+                </div>
+            </div>
+        </div>
+    </nz-page-header-content>
+    <nz-page-header-content class="main-content" style="height: calc(-344px + 100vh);">
+        <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data"
+            [nzFrontPagination]="false" nzBordered [nzSize]="'middle'">
+            <thead>
+                <tr>
+                    <th nzWidth="60px">STT</th>
+                    <th>Số chứng từ</th>
+                    <th>Mã điểm đo</th>
+                    <th>Mã thiết bị</th>
+                    <th>Ngày đo</th>
+                    <th>Giờ đo</th>
+                    <th>Chỉ số đo</th>
+                    <th>Chênh lệch chỉ số</th>
+                    <th>Chi tiết</th>
+                    <th>Đơn vị đo</th>
+                    <th nzAlign="center">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of headerTable.data; let i = index">
+                    <td>{{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}</td>
+                    <td>{{data.mdocm}}</td>
+                    <td>{{data.point}}</td>
+                    <td>{{data.equnr}}</td>
+                    <td>{{data.iDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{data.iDate | date: 'HH:mm:ss' }}</td>
+                    <td>{{data.reading}}</td>
+                    <td>{{data.difValue}}</td>
+                    <td>{{data.readText}}</td>
+                    <td>{{data.dvt}}</td>
+                    <td nzAlign="center">
+                        <nz-tag nzColor="success" *ngIf="data.isActive">
+                            <nz-icon nzType="check-circle" />
+                            <span>Kích hoạt</span>
+                        </nz-tag>
+                        <nz-tag nzColor="error" *ngIf="!data.isActive">
+                            <nz-icon nzType="close-circle" />
+                            <span>Khoá</span>
+                        </nz-tag>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-page-header-content>
+    <nz-page-header-content class="footer-content">
+        <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+            <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+                [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+                (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+        </div>
+    </nz-page-header-content>
+</nz-page-header>

@@ -2,6 +2,7 @@
 using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.TRAN;
+using EAM.BUSINESS.Filter.TRAN;
 using EAM.CORE;
 using EAM.CORE.Entities.TRAN;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace EAM.BUSINESS.Services.TRAN
     public interface ITranEqCounterService : IGenericService<TblTranEqCounter, TranEqCounterDto>
     {
         Task Insert(TranEqCounterDto dto);
+        Task<PagedResponseDto> Search(TranEqFilter filter);
     }
 
     public class TranEqCounterService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranEqCounter, TranEqCounterDto>(dbContext, mapper), ITranEqCounterService
@@ -31,7 +33,7 @@ namespace EAM.BUSINESS.Services.TRAN
            
         }
 
-        public override async Task<PagedResponseDto> Search(BaseFilter filter)
+        public  async Task<PagedResponseDto> Search(TranEqFilter filter)
         {
             try
             {
@@ -48,6 +50,14 @@ namespace EAM.BUSINESS.Services.TRAN
                 if (filter.IsActive.HasValue)
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                if (filter.FromDate.HasValue)
+                {
+                    query = query.Where(x => x.IDate >= filter.FromDate);
+                }
+                if (filter.ToDate.HasValue)
+                {
+                    query = query.Where(x => x.IDate <= filter.ToDate);
                 }
                 return await Paging(query.OrderByDescending(x => x.CreateDate), filter);
 
