@@ -49,7 +49,7 @@
                     <td> <a (click)="openEdit(data)">{{ data.point }}</a></td>
                     <td>{{ data.equnr }} - {{globalService.getNameEquip(lstEquip, data.equnr)}}</td>
                     <td>{{ data.pttxt }}</td>
-                    <td>{{ data.mptyp == '1' ? 'Giá trị luỹ kế' : 'Chỉ số đo' }}</td>
+                    <td>{{ data.mptyp == '01' ? 'Giá trị luỹ kế' : 'Chỉ số đo' }}</td>
                     <td>{{ data.dvt }} - {{globalService.getNameUnit(lstUnit, data.dvt)}}</td>
                     <td>{{ data.maxCount }}</td>
                     <td>{{ data.yearCount }}</td>
@@ -93,7 +93,7 @@
                         <nz-form-item>
                             <nz-form-label>Thiết bị</nz-form-label>
                             <nz-form-control nzErrorTip="Không được để trống">
-                                <nz-select nzShowSearch nzAllowClear formControlName="equnr">
+                                <nz-select nzShowSearch nzAllowClear formControlName="equnr" [nzDisabled]="edit ? true : false">
                                     <nz-option cdkScrollable *ngFor="let item of lstEquip"
                                         [nzLabel]="item.equnr + ' - ' + item.eqktx" [nzValue]="item.equnr">
                                     </nz-option>
@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <div nz-col [nzSpan]="12">
-                    <app-input-clear placeholder="Tên điểm đo" [required]="true" label="Tên điểm đo"
+                    <app-input-clear placeholder="Tên điểm đo" [required]="true" label="Tên điểm đo" [disabled]="edit ? true : false"
                         [control]="$any(validateForm).controls['pttxt']"></app-input-clear>
                 </div>
                 <div nz-col class="gutter-row" [nzSpan]="12">
@@ -111,7 +111,7 @@
                         <nz-form-item>
                             <nz-form-label>Loại điểm đo</nz-form-label>
                             <nz-form-control nzErrorTip="Không được để trống">
-                                <nz-select nzShowSearch nzAllowClear formControlName="mptyp">
+                                <nz-select nzShowSearch nzAllowClear formControlName="mptyp" [nzDisabled]="edit ? true : false">
                                     <nz-option cdkScrollable *ngFor="let item of lstMptyp"
                                         [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
                                     </nz-option>
@@ -125,7 +125,7 @@
                         <nz-form-item>
                             <nz-form-label>Đơn vị tính</nz-form-label>
                             <nz-form-control nzErrorTip="Không được để trống">
-                                <nz-select nzShowSearch nzAllowClear formControlName="dvt">
+                                <nz-select nzShowSearch nzAllowClear formControlName="dvt" [nzDisabled]="edit ? true : false">
                                     <nz-option cdkScrollable *ngFor="let item of lstUnit"
                                         [nzLabel]="item.code + ' - ' + item.name" [nzValue]="item.code">
                                     </nz-option>

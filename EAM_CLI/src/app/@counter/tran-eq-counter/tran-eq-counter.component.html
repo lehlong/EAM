@@ -30,6 +30,10 @@
                     <nz-date-picker [(ngModel)]="model.iDate" nzPlaceHolder="Chọn ngày" [nzShowTime]="true"
                         [nzDisabled]="model.point == '' ? true : false"></nz-date-picker>
 
+                        <label>Ngày đo gần nhất</label>
+                    <nz-date-picker [(ngModel)]="minDate" nzPlaceHolder="Ngày đo gần nhất" [nzShowTime]="true"
+                        [nzDisabled]="true"></nz-date-picker>
+
                     <label>Chỉ số đo</label>
                     <input nz-input [(ngModel)]="model.reading" type="number"
                         [disabled]="model.point == '' ? true : false" />

@@ -19,6 +19,7 @@ import { PlanHModel } from '../../models/plan/plan-h.model';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { EqCounterService } from '../../service/master-data/equip-counter.service';
 import { BaseFilter } from '../../models/base.model';
+import { TranEqCounterService } from '../../service/tran/tran-eq-counter.service';
 
 @Component({
   selector: 'app-single-maintenance',
@@ -58,6 +59,7 @@ export class SingleMaintenanceComponent implements OnInit {
     private _sOrderType: OrderTypeService,
     private message: NzMessageService,
     private _sEqCounter: EqCounterService,
+    private _sTranCounter: TranEqCounterService
   ) { }
   ngOnInit(): void {
     this.getMasterData();
@@ -113,6 +115,36 @@ export class SingleMaintenanceComponent implements OnInit {
 
     if (!isValid) return;
 
+    if (this.model.cyctype == 'P') {
+      const isValidP =
+        this._global.validateRequired(this.model.equnr, 'Vui lòng chọn Thiết bị khi lập theo Chỉ số hoạt động') &&
+        this._global.validateRequired(this.model.reading, 'Vui lòng nhập Chỉ số bắt đầu KH khi lập theo Chỉ số hoạt động') &&
+        this._global.validateRequired(this.model.measvalue, 'Vui lòng nhập Chỉ số khi lập theo Chỉ số hoạt động') &&
+        this._global.validateRequired(this.model.point, 'Vui lòng chọn Mã điểm đo | Bộ đếm khi lập theo Chỉ số hoạt động');
+
+      if (!isValidP) return;
+    }
+
+    if (Number(this.model.cycle) < 1) {
+      this.message.error('Tần suất phải lớn hơn 0!');
+      return;
+    }
+
+    if (Number(this.model.cycef) < 1) {
+      this.message.error('Thời gian hiệu lực phải lớn hơn 0!');
+      return;
+    }
+
+    if (Number(this.model.reading) < 0) {
+      this.message.error('Chỉ số bắt đầu KH phải lớn hơn 0!');
+      return;
+    }
+
+    if (Number(this.model.measvalue) < 0) {
+      this.message.error('Chỉ số hoạt động phải lớn hơn 0!');
+      return;
+    }
+
     this.model.lstEquip = this.lstEquipPlan.map((i) => ({
       id: 'A',
       warpl: this.model.warpl,
@@ -123,8 +155,13 @@ export class SingleMaintenanceComponent implements OnInit {
     this.model.lstPlanOrder = this.lstPlan.map((i) => ({
       id: 'A',
       warpl: this.model.warpl,
+      reading: i.reading,
       schstart: this._global.convertToIsoDateString(i.schstart),
     }));
+
+    if (this.model.cyctype == 'P') {
+      this.model.nextCounter = Number(this.model.reading) + Number(this.model.measvalue)
+    }
 
     this._sPlanH.create(this.model).subscribe({
       next: () => {
@@ -137,6 +174,19 @@ export class SingleMaintenanceComponent implements OnInit {
         this.message.error('Tạo kế hoạch thất bại');
       },
     });
+  }
+
+  eqCounterUnit: string = ''
+  onChangePoint(e: any) {
+    this.eqCounterUnit = '';
+    this.model.reading = 0;
+    var counter = this.lstEqCounter.find(x => x.point == e)
+    this.eqCounterUnit = counter.dvt
+    this._sTranCounter.GetMaxPoint(counter.equnr, counter.point).subscribe({
+      next: (data) => {
+        this.model.reading = data
+      }
+    })
   }
 
   changeEquip(selectedValue: any, rowData: any): void {
@@ -169,6 +219,7 @@ export class SingleMaintenanceComponent implements OnInit {
     this._sPlanH.genarateCode(e).subscribe({
       next: (data) => {
         this.model.warpl = data;
+        this.onChangeCode(data);
       },
     });
   }
@@ -199,14 +250,30 @@ export class SingleMaintenanceComponent implements OnInit {
       );
 
       var lstTemp: any = [];
-      lstDate.forEach((i) => {
-        lstTemp.push({
-          warpl: this.model.warpl,
-          wptxt: this.model.wptxt,
-          tplnr: this.model.tplnr,
-          schstart: i,
+
+      if (this.model.cyctype != 'T' && this.model.reading != 0 && this.model.reading != null && this.model.measvalue != 0 && this.model.measvalue != null) {
+        var r = this.model.reading;
+        lstDate.forEach((i) => {
+          r += this.model.measvalue
+          lstTemp.push({
+            warpl: this.model.warpl,
+            wptxt: this.model.wptxt,
+            tplnr: this.model.tplnr,
+            reading: r,
+            schstart: i,
+          });
         });
-      });
+      } else {
+        lstDate.forEach((i) => {
+          lstTemp.push({
+            warpl: this.model.warpl,
+            wptxt: this.model.wptxt,
+            tplnr: this.model.tplnr,
+            schstart: i,
+          });
+        });
+      }
+
       this.lstPlan = lstTemp;
     }
   }
@@ -217,9 +284,19 @@ export class SingleMaintenanceComponent implements OnInit {
       i.tplnr = e;
     });
     this.lstEquipSelect =
-      e == null || e == null
+      e == null || e == ''
         ? this.lstEquip
         : this.lstEquip.filter((x) => x.tplnr == e);
+  }
+
+  onChangeCyctype() {
+    this.eqCounterUnit = '';
+    this.lstEqCounter = [];
+    this.model.equnr = '';
+    this.model.point = '';
+    this.model.measvalue = 0;
+    this.model.reading = 0;
+    this.lstEquipPlan = []
   }
 
   onChangeCode(e: any) {
@@ -234,6 +311,9 @@ export class SingleMaintenanceComponent implements OnInit {
   }
 
   searchEqCounter(e: any) {
+    this.eqCounterUnit = '';
+    this.model.reading = 0;
+    this.lstEquipPlan = []
     var f = new BaseFilter();
     f.equnr = e;
     this._sEqCounter.search(f).subscribe({
@@ -242,6 +322,21 @@ export class SingleMaintenanceComponent implements OnInit {
         this.model.point = '';
         if (this.lstEqCounter.length == 0) {
           this.message.error('Không có bộ đếm nào cho thiết bị này!')
+        } else {
+          if (e != null || e != '') {
+            const newEquip = new EquipPlanModel();
+            const selectedEquip = this.lstEquipSelect.find(
+              (item) => item.equnr === e
+            );
+            if (selectedEquip) {
+              newEquip.tplnr = selectedEquip.tplnr;
+              newEquip.eqart = selectedEquip.eqart;
+              newEquip.ingrp = selectedEquip.ingrp;
+            }
+            newEquip.equnr = e
+            this.lstEquipPlan = [...this.lstEquipPlan, newEquip];
+          }
+
         }
       },
       error: (response) => {

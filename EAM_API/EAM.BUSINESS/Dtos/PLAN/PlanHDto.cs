@@ -28,7 +28,7 @@ namespace EAM.BUSINESS.Dtos.PLAN
 
         public string? Mpgrp { get; set; }
         [Description("Loại kế hoạch")]
-
+        public decimal? Reading { get; set; }
         public string? Point { get; set; }
         public string? Cyctype { get; set; }
         public string? Cycunit { get; set; }
@@ -44,6 +44,7 @@ namespace EAM.BUSINESS.Dtos.PLAN
         public string? Ingrp { get; set; }
         public string? Arbpl { get; set; }
         public string? Auart { get; set; }
+        public decimal? NextCounter { get; set; }
         public List<TblPlanD>? lstEquip { get; set; }
         public List<TblPlanOrder>? lstPlanOrder { get; set; }
 

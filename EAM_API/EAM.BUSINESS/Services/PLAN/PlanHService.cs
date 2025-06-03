@@ -59,7 +59,7 @@ namespace EAM.BUSINESS.Services.PLAN
                 {
                     h = h.Where(x => x.Warpl.Contains(filter.Warpl));
                 }
-                var header = h.ToList();
+                var header = h.Where(x => x.Cyctype == "T").ToList();
 
                 foreach (var i in header)
                 {
@@ -148,6 +148,7 @@ namespace EAM.BUSINESS.Services.PLAN
                         Measure = i.Measure,
                         Tplnr = i.Tplnr,
                         Equnr = i.Equnr,
+                        Reading = i.Reading,
                         Iscompled = false
                     });
 
@@ -197,7 +198,7 @@ namespace EAM.BUSINESS.Services.PLAN
                 if (!string.IsNullOrEmpty(filter.Arbpl)) hQuery = hQuery.Where(x => x.Arbpl == filter.Arbpl);
                 if (!string.IsNullOrEmpty(filter.Tplnr)) hQuery = hQuery.Where(x => x.Tplnr == filter.Tplnr);
                 if (!string.IsNullOrEmpty(filter.Warpl)) hQuery = hQuery.Where(x => x.Warpl.Contains(filter.Warpl));
-                var header = await hQuery.ToListAsync();
+                var header = await hQuery.Where(x => x.Cyctype == "T").ToListAsync();
 
                 var pmOrders = new Dictionary<string, int?>
                 {

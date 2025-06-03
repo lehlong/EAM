@@ -11,3 +11,8 @@ nz-select, nz-date-picker{
   height: calc(100vh - 132px);
     overflow: auto;
 }
+
+::ng-deep .ant-select-dropdown .ant-select-item {
+  white-space: normal !important; /* Cho phép xuống dòng nếu nội dung dài */
+  word-break: break-word;         /* Tự động xuống dòng ở từ bất kỳ */
+}

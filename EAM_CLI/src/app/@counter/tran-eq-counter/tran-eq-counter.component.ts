@@ -19,7 +19,7 @@ export class TranEqCounterComponent {
   loading: boolean = false;
   lstEquip: any = [];
   lstEqCounter: any[] = []
-  lstUnit: any[]= []
+  lstUnit: any[] = []
 
   model: any = {
     mdocm: 'A',
@@ -33,8 +33,9 @@ export class TranEqCounterComponent {
     isActive: true
   }
 
-  maxValue : any = '';
-  type : any = '';
+  minDate: any = '';
+  maxValue: any = '';
+  type: any = '';
 
   constructor(
     private _sCounter: EqCounterService,
@@ -65,7 +66,7 @@ export class TranEqCounterComponent {
     this.filter.equnr = e;
     this._sCounter.search(this.filter).subscribe({
       next: (data) => {
-        this.lstEqCounter = data.data.filter((x : any) => x.isActive == true);
+        this.lstEqCounter = data.data.filter((x: any) => x.isActive == true);
         this.model.point = '';
         if (this.lstEqCounter.length == 0) {
           this.message.error('Không có bộ đếm nào cho thiết bị này!')
@@ -90,10 +91,17 @@ export class TranEqCounterComponent {
         return;
       }
     }
-    if(this.model.reading < this.maxValue){
+    if (this.model.reading < this.maxValue) {
       this.message.error(`Vui lòng nhập Chỉ số đo >= ${this.maxValue}`);
       return;
     }
+    if (this.minDate != '' && this.minDate != null) {
+      if (new Date(this.model.iDate) < new Date(this.minDate)) {
+        this.message.error(`Vui lòng nhập Ngày đo >= Ngày đo gần nhất!`);
+        return;
+      }
+    }
+
     this.model.difValue = this.model.reading - this.maxValue
     this.model.iDate = this.globalService.formatDateToSendServer(this.model.iDate);
     this._sTranCounter.create(this.model).subscribe({
@@ -108,20 +116,24 @@ export class TranEqCounterComponent {
 
 
   onChangePoint(e: any) {
+    this.model.dvt = ''
+    this.minDate = ''
     var counter = this.lstEqCounter.find(x => x.point == e)
     this.model.dvt = counter.dvt
     this.type = counter.mptyp;
     if (counter.mptyp == '01') {
       this._sTranCounter.GetMaxPoint(counter.equnr, counter.point).subscribe({
-        next : (data) => {
-          this.maxValue = data
-          this.model.reading = data
+        next: (data) => {
+          this.maxValue = data.reading
+          this.model.reading = data.reading
+          this.minDate = data.iDate
         }
       })
     } else {
       this.model.reading = 0;
       this.type = '02';
       this.maxValue = 0;
+      this.minDate = '';
     }
   }
 
@@ -137,6 +149,7 @@ export class TranEqCounterComponent {
   }
 
   reset() {
+    this.minDate = ''
     this.filter = new BaseFilter();
     this.model = {
       mdocm: 'A',

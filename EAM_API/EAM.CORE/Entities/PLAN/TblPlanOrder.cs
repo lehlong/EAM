@@ -42,6 +42,8 @@ namespace EAM.CORE.Entities.PLAN
 
         [Column("MEASVALUE")]
         public decimal? Measvalue { get; set; }
+        [Column("READING")]
+        public decimal? Reading { get; set; }
 
         [Column("AUFNR")]
         public string? Aufnr { get; set; }

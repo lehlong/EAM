@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using EAM.CORE;
-using System.Reflection;
-using System.ComponentModel.DataAnnotations;
-using EAM.CORE.Common;
-using AutoMapper;
+﻿using AutoMapper;
 using Common;
+using EAM.CORE;
+using EAM.CORE.Common;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace EAM.BUSINESS.Common
 {
@@ -105,8 +106,47 @@ namespace EAM.BUSINESS.Common
             try
             {
                 var entity = _mapper.Map<TEntity>(dto);
+
+                var keyProperties = dto.GetType()
+                    .GetProperties()
+                    .Where(p => Attribute.IsDefined(p, typeof(KeyAttribute)))
+                    .ToList();
+
+                if (keyProperties.Any())
+                {
+                    var query = _dbContext.Set<TEntity>().AsQueryable();
+
+                    foreach (var prop in keyProperties)
+                    {
+                        var keyName = prop.Name;
+                        var keyValue = prop.GetValue(dto);
+
+                        if (keyValue == null) continue;
+
+                        var parameter = Expression.Parameter(typeof(TEntity), "e");
+                        var left = Expression.Call(
+                            typeof(EF),
+                            nameof(EF.Property),
+                            new[] { typeof(object) },
+                            parameter,
+                            Expression.Constant(keyName)
+                        );
+                        var right = Expression.Constant(keyValue);
+                        var equal = Expression.Equal(left, right);
+                        var lambda = Expression.Lambda<Func<TEntity, bool>>(equal, parameter);
+
+                        query = query.Where(lambda);
+                    }
+
+                    if (await query.AnyAsync())
+                    {
+                        throw new InvalidOperationException("Mã đã tồn tại! Vui lòng nhập mã khác!");
+                    }
+                }
+
                 var entityResult = await _dbContext.Set<TEntity>().AddAsync(entity);
                 await _dbContext.SaveChangesAsync();
+
                 var dtoResult = _mapper.Map<TDto>(entityResult.Entity);
                 return dtoResult;
             }
@@ -117,6 +157,7 @@ namespace EAM.BUSINESS.Common
                 return null;
             }
         }
+
         public virtual async Task Delete(object code)
         {
             try

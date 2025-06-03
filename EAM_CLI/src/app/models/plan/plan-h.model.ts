@@ -11,6 +11,7 @@ export class PlanHModel {
   stdate: Date | null = null;
   measure: string | null = null;
   measvalue: number | null = 0;
+  reading : number | null = 0;
   point : string | null = '';
   mix: string | null = null;
   tplnr: string | null = null;
@@ -19,6 +20,7 @@ export class PlanHModel {
   ingrp: string | null = null;
   arbpl: string | null = null;
   auart: string | null = 'PM01';
+  nextCounter : number | null = 0;
   isActive: boolean | null = true;
   lstEquip: any[] = [];
   lstPlanOrder: any[] = [];

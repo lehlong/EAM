@@ -13,6 +13,7 @@ import { WcService } from '../../service/master-data/wc.service';
 import { TasklistService } from '../../service/master-data/task-list.service';
 import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { EquipService } from '../../service/master-data/equip.service';
+import { EqCounterService } from '../../service/master-data/equip-counter.service';
 
 @Component({
   selector: 'app-plan-manager',
@@ -40,6 +41,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   lstTask: any[] = [];
   lstEqGroup: any[] = [];
   lstEquip: any[] = [];
+  lstEqCounter : any = [];
 
   model: any = {
     iwerk: null,
@@ -78,6 +80,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
     private _sTasklist: TasklistService,
     private _sEqGroup: EqGroupService,
     private equip: EquipService,
+    private _sEqCounter : EqCounterService
   ) {
     this.validateForm = this.fb.group({
       warpl: ['', [Validators.required]],
@@ -115,6 +118,14 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
     this.orderType.getAll().subscribe({
       next: (data: any) => {
         this.lstOrderType = data;
+      },
+      error: (response: any) => {
+        console.log(response);
+      },
+    });
+     this._sEqCounter.getAll().subscribe({
+      next: (data: any) => {
+        this.lstEqCounter = data;
       },
       error: (response: any) => {
         console.log(response);

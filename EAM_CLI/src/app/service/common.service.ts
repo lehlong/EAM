@@ -60,7 +60,7 @@ export class CommonService {
       .pipe(
         tap((response) => {
           if (response.status == false) {
-            this.showError(response.messageObject.message)
+            this.showError(`Mã lỗi: ${response.messageObject.message} - ${response.messageObject.messageDetail}`)
           }
         }), // Log phản hồi API
         map(this.handleApiResponse),
@@ -91,7 +91,7 @@ export class CommonService {
             this.showSuccess('Thêm mới thông tin thành công');
           }
         } else {
-          this.showError(response.messageObject.message);
+          this.showError(`Mã lỗi: ${response.messageObject.message} - ${response.messageObject.messageDetail}`)
         }
       }),
       map(this.handleApiResponse),
@@ -117,7 +117,7 @@ export class CommonService {
         if (response.status) {
           this.showSuccess('Cập nhật thông tin thành công')
         }else{
-          this.showError(response.messageObject.message)
+         this.showError(`Mã lỗi: ${response.messageObject.message} - ${response.messageObject.messageDetail}`)
         }
       }),
       map(this.handleApiResponse),

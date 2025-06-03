@@ -57,6 +57,12 @@ namespace EAM.CORE.Entities.PLAN
         [Column("POINT")]
         public string? Point { get; set; }
 
+        [Column("READING")]
+        public decimal? Reading { get; set; }
+
+        [Column("NEXT_COUNTER")]
+        public decimal? NextCounter { get; set; }
+
         [Column("PLNNR")]
         public string? Plnnr { get; set; }
 

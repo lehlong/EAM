@@ -140,14 +140,33 @@
         </div>
       </div>
 
-      <div nz-col class="gutter-row" [nzSpan]="6">
+     <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
-          <label>Chỉ số hoạt động</label>
-          <input nz-input type="number" [disabled]="true">
+          <label>Thiết bị</label>
+         <input nz-input [value]="globalService.getNameEquip(lstEquip, model.equnr)" [disabled]="true">
         </div>
       </div>
 
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Mã điểm đo</label>
+           <input nz-input [value]="globalService.getNamePoint(lstEqCounter, model.point)" [disabled]="true">
+        </div>
+      </div>
 
+       <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Chỉ số bắt đầu KH</label>
+          <input nz-input type="number" [(ngModel)]="model.reading" [disabled]="true">
+        </div>
+      </div>
+     
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Chỉ số hoạt động</label>
+          <input nz-input type="number" [(ngModel)]="model.measvalue" [disabled]="true">
+        </div>
+      </div>
 
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
@@ -286,7 +305,9 @@
               <th>Tên kế hoạch</th>
               <th>Khu vực chức năng</th>
               <th>Ngày dự kiến</th>
+              <th>Chỉ số dự kiến</th>
               <th>Số lệnh</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -295,6 +316,7 @@
               <td>{{ data.name }}</td>
               <td>{{getNameFloc(model.tplnr)}}</td>
               <td>{{ data.schstart | date: 'dd/MM/yyyy' }}</td>
+              <td>{{data.reading | number}}</td>
               <td>{{data.aufnr}}</td>
             </tr>
           </tbody>
