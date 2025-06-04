@@ -53,6 +53,25 @@ namespace EAM.API.Controllers.MD
             return Ok(transferObject);
         }
 
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById([FromQuery] string equnr)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetEquip(equnr);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+                transferObject.Status = true;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

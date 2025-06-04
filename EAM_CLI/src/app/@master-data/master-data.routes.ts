@@ -29,7 +29,7 @@ export const masterDataRoutes: Routes = [
   { path: 'noti-type', component: NotiTypeComponent },
   { path: 'order-type', component: OrderTypeComponent },
   { path: 'floc', component: FlocComponent },
-  { path: 'equip', component: EquipComponent },
+  { path: 'equip/:equnr', component: EquipComponent },
   { path: 'task-list', component: TasklistComponent },
   { path: 'char', component: CharComponent },
   { path: 'class-h', component: ClassHComponent },
@@ -40,6 +40,6 @@ export const masterDataRoutes: Routes = [
   { path: 'active-status', component: ActiveStatusComponent },
   { path: 'plgrp', component: PlgrpComponent },
   { path: 'unit', component: UnitComponent },
-  { path: 'equip-history', component: EquipHistoryComponent },
+  { path: 'equip-history/:equnr', component: EquipHistoryComponent },
 
 ];

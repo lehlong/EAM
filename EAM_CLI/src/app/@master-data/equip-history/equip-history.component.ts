@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ShareModule } from '../../shared/share-module';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
@@ -99,7 +99,8 @@ export class EquipHistoryComponent {
     private classH: ClassHService,
     private classD: ClassDService,
     private _sNoti: NotiService,
-    private _sOrder: OrderService
+    private _sOrder: OrderService,
+    private route: ActivatedRoute,
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
@@ -138,6 +139,19 @@ export class EquipHistoryComponent {
   ngOnInit(): void {
     this.search();
     this.getMasterData();
+ this.route.paramMap.subscribe({
+      next: (params) => {
+        const equnr = params.get('equnr');
+        if (equnr != '0') {
+          this._service.getById(equnr).subscribe({
+            next: (data) => {
+              if(data != null) this.openEdit(data)
+            }
+          })
+        }
+      },
+    });
+
   }
 
   getMasterData() {

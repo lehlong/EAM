@@ -14,6 +14,10 @@ export class EquipService {
   getByEqunr(equnr: string): Observable<any> {
     return this.commonService.get(`Equip/GetByEqunr/${equnr}`)
   }
+
+  getById(equnr: any): Observable<any> {
+    return this.commonService.get(`Equip/GetById?equnr=${equnr}`)
+  }
   getAll(): Observable<any> {
     return this.commonService.get('Equip/GetAll')
   }

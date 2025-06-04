@@ -15,9 +15,24 @@ namespace EAM.BUSINESS.Services.MD
         Task<PagedResponseDto> Search(EquipFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
         Task<List<EquipDto>> GetByEqunr(string equnr);
+        Task<TblMdEquip> GetEquip(string equnr);
     }
     public class EquipService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdEquip, EquipDto>(dbContext, mapper), IEquipService
     {
+        public async Task<TblMdEquip> GetEquip(string equnr)
+        {
+            try
+            {
+                return await _dbContext.TblMdEquip.FirstOrDefaultAsync(x => x.Equnr == equnr);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+
+        }
         public async Task<PagedResponseDto> Search(EquipFilter filter)
         {
             try
@@ -62,7 +77,7 @@ namespace EAM.BUSINESS.Services.MD
                 {
                     query = query.Where(x => x.Iwerk == filter.Iwerk);
                 }
-                
+
 
 
                 if (filter.IsActive.HasValue)

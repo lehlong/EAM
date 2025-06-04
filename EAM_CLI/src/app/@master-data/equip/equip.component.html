@@ -526,6 +526,14 @@
         <nz-tab nzTitle="Vị trí thiết bị">
           <div id="equip-map" style="height: calc(100vh - 200px);"></div>
         </nz-tab>
+
+        <nz-tab nzTitle="QR Thiết bị">
+          <div id="download-qr-equip" *ngIf="linkEqunr!= null && linkEqunr != ''">
+            <nz-qrcode [nzValue]="linkEqunr" [nzLevel]="'Q'"></nz-qrcode>
+            <a #download></a>
+            <button nz-button nzType="primary" (click)="downloadQrCode()">Tải QR</button>
+          </div>
+        </nz-tab>
       </nz-tabset>
     </form>
   </ng-container>

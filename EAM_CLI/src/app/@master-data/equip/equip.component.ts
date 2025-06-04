@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { BaseFilter, PaginationResult } from '../../models/base.model';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -21,7 +21,7 @@ import { ActiveStatusService } from '../../service/master-data/active-status.ser
 import { AccountService } from '../../service/system-manager/account.service';
 import { EquipFilter } from '../../filter/master-data/equiq-filter';
 import { EquipCharService } from '../../service/master-data/equiq-char.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClassHService } from '../../service/master-data/class-h.service';
 import { ClassDService } from '../../service/master-data/class-d.service';
 import { EquipClassModel } from '../../models/master-data/equip-class.model';
@@ -35,6 +35,9 @@ import * as L from 'leaflet';
   styleUrl: './equip.component.scss',
 })
 export class EquipComponent {
+
+  @ViewChild('download-qr-equip', { static: false }) download!: ElementRef;
+
   private map: L.Map | undefined;
   validateForm: FormGroup;
   isSubmit: boolean = false;
@@ -73,6 +76,7 @@ export class EquipComponent {
   lstClassH: any[] = []
   lstClassD: any[] = []
   lstClassDSelect: any[] = []
+  linkEqunr : string = ''
 
   constructor(
     private _sAccount: AccountService,
@@ -93,7 +97,8 @@ export class EquipComponent {
     private _sEqChar: EquipCharService,
     private router: Router,
     private classH: ClassHService,
-    private classD: ClassDService
+    private classD: ClassDService,
+    private route: ActivatedRoute,
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
@@ -134,9 +139,23 @@ export class EquipComponent {
   ngOnInit(): void {
     this.search();
     this.getMasterData();
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        const equnr = params.get('equnr');
+        if (equnr != '0') {
+          this._service.getById(equnr).subscribe({
+            next: (data) => {
+              if(data != null) this.openEdit(data)
+            }
+          })
+        }
+      },
+    });
+
   }
 
   close() {
+    this.linkEqunr = '';
     this.isSubmit = false;
     this.visible = false;
     this.map = undefined;
@@ -354,6 +373,7 @@ export class EquipComponent {
   }
 
   openEdit(data: any) {
+    this.linkEqunr = `${environment.thisUrl}/master-data/equip-history/${data.equnr}`
     this.edit = true;
     this.visible = true;
     this.validateForm.patchValue(data);
@@ -568,5 +588,15 @@ export class EquipComponent {
 
   handleDocUploadChange(info: any): void {
     this.handleUploadChange(info, 'doc');
+  }
+
+  downloadQrCode(): void {
+    const canvas = document.getElementById('download-qr-equip')?.querySelector<HTMLCanvasElement>('canvas');
+    if (canvas) {
+      this.download.nativeElement.href = canvas.toDataURL('image/png');
+      this.download.nativeElement.download = 'ng-zorro-antd';
+      const event = new MouseEvent('click');
+      this.download.nativeElement.dispatchEvent(event);
+    }
   }
 }

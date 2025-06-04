@@ -83,3 +83,11 @@ nz-empty {
 td > nz-select{
   margin-bottom: 0;
 }
+
+#download-qr-equip{
+      display: flex
+;
+    flex-flow: column;
+    gap: 12px;
+    width: fit-content;
+}
