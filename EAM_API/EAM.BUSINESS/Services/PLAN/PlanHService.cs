@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.MD;
@@ -17,8 +18,10 @@ namespace EAM.BUSINESS.Services.PLAN
     public interface IPlanHService : IGenericService<TblPlanH, PlanHDto>
     {
         Task<byte[]> Export(BaseMdFilter filter);
+        Task<string> ExportReport();
         Task Create(PlanHDto dto);
         Task GenarateOrder(FilterPlanModel filter);
+        Task GenarateOrderSelect(List<string> ids);
         Task<string> GenarateCode(string m);
         Task<List<ResponsePlanModel>> SearchPlan(FilterPlanModel filter);
     }
@@ -32,6 +35,48 @@ namespace EAM.BUSINESS.Services.PLAN
                 var sequence = m == "M1" ? 10000000 : m == "M2" ? 20000000 : 30000000;
                 var count = await _dbContext.TblPlanH.Where(x => x.Mpgrp == m).CountAsync();
                 return (sequence + count).ToString();
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+        public async Task<string> ExportReport()
+        {
+            try
+            {
+                string templatePath = Path.Combine("TemplateExcel", "BaoCaoKeHoachBTBD.xlsx");
+                DateTime now = DateTime.Now;
+                string exportFolder = Path.Combine("ExportFiles",
+                                                   now.Year.ToString(),
+                                                   now.Month.ToString("D2"),
+                                                   now.Day.ToString("D2"));
+                Directory.CreateDirectory(exportFolder);
+                string exportFileName = "BaoCaoKeHoachBTBD.xlsx";
+                string exportPath = Path.Combine(exportFolder, exportFileName);
+                using (var workbook = new XLWorkbook(templatePath))
+                {
+                    var worksheet = workbook.Worksheet(1);
+
+                    //worksheet.Cell("G2").Value = noti.Qmnum;
+                    //worksheet.Cell("D8").Value = $"{noti.Equnr} - {_dbContext.TblMdEquip.Find(noti.Equnr)?.Eqktx}";
+                    //worksheet.Cell("D9").Value = $"{noti.Tplnr} - {_dbContext.TblMdFloc.Find(noti.Tplnr)?.Descript}";
+                    //worksheet.Cell("D10").Value = $"{noti.Priok} - {GetPriorityText(noti.Priok)}";
+                    //worksheet.Cell("D11").Value = $"{noti.HtDvql}";
+                    //worksheet.Cell("D12").Value = $"{noti.Iwerk} - {_dbContext.TblMdPlant.Find(noti.Iwerk)?.IwerkTxt}";
+                    //worksheet.Cell("D13").Value = $"{noti.HtDvsd}";
+                    //worksheet.Cell("D14").Value = noti.Qmdat?.ToString("dd/MM/yyyy");
+                    //worksheet.Cell("D15").Value = noti.Ltrmn?.ToString("dd/MM/yyyy");
+                    //worksheet.Cell("B18").Value = noti.Qmtxt;
+                    worksheet.Cell("A10").Value = $"Ngày giờ: {DateTime.Now.ToString("dd/MM/yyyy hh:mm")}";
+                    workbook.SaveAs(exportPath);
+                }
+
+                return exportPath.Replace("\\", "/");
+
             }
             catch (Exception ex)
             {
@@ -72,6 +117,7 @@ namespace EAM.BUSINESS.Services.PLAN
                     {
                         data.Add(new ResponsePlanModel
                         {
+                            Id = j.Id,
                             Arbpl = i.Arbpl,
                             Warpl = i.Warpl,
                             Name = i.Wptxt,
@@ -299,6 +345,104 @@ namespace EAM.BUSINESS.Services.PLAN
                 Exception = ex;
             }
         }
+
+        public async Task GenarateOrderSelect(List<string> ids)
+        {
+            try
+            {
+                var planOrders = await _dbContext.TblPlanOrder
+                                                 .Where(x => ids.Contains(x.Id) && x.Iscompled == false)
+                                                 .ToListAsync();
+                var warplList = planOrders.Select(x => x.Warpl).Distinct().ToList();
+                var header = await _dbContext.TblPlanH
+                                             .Where(x => warplList.Contains(x.Warpl) && x.Cyctype == "T")
+                                             .ToListAsync();
+                var pmOrders = new Dictionary<string, int?>
+        {
+            { "PM01", _dbContext.TblMdOrderType.Find("PM01").Sequence + _dbContext.TblTranOrder.Count(x => x.Auart == "PM01") },
+            { "PM02", _dbContext.TblMdOrderType.Find("PM02").Sequence + _dbContext.TblTranOrder.Count(x => x.Auart == "PM02") },
+            { "PM03", _dbContext.TblMdOrderType.Find("PM03").Sequence + _dbContext.TblTranOrder.Count(x => x.Auart == "PM03") }
+        };
+                foreach (var i in header)
+                {
+                    var filteredPlanOrders = planOrders.Where(x => x.Warpl == i.Warpl);
+                    foreach (var _d in filteredPlanOrders)
+                    {
+                        var code = pmOrders.ContainsKey(i.Auart) ? pmOrders[i.Auart].ToString() : string.Empty;
+                        _d.Iscompled = true;
+                        _d.Aufnr = code;
+                        _dbContext.TblPlanOrder.Update(_d);
+                        _dbContext.TblTranOrder.Add(new TblTranOrder
+                        {
+                            Aufnr = code,
+                            Iwerk = i.Iwerk,
+                            Auart = i.Auart,
+                            Ktext = i.Wptxt,
+                            Tplnr = i.Tplnr,
+                            Ingpr = i.Ingrp,
+                            Arbpl = i.Arbpl,
+                            Gstrs = _d.Schstart,
+                            Warpl = i.Warpl,
+                            Equnr = i.Equnr,
+                            Status = "01"
+                        });
+                        if (i.Mptyp == "1")
+                        {
+                            var lstEquip = _dbContext.TblPlanD.Where(x => x.Warpl == i.Warpl).ToList();
+                            foreach (var e in lstEquip)
+                            {
+                                _dbContext.TblTranOrderEq.Add(new TblTranOrderEq
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Aufnr = code,
+                                    Equnr = e.Equnr,
+                                });
+                            }
+                            var lstTaskList = _dbContext.TblMdTasklist.Where(x => x.Plnnr == i.Plnnr).ToList();
+                            foreach (var t in lstTaskList)
+                            {
+                                _dbContext.TblTranOrderOperation.Add(new TblTranOrderOperation
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Aufnr = code,
+                                    Vornr = t.Vornr,
+                                    Ltxa1 = t.Ltxa1,
+                                });
+                            }
+                        }
+                        else
+                        {
+                            _dbContext.TblTranOrderEq.Add(new TblTranOrderEq
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Aufnr = code,
+                                Equnr = i.Equnr,
+                            });
+                            var lstTaskList = _dbContext.TblMdTasklist.Where(x => x.Plnnr == _d.Plnnr).ToList();
+                            foreach (var t in lstTaskList)
+                            {
+                                _dbContext.TblTranOrderOperation.Add(new TblTranOrderOperation
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Aufnr = code,
+                                    Vornr = t.Vornr,
+                                    Ltxa1 = t.Ltxa1,
+                                });
+                            }
+                        }
+                        if (pmOrders.ContainsKey(i.Auart)) pmOrders[i.Auart]++;
+                    }
+                }
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+            }
+        }
+
+
 
     }
 }

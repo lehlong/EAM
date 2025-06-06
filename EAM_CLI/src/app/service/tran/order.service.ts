@@ -44,6 +44,10 @@ export class OrderService {
     return this.commonService.put('Order/Update', params);
   }
 
+  updateListOrder(params: any): Observable<any> {
+    return this.commonService.put('Order/UpdateListOrder', params);
+  }
+
   delete(id: string): Observable<any> {
     return this.commonService.delete(`Order/Delete/${id}`);
   }

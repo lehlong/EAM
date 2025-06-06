@@ -14,6 +14,7 @@ import { TasklistService } from '../../service/master-data/task-list.service';
 import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { EquipService } from '../../service/master-data/equip.service';
 import { EqCounterService } from '../../service/master-data/equip-counter.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-plan-manager',
@@ -253,6 +254,17 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
       anchor.href = url;
       anchor.click();
     });
+  }
+
+  exportReport(){
+    this._service.exportReport(this.filter).subscribe({
+      next: (data) => {
+        var anchor = document.createElement('a');
+        anchor.href = environment.urlFiles + '/' + data;
+        anchor.click();
+      },
+      error: (err) => console.error(err),
+    })
   }
   submitForm(): void {
     this.isSubmit = true;

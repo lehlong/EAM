@@ -75,6 +75,11 @@
       [nzFrontPagination]="false" #headerTable [nzData]="lstOrderPlan">
       <thead>
         <tr>
+          <th
+            [nzChecked]="checked"
+            [nzIndeterminate]="indeterminate"
+            (nzCheckedChange)="onAllChecked($event)"
+          ></th>
           <th>STT</th>
           <th>Bộ phận</th>
           <th>Mã kế hoạch</th>
@@ -88,6 +93,11 @@
       <tbody>
       <tbody>
         <tr *ngFor="let data of lstOrderPlan; let i = index">
+           <td
+              [nzChecked]="setOfCheckedId.includes(data.id)"
+              [nzDisabled]="data.isComplete"
+              (nzCheckedChange)="onItemChecked(data, $event)"
+            ></td>
           <td>{{ i + 1 }}</td>
           <td>{{ _global.getNameWc(lstWc, data.arbpl) }}</td>
           <td>{{ data.warpl }}</td>

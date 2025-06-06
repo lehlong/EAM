@@ -14,6 +14,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string? Equnr { get; set; }
         public string? Anlnr { get; set; }
         public string? Anlun { get; set; }
+        public string? IsConfirm { get; set; }
         public DateTime? Datab { get; set; }
         public TimeSpan? TimeF { get; set; }
         public DateTime? Datbi { get; set; }

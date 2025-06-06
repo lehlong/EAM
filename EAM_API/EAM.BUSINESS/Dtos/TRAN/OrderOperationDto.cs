@@ -3,6 +3,7 @@ using Common;
 using EAM.CORE.Entities.TRAN;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EAM.BUSINESS.Dtos.TRAN
 {
@@ -12,6 +13,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string? Aufnr { get; set; }
         public string? Vornr { get; set; }
+        public string? IsConfirm { get; set; }
         public string? Ltxa1 { get; set; }
         public string? Arbpl { get; set; }
         public string? Status { get; set; }

@@ -15,12 +15,14 @@ import { WcService } from '../../service/master-data/wc.service';
 import { AccountService } from '../../service/system-manager/account.service';
 import { OrderService } from '../../service/tran/order.service';
 import {
+  confirm,
   HTBTBD,
   ILART,
   LVTSD,
   PriorityLevel,
   TTTH,
 } from '../../shared/constants/select.constants';
+import Swal from 'sweetalert2';
 import { CatalogService } from '../../service/master-data/catalog.service';
 import { OrderAttService } from '../../service/tran/order-att.service';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
@@ -44,7 +46,6 @@ import { TasklistService } from '../../service/master-data/task-list.service';
   styleUrl: './incident-correct.component.scss',
 })
 export class IncidentCorrectComponent implements OnInit, OnDestroy {
-  checked: boolean = false;
   filter = new BaseFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
@@ -89,6 +90,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   previewTitle: string | undefined = '';
   previewVisible = false;
   visibleOrder: boolean = false;
+  lstConfirm = confirm
 
   model: any = new OrderModel();
 
@@ -144,6 +146,10 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  checkStatusOrder(): boolean {
+    return this.model.status == '04' ? true : false;
+  }
   search() {
     this.subscriptions.push(
       this._sOrder.search(this.filter).subscribe({
@@ -160,8 +166,15 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   fillDate: any = {
     startDate: null,
     toDate: null,
-    isWork : false
+    isWork : false,
+    isConfirm : ''
   };
+
+  onChangeTaskConfirm(){
+    this.model.lstOpe.forEach((i: any) => {
+        i.isConfirm = this.fillDate.isConfirm;
+      });
+  }
 
   changeFillDate(type: string) {
     if (
@@ -614,4 +627,151 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  
+    visibleAssignAll : boolean = false
+    userAssign: any = ''
+  
+    assignCancel() {
+      this.visibleAssignAll = false;
+    }
+    assignOk() {
+      this.lstSelectData.forEach((i)=>{
+        i.status = '02'
+        i.staffSc = this.userAssign
+      })
+      this.updateStatusListOrder(this.lstSelectData)
+    }
+  
+  
+    onClickAsignAll() {
+      if (this.lstSelectData.length == 0) {
+        this.message.error('Vui lòng chọn lệnh để thực hiện chức năng!');
+        return;
+      }
+      var checkStatus = this.lstSelectData.filter(x => x.status != '01')
+      if (checkStatus.length > 0) {
+        this.message.error('Chức năng Phân công chỉ thực hiện cho lệnh có trạng thái Khởi tạo! Vui lòng chọn lại!');
+        return;
+      }
+      this.visibleAssignAll = true
+    }
+  
+    onClickProcessAll() {
+      if (this.lstSelectData.length == 0) {
+        this.message.error('Vui lòng chọn lệnh để thực hiện chức năng!');
+        return;
+      }
+      var checkStatus = this.lstSelectData.filter(x => x.status != '02')
+      if (checkStatus.length > 0) {
+        this.message.error('Chức năng Đang thực hiện chỉ thực hiện cho lệnh có trạng thái Đã phân công! Vui lòng chọn lại!');
+        return;
+      }
+      Swal.fire({
+        title: 'Đang thực hiện?',
+        text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Xác nhận',
+        cancelButtonText: 'Huỷ',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.lstSelectData.forEach((i) => {
+            i.status = '07';
+            i.gstri = new Date();
+          });
+          this.updateStatusListOrder(this.lstSelectData)
+        }
+      })
+    }
+  
+    onClickDoneAll() {
+      if (this.lstSelectData.length == 0) {
+        this.message.error('Vui lòng chọn lệnh để thực hiện chức năng!');
+        return;
+      }
+      var checkStatus = this.lstSelectData.filter(x => x.status != '07')
+      if (checkStatus.length > 0) {
+        this.message.error('Chức năng Hoàn thành chỉ thực hiện cho lệnh có trạng thái Đang thực hiện! Vui lòng chọn lại!');
+        return;
+      }
+  
+      Swal.fire({
+        title: 'Hoàn thành?',
+        text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Xác nhận',
+        cancelButtonText: 'Huỷ',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.lstSelectData.forEach((i) => {
+            i.status = '04';
+            i.gltri = new Date();
+          });
+          this.updateStatusListOrder(this.lstSelectData)
+        }
+      })
+  
+    }
+  
+    updateStatusListOrder(data: any) {
+      this._sOrder.updateListOrder(data).subscribe({
+        next: () => {
+          this.search();
+          this.checked = false;
+          this.indeterminate = false;
+          this.lstSelectData = [];
+          this.setOfCheckedId = new Set<any>()
+          this.visibleAssignAll = false
+          this.userAssign = ''
+        },
+        error: (err) => {
+          console.error(err);
+          this.message.error('Cập nhật thất bại');
+        },
+      });
+    }
+  
+    indeterminate = false;
+    lstSelectData: any[] = []
+    setOfCheckedId = new Set<any>();
+    checked: boolean = false;
+  
+  
+    onItemChecked(data: any, checked: boolean): void {
+      if (checked) {
+        this.lstSelectData.push(data)
+        this.setOfCheckedId.add(data.aufnr)
+      } else {
+        this.lstSelectData = this.lstSelectData.filter(x => x.aufnr != data.aufnr)
+        this.setOfCheckedId.delete(data.aufnr)
+      }
+      this.refreshSelection();
+    }
+  
+    onAllChecked(checked: boolean): void {
+      this.lstSelectData = []
+      this.setOfCheckedId = new Set<any>();
+      if (checked) {
+        this.paginationResult.data.forEach((i: any) => {
+          this.lstSelectData.push(i)
+          this.setOfCheckedId.add(i.aufnr)
+        })
+      }
+      this.refreshSelection();
+    }
+  
+    refreshSelection() {
+      if (this.lstSelectData.length > 0 && this.lstSelectData.length != this.paginationResult.data.length) {
+        this.indeterminate = true;
+        this.checked = false;
+      } else if (this.lstSelectData.length == this.paginationResult.data.length) {
+        this.indeterminate = false;
+        this.checked = true;
+      } else {
+        this.indeterminate = false;
+        this.checked = false;
+      }
+    }
 }

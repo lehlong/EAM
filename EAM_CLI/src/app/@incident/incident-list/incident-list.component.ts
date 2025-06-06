@@ -45,8 +45,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   checked: boolean = false;
   isVisibleAddOrder = false;
   visibleDetail: boolean = false;
-  filter = new BaseFilter();
-  sfilter = new NotiFilter();
+  filter = new NotiFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
   lstFloc: any[] = [];
@@ -252,7 +251,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    const filter : any = { ...this.sfilter };
+    const filter : any = { ...this.filter };
     if (filter.fromDate) {
       filter.fromDate = this._global.formatDatePlanFilter(filter.fromDate);
     }

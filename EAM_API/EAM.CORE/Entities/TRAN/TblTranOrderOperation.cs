@@ -24,6 +24,9 @@ namespace EAM.CORE.Entities.TRAN
         [Column("ARBPL")]
         public string? Arbpl { get; set; }
 
+        [Column("IS_CONFIRM")]
+        public string? IsConfirm { get; set; }
+
         [Column("STATUS")]
         public string? Status { get; set; }
 

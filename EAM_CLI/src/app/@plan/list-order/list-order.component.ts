@@ -27,21 +27,19 @@ import { AccountService } from '../../service/system-manager/account.service';
 import { OrderAttService } from '../../service/tran/order-att.service';
 import { OrderService } from '../../service/tran/order.service';
 import { ItemService } from '../../service/warehouse/item.service';
-import { PriorityLevel, HTBTBD, LVTSD, ILART, TTTH, OrderStatus } from '../../shared/constants/select.constants';
-import { TitleStrategy } from '@angular/router';
-import { NotiFilter } from '../../filter/incident/incident.filter';
+import { PriorityLevel, HTBTBD, LVTSD, ILART, TTTH, OrderStatus, confirm } from '../../shared/constants/select.constants';
 import { OrderFilter } from '../../filter/plan/order.filter';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-order',
   imports: [ShareModule],
+  standalone: true,
   templateUrl: './list-order.component.html',
   styleUrl: './list-order.component.scss',
 })
 export class ListOrderComponent implements OnInit, OnDestroy {
-  checked: boolean = false;
-  filter = new BaseFilter();
-  ofilter = new OrderFilter();
+  filter = new OrderFilter();
   loading: boolean = false;
   paginationResult = new PaginationResult();
   lstItem: any[] = [];
@@ -75,6 +73,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   lstEqCat: any = [];
   lstOrderOperation: any[] = [];
   lstOrderStatus = OrderStatus
+  lstConfirm = confirm
 
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];
@@ -135,8 +134,15 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   fillDate: any = {
     startDate: null,
     toDate: null,
-    isWork : false
+    isWork: false,
+    isConfirm: null
   };
+
+  onChangeTaskConfirm() {
+    this.model.lstOpe.forEach((i: any) => {
+      i.isConfirm = this.fillDate.isConfirm;
+    });
+  }
   changeFillDate(type: string) {
     if (
       this.fillDate.startDate > this.fillDate.toDate &&
@@ -161,10 +167,10 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangeWork(){
+  onChangeWork() {
     this.model.lstOpe.forEach((i: any) => {
-        i.isWork = this.fillDate.isWork;
-      });
+      i.isWork = this.fillDate.isWork;
+    });
   }
 
   changeDate(data: any, type: string) {
@@ -194,7 +200,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     );
   }
   search() {
-    const filter : any = { ...this.ofilter };
+    const filter: any = { ...this.filter };
     if (filter.fromDate) {
       filter.fromDate = this._global.formatDatePlanFilter(filter.fromDate);
     }
@@ -279,7 +285,6 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this._sOrder.getDetail(e.aufnr).subscribe({
         next: (data) => {
-          console.log(data);
           this.visibleOrder = true;
           this.model = data;
           this.model.equipName = this._global.getNameEquip(
@@ -304,6 +309,10 @@ export class ListOrderComponent implements OnInit, OnDestroy {
       })
     );
     this.loadAttachments(e.aufnr);
+  }
+
+  checkStatusOrder(): boolean {
+    return this.model.status == '04' ? true : false;
   }
 
   closeOrder() {
@@ -355,21 +364,32 @@ export class ListOrderComponent implements OnInit, OnDestroy {
   }
 
   updateStatusOrder(data: any, status: any) {
-    data.status = status;
-    if (status == '07') {
-      data.gstri = new Date();
-    } else {
-      data.gltri = new Date();
-    }
+    Swal.fire({
+      title: status == '07' ? 'Đang thực hiện?' : 'Hoàn thành?',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        data.status = status;
+        if (status == '07') {
+          data.gstri = new Date();
+        } else {
+          data.gltri = new Date();
+        }
 
-    this._sOrder.update(data).subscribe({
-      next: () => {
-        this.search();
-      },
-      error: (err) => {
-        console.error(err);
-        this.message.error('Cập nhật thất bại');
-      },
+        this._sOrder.update(data).subscribe({
+          next: () => {
+            this.search();
+          },
+          error: (err) => {
+            console.error(err);
+            this.message.error('Cập nhật thất bại');
+          },
+        });
+      }
     });
   }
 
@@ -591,6 +611,153 @@ export class ListOrderComponent implements OnInit, OnDestroy {
         }
       },
     });
+  }
+
+
+  visibleAssignAll : boolean = false
+  userAssign: any = ''
+
+  assignCancel() {
+    this.visibleAssignAll = false;
+  }
+  assignOk() {
+    this.lstSelectData.forEach((i)=>{
+      i.status = '02'
+      i.staffSc = this.userAssign
+    })
+    this.updateStatusListOrder(this.lstSelectData)
+  }
+
+
+  onClickAsignAll() {
+    if (this.lstSelectData.length == 0) {
+      this.message.error('Vui lòng chọn lệnh để thực hiện chức năng!');
+      return;
+    }
+    var checkStatus = this.lstSelectData.filter(x => x.status != '01')
+    if (checkStatus.length > 0) {
+      this.message.error('Chức năng Phân công chỉ thực hiện cho lệnh có trạng thái Khởi tạo! Vui lòng chọn lại!');
+      return;
+    }
+    this.visibleAssignAll = true
+  }
+
+  onClickProcessAll() {
+    if (this.lstSelectData.length == 0) {
+      this.message.error('Vui lòng chọn lệnh để thực hiện chức năng!');
+      return;
+    }
+    var checkStatus = this.lstSelectData.filter(x => x.status != '02')
+    if (checkStatus.length > 0) {
+      this.message.error('Chức năng Đang thực hiện chỉ thực hiện cho lệnh có trạng thái Đã phân công! Vui lòng chọn lại!');
+      return;
+    }
+    Swal.fire({
+      title: 'Đang thực hiện?',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.lstSelectData.forEach((i) => {
+          i.status = '07';
+          i.gstri = new Date();
+        });
+        this.updateStatusListOrder(this.lstSelectData)
+      }
+    })
+  }
+
+  onClickDoneAll() {
+    if (this.lstSelectData.length == 0) {
+      this.message.error('Vui lòng chọn lệnh để thực hiện chức năng!');
+      return;
+    }
+    var checkStatus = this.lstSelectData.filter(x => x.status != '07')
+    if (checkStatus.length > 0) {
+      this.message.error('Chức năng Hoàn thành chỉ thực hiện cho lệnh có trạng thái Đang thực hiện! Vui lòng chọn lại!');
+      return;
+    }
+
+    Swal.fire({
+      title: 'Hoàn thành?',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.lstSelectData.forEach((i) => {
+          i.status = '04';
+          i.gltri = new Date();
+        });
+        this.updateStatusListOrder(this.lstSelectData)
+      }
+    })
+
+  }
+
+  updateStatusListOrder(data: any) {
+    this._sOrder.updateListOrder(data).subscribe({
+      next: () => {
+        this.search();
+        this.checked = false;
+        this.indeterminate = false;
+        this.lstSelectData = [];
+        this.setOfCheckedId = new Set<any>()
+        this.visibleAssignAll = false
+        this.userAssign = ''
+      },
+      error: (err) => {
+        console.error(err);
+        this.message.error('Cập nhật thất bại');
+      },
+    });
+  }
+
+  indeterminate = false;
+  lstSelectData: any[] = []
+  setOfCheckedId = new Set<any>();
+  checked: boolean = false;
+
+
+  onItemChecked(data: any, checked: boolean): void {
+    if (checked) {
+      this.lstSelectData.push(data)
+      this.setOfCheckedId.add(data.aufnr)
+    } else {
+      this.lstSelectData = this.lstSelectData.filter(x => x.aufnr != data.aufnr)
+      this.setOfCheckedId.delete(data.aufnr)
+    }
+    this.refreshSelection();
+  }
+
+  onAllChecked(checked: boolean): void {
+    this.lstSelectData = []
+    this.setOfCheckedId = new Set<any>();
+    if (checked) {
+      this.paginationResult.data.forEach((i: any) => {
+        this.lstSelectData.push(i)
+        this.setOfCheckedId.add(i.aufnr)
+      })
+    }
+    this.refreshSelection();
+  }
+
+  refreshSelection() {
+    if (this.lstSelectData.length > 0 && this.lstSelectData.length != this.paginationResult.data.length) {
+      this.indeterminate = true;
+      this.checked = false;
+    } else if (this.lstSelectData.length == this.paginationResult.data.length) {
+      this.indeterminate = false;
+      this.checked = true;
+    } else {
+      this.indeterminate = false;
+      this.checked = false;
+    }
   }
 }
 

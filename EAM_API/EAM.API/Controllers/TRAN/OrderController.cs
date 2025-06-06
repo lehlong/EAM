@@ -146,6 +146,26 @@ namespace EAM.API.Controllers.TRAN
             return Ok(transferObject);
         }
 
+        [HttpPut("UpdateListOrder")]
+        public async Task<IActionResult> UpdateListOrder([FromBody] List<OrderDto> Order)
+        {
+            var transferObject = new TransferObject();
+            await _service.UpdateListOrder(Order);
+            if (_service.Status)
+            {
+                transferObject.Status = true;
+                transferObject.MessageObject.MessageType = MessageType.Success;
+                transferObject.GetMessage("0103", _service);
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0104", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {

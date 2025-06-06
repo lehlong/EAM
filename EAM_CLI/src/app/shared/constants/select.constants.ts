@@ -72,3 +72,8 @@ export const mptyp = [
   { name: 'Giá trị lũy kế', value: '01' },
   { name: 'Chỉ số đo', value: '02' },
 ];
+
+export const confirm = [
+  { name: 'Đã thực hiện', value: '01' },
+  { name: 'Chưa thực hiện', value: '02' },
+];

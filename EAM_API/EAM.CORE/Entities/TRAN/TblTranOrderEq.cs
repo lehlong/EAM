@@ -24,6 +24,9 @@ namespace EAM.CORE.Entities.TRAN
         [Column("ANLUN")]
         public string? Anlun { get; set; }
 
+        [Column("IS_CONFIRM")]
+        public string? IsConfirm { get; set; }
+
         [Column("DATAB")]
         public DateTime? Datab { get; set; }
 

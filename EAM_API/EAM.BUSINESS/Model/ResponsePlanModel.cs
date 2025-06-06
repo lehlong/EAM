@@ -8,6 +8,7 @@ namespace EAM.BUSINESS.Model
 {
     public class ResponsePlanModel
     {
+        public string Id { get; set; }
         public string? Arbpl { get; set; }
         public string? Tplnr { get; set; }
         public string? Warpl { get; set; }

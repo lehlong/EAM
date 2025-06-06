@@ -20,6 +20,14 @@ export class PlanHService {
     return this.commonService.get('PlanH/GenarateOrder', params);
   }
 
+  genarateOrderSelect(params: any): Observable<any> {
+    return this.commonService.post('PlanH/GenarateOrderSelect', params);
+  }
+
+  exportReport(params: any): Observable<any> {
+    return this.commonService.get('PlanH/ExportReport', {});
+  }
+
   genarateCode(params: any): Observable<any> {
     return this.commonService.get(`PlanH/GenarateCode?m=${params}`);
   }

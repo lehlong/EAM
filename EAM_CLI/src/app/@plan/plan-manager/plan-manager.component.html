@@ -18,6 +18,10 @@
       <button (click)="exportExcel()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
         <span nz-icon nzType="file-excel"></span>Xuất Excel
       </button>
+
+      <button (click)="exportReport()" class="!flex !items-center !border-l-0" style="margin-left: 2%; background-color: #1f7937; color: white;" nz-button >
+        <span nz-icon nzType="file-excel"></span>Xuất báo cáo
+      </button>
     </div>
   </nz-page-header-extra>
   <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R6.2.1')">
@@ -136,7 +140,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Ngày bắt đầu kế hoạch</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate"></nz-date-picker>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.stdate" [nzDisabled]="model.cyctype == 'P'"></nz-date-picker>
         </div>
       </div>
 

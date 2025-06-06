@@ -18,6 +18,7 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<string> ExportExcel(string aufnr);
         Task<string> InsertOrder(OrderDto data);
         Task UpdateOrder(OrderDto data);
+        Task UpdateListOrder(List<OrderDto> data);
         Task<OrderDto> GetDetail(string code);
         Task<PagedResponseDto> SearchPlanOrder(OrderFilter filter);
     }
@@ -328,6 +329,35 @@ namespace EAM.BUSINESS.Services.TRAN
 
                 await _dbContext.SaveChangesAsync();
 
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+            }
+        }
+
+        public async Task UpdateListOrder(List<OrderDto> datas)
+        {
+            try
+            {
+                foreach (var data in datas)
+                {
+                    var entity = _mapper.Map<TblTranOrder>(data);
+                    _dbContext.TblTranOrder.Update(entity);
+                    if (!string.IsNullOrEmpty(data.Qmnum))
+                    {
+                        var noti = _dbContext.TblTranNoti.Find(data.Qmnum);
+                        if (data.Status == "07" || data.Status == "04")
+                        {
+                            noti.StatAct = data.Status;
+                        }
+                        noti.Lvtsd = data.LoaivtSd;
+                        noti.Htbtbd = data.HtBtbd;
+                        _dbContext.TblTranNoti.Update(noti);
+                    }
+                }
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {

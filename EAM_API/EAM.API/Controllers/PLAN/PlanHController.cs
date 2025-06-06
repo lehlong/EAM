@@ -69,6 +69,41 @@ namespace EAM.API.Controllers.PLAN
             return Ok(transferObject);
         }
 
+        [HttpPost("GenarateOrderSelect")]
+        public async Task<IActionResult> GenarateOrderSelect([FromBody] List<string> ids)
+        {
+            var transferObject = new TransferObject();
+            await _service.GenarateOrderSelect(ids);
+            if (_service.Status)
+            {
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
+        [HttpGet("ExportReport")]
+        public async Task<IActionResult> ExportReport()
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.ExportReport();
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         [HttpGet("GenarateCode")]
         public async Task<IActionResult> GenarateCode([FromQuery] string m)
         {
