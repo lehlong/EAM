@@ -16,5 +16,6 @@ namespace EAM.BUSINESS.Model
         public string? Tplnr { get; set; }
         public string? Equnr { get; set; }
         public string? Warpl { get; set; }
+        public string? Mpgrp { get; set; }
     }
 }

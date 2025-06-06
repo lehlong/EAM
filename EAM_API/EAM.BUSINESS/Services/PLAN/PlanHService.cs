@@ -4,6 +4,8 @@ using Common;
 using EAM.BUSINESS.Common;
 using EAM.BUSINESS.Dtos.MD;
 using EAM.BUSINESS.Dtos.PLAN;
+using EAM.BUSINESS.Filter.PLAN;
+using EAM.BUSINESS.Filter.TRAN;
 using EAM.BUSINESS.Model;
 using EAM.CORE;
 using EAM.CORE.Entities.MD;
@@ -24,6 +26,7 @@ namespace EAM.BUSINESS.Services.PLAN
         Task GenarateOrderSelect(List<string> ids);
         Task<string> GenarateCode(string m);
         Task<List<ResponsePlanModel>> SearchPlan(FilterPlanModel filter);
+        Task<PagedResponseDto> Search(PlanFilter filter);
     }
 
     public class PlanHService(AppDbContext dbContext, IMapper mapper) : GenericService<TblPlanH, PlanHDto>(dbContext, mapper), IPlanHService
@@ -43,7 +46,44 @@ namespace EAM.BUSINESS.Services.PLAN
                 return null;
             }
         }
+        public async Task<PagedResponseDto> Search(PlanFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblPlanH.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x => x.Warpl.ToString().Contains(filter.KeyWord));
+                }
+                if (!string.IsNullOrWhiteSpace(filter.Ingrp))
+                {
+                    query = query.Where(x => x.Ingrp == filter.Ingrp);
+                }
+              
+                if (!string.IsNullOrWhiteSpace(filter.Tplnr))
+                {
+                    query = query.Where(x => x.Tplnr == filter.Tplnr);
+                }
 
+                if (!string.IsNullOrWhiteSpace(filter.Mtgrp))
+                {
+                    query = query.Where(x => x.Mpgrp == filter.Mtgrp);
+                }
+
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                return await Paging(query.OrderByDescending(x => x.Warpl), filter);
+
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
         public async Task<string> ExportReport()
         {
             try

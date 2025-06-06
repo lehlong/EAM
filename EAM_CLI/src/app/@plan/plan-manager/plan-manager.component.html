@@ -24,6 +24,63 @@
       </button>
     </div>
   </nz-page-header-extra>
+    <nz-page-header-content>
+    <div nz-row [nzGutter]="12" style="margin: 0;">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Năm</label>
+           <nz-date-picker nzMode="year" [(ngModel)]="filter.schStart" (ngModelChange)="search()"></nz-date-picker>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Phòng ban lập kế hoạch </label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Phòng ban lập kế hoạch " [(ngModel)]="filter.ingrp"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstPlgrp" [nzLabel]="item.ingrp+ ' - '+item.ingrpTxt"
+              [nzValue]="item.ingrp">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Khu vực chức năng</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Khu vực chức năng" [(ngModel)]="filter.tplnr"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+              [nzValue]="item.tplnr">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Nhóm thiết bị</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Nhóm thiết bị" [(ngModel)]="filter.eqart"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstEqGroup" [nzLabel]="item.eqart+ ' - '+item.eqartTxt"
+              [nzValue]="item.eqart">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+        <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Loại kế hoạch</label>
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Loại kế hoạch" [(ngModel)]="filter.mtgrp"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of lstMPGRP" [nzLabel]="item.value+ ' - '+item.name"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+  </nz-page-header-content>
   <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R6.2.1')">
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
       <thead>

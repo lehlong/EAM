@@ -3,6 +3,7 @@ using EAM.API.AppCode.Enum;
 using EAM.API.AppCode.Extensions;
 using EAM.BUSINESS.Dtos.MD;
 using EAM.BUSINESS.Dtos.PLAN;
+using EAM.BUSINESS.Filter.PLAN;
 using EAM.BUSINESS.Model;
 using EAM.BUSINESS.Services.MD;
 using EAM.BUSINESS.Services.PLAN;
@@ -17,7 +18,7 @@ namespace EAM.API.Controllers.PLAN
         public readonly IPlanHService _service = service;
 
         [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        public async Task<IActionResult> Search([FromQuery] PlanFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.Search(filter);

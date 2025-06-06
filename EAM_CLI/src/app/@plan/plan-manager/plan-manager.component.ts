@@ -15,6 +15,7 @@ import { EqGroupService } from '../../service/master-data/eq-group.service';
 import { EquipService } from '../../service/master-data/equip.service';
 import { EqCounterService } from '../../service/master-data/equip-counter.service';
 import { environment } from '../../../environments/environment';
+import { PlanFilter } from '../../filter/plan/plan.filter';
 
 @Component({
   selector: 'app-plan-manager',
@@ -27,7 +28,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   isSubmit: boolean = false;
   visible: boolean = false;
   edit: boolean = false;
-  filter = new BaseFilter();
+  filter = new PlanFilter();
   paginationResult = new PaginationResult();
   loading: boolean = false;
   lstMpgrp = MPGRP;
@@ -37,6 +38,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   lstWc: any[] = [];
   lstCyctype = CYCTYPE;
   lstCycunit = CYCUNIT;
+  lstMPGRP = MPGRP;
   lstTasklist: any[] = [];
   lstChecklist: any[] = [];
   lstTask: any[] = [];
@@ -155,6 +157,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
         console.log(response);
       },
     });
+ 
 
     this.getAllTasklist();
   }
@@ -311,7 +314,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
-    this.filter = new BaseFilter();
+    this.filter = new PlanFilter();
     this.search();
   }
 
