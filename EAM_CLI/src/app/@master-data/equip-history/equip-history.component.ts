@@ -28,6 +28,8 @@ import { AccountService } from '../../service/system-manager/account.service';
 import { NotiFilter } from '../../filter/incident/incident.filter';
 import { NotiService } from '../../service/tran/noti.service';
 import { OrderService } from '../../service/tran/order.service';
+import { TranEqCounterService } from '../../service/tran/tran-eq-counter.service';
+import { EqCounterService } from '../../service/master-data/equip-counter.service';
 
 @Component({
   selector: 'app-equip-history',
@@ -49,6 +51,7 @@ export class EquipHistoryComponent {
   paginationResult = new PaginationResult();
   paginationResultNoti = new PaginationResult();
   paginationResultOrder = new PaginationResult();
+  paginationResultCounter = new PaginationResult();
   lstPlant: any = [];
   lstFloc: any = [];
   lstEqCat: any = [];
@@ -61,6 +64,7 @@ export class EquipHistoryComponent {
   lstAccount: any = [];
   lstEqChar: any = [];
   loading: boolean = false;
+  lstEqCounter: any[] = []
 
   environment = environment;
 
@@ -77,6 +81,7 @@ export class EquipHistoryComponent {
   lstClassH: any[] = [];
   lstClassD: any[] = [];
   lstClassDSelect: any[] = [];
+  lstVt: any[] = []
 
   constructor(
     private _sAccount: AccountService,
@@ -88,19 +93,16 @@ export class EquipHistoryComponent {
     private _serviceCat: EqCatService,
     private _serviceWc: WcService,
     private _serviceEqGroup: EqGroupService,
-    private _serviceEquipDoc: EquipDocService,
-    private _serviceEquipPic: EquipPicService,
     private fb: NonNullableFormBuilder,
     public _global: GlobalService,
-    private message: NzMessageService,
-    private commonService: CommonService,
     private _sEqChar: EquipCharService,
-    private router: Router,
     private classH: ClassHService,
     private classD: ClassDService,
     private _sNoti: NotiService,
     private _sOrder: OrderService,
     private route: ActivatedRoute,
+    private _sTranEqCounter: TranEqCounterService,
+    private _sEqCounter: EqCounterService
   ) {
     this.validateForm = this.fb.group({
       equnr: ['', [Validators.required]],
@@ -139,13 +141,13 @@ export class EquipHistoryComponent {
   ngOnInit(): void {
     this.search();
     this.getMasterData();
- this.route.paramMap.subscribe({
+    this.route.paramMap.subscribe({
       next: (params) => {
         const equnr = params.get('equnr');
         if (equnr != '0') {
           this._service.getById(equnr).subscribe({
             next: (data) => {
-              if(data != null) this.openEdit(data)
+              if (data != null) this.openEdit(data)
             }
           })
         }
@@ -156,6 +158,7 @@ export class EquipHistoryComponent {
 
   getMasterData() {
     this._sAccount.getListUser().subscribe((r) => (this.lstAccount = r));
+    this._sEqCounter.getAll().subscribe((r) => (this.lstEqCounter = r));
     this._sUsageStatus.getAll().subscribe((r) => (this.lstUsageStatus = r));
     this._sActiveStatus.getAll().subscribe((r) => (this.lstActiveStatus = r));
     this._service.getAll().subscribe((r) => (this.lstEquip = r));
@@ -286,6 +289,22 @@ export class EquipHistoryComponent {
         console.log(response);
       },
     });
+
+    this._sTranEqCounter.search(this.filterNoti).subscribe({
+      next: (data) => {
+        this.paginationResultCounter = data
+        console.log(data)
+      }
+    })
+
+    this._service.getVtByEqunr(data.equnr).subscribe({
+      next: (data) => {
+        this.lstVt = data
+        console.log(data)
+      }
+    })
+
+
 
     this.visible = true;
   }

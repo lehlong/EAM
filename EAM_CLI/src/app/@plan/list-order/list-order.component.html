@@ -5,21 +5,28 @@
     <div class="flex-grow-2 flex">
       <nz-space>
         <div *nzSpaceItem>
-          <button class="button-template" nz-button nzType="default" *ngIf="_global.checkPermissions('R6.5.3')"
+          <button  nz-button nzType="default" *ngIf="_global.checkPermissions('R6.5.3')"
             (click)="onClickAsignAll()"><nz-icon nzType="user-add" nzTheme="outline" /> Phân công</button>
         </div>
         <div *nzSpaceItem>
-          <button class="button-template" nz-button nzType="primary" *ngIf="_global.checkPermissions('R6.5.4')"
-            class="btn-check" (click)="onClickProcessAll()">
+          <button  nz-button nzType="primary" *ngIf="_global.checkPermissions('R6.5.4')"
+           (click)="onClickProcessAll()">
             <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
           </button>
         </div>
         <div *nzSpaceItem>
-          <button class="button-template" nz-button nzType="primary" *ngIf="_global.checkPermissions('R6.5.5')"
+          <button nz-button nzType="dashed" *ngIf="_global.checkPermissions('R6.5.5')"
+            (click)="onClickReProcess()">
+            <nz-icon nzType="sync" nzTheme="outline" /> Thực hiện lại
+          </button>
+        </div>
+        <div *nzSpaceItem>
+          <button nz-button nzType="primary" *ngIf="_global.checkPermissions('R6.5.5')"
             class="btn-check" (click)="onClickDoneAll()">
             <nz-icon nzType="check" nzTheme="outline" /> Hoàn thành
           </button>
         </div>
+        
       </nz-space>
     </div>
   </nz-page-header-extra>
@@ -125,7 +132,6 @@
         <tr *ngFor="let data of paginationResult.data">
           <td
               [nzChecked]="setOfCheckedId.has(data.aufnr)"
-              [nzDisabled]="data.status == '04'"
               (nzCheckedChange)="onItemChecked(data, $event)"
             ></td>
           <td (click)="openEditOrder(data)"><a>{{ data.aufnr }}</a></td>
@@ -154,6 +160,10 @@
             <button *ngIf="data.status === '07' && _global.checkPermissions('R6.5.5')" nz-button nzType="primary"
               (click)="updateStatusOrder(data, '04')">
               <nz-icon nzType="check"></nz-icon>
+            </button>
+             <button *ngIf="data.status === '04' && _global.checkPermissions('R6.5.5')" nz-button nzType="dashed"
+              (click)="updateStatusOrder(data, '07.1')">
+              <nz-icon nzType="sync"></nz-icon>
             </button>
           </td>
           <td nzAlign="center">
@@ -716,6 +726,11 @@
     *ngIf="model.status == '02' && _global.checkPermissions('R6.5.4')" class="btn-check"
     (click)="updateStatusOrder(model, '07')">
     <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
+  </button>
+  <button class="button-template" nz-button nzType="dashed"
+    *ngIf="model.status == '04' && _global.checkPermissions('R6.5.5')"
+    (click)="updateStatusOrder(model, '07.1')">
+    <nz-icon nzType="sync" nzTheme="outline" /> Thực hiện lại
   </button>
   <button class="button-template" nz-button nzType="primary"
     *ngIf="model.status == '07' && _global.checkPermissions('R6.5.5')" class="btn-check"

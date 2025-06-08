@@ -365,9 +365,9 @@ export class ListOrderComponent implements OnInit, OnDestroy {
 
   updateStatusOrder(data: any, status: any) {
     Swal.fire({
-      title: status == '07' ? 'Đang thực hiện?' : 'Hoàn thành?',
+      title: status == '07' ? 'Đang thực hiện?' : status == '04' ? 'Hoàn thành?' : 'Thực hiện lại?',
       text: 'Anh chị có chắc chắn thực hiện hành động này?!',
-      icon: 'success',
+      icon: status == '07.1' ? 'question': 'success',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',
       cancelButtonText: 'Huỷ',
@@ -376,8 +376,12 @@ export class ListOrderComponent implements OnInit, OnDestroy {
         data.status = status;
         if (status == '07') {
           data.gstri = new Date();
-        } else {
+        } else if (status == '04') {
           data.gltri = new Date();
+        }
+
+        if(status == '07.1'){
+          data.status = '07'
         }
 
         this._sOrder.update(data).subscribe({
@@ -397,6 +401,18 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     const data = this.model;
     var lstItemOrderAll = [...this.lstItemOrderS, ...this.lstItemOrderM];
     this.model.lstVt = lstItemOrderAll;
+    var valid : boolean = true
+    this.model.lstOpe.forEach((i: any) => {
+      if (i.isConfirm == '01' && i.isWork == true) {
+        if (i.dateCf == null || i.dateCf == '' || i.dateCt == null || i.dateCt == '') {
+          valid = false
+        }
+      }
+    })
+    if(!valid){
+      this.message.error('Vui lòng nhập Từ ngày, Đến ngày trong tab Tác vụ theo lệnh nếu trạng thái xác nhận là Đã thực hiện!')
+      return;
+    }
     this.subscriptions.push(
       this._sOrder.update(this.model).subscribe({
         next: () => {
@@ -693,6 +709,35 @@ export class ListOrderComponent implements OnInit, OnDestroy {
         this.lstSelectData.forEach((i) => {
           i.status = '04';
           i.gltri = new Date();
+        });
+        this.updateStatusListOrder(this.lstSelectData)
+      }
+    })
+
+  }
+
+  onClickReProcess() {
+    if (this.lstSelectData.length == 0) {
+      this.message.error('Vui lòng chọn lệnh để thực hiện chức năng!');
+      return;
+    }
+    var checkStatus = this.lstSelectData.filter(x => x.status != '04')
+    if (checkStatus.length > 0) {
+      this.message.error('Chức năng Thực hiện lại chỉ thực hiện cho lệnh có trạng thái Hoàn thành! Vui lòng chọn lại!');
+      return;
+    }
+
+    Swal.fire({
+      title: 'Thực hiện lại?',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.lstSelectData.forEach((i) => {
+          i.status = '07';
         });
         this.updateStatusListOrder(this.lstSelectData)
       }

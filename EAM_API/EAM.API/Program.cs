@@ -31,6 +31,7 @@ var logger = LogManager.Setup()
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 builder.Services.AddDIServices(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();

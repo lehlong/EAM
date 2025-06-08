@@ -9,9 +9,9 @@ namespace EAM.BUSINESS.Filter.PLAN
 {
     public class PlanFilter : BaseFilter
     {
-        public DateTime? SchStart { get; set; }
+        public int? SchStart { get; set; }
         public string? Arbpl {  get; set; }
-        public string? Equart {  get; set; }
+        public string? Eqart {  get; set; }
         public string? Tplnr { get; set; }
         public string?  Mtgrp { get; set; }
         public string? Ingrp { get; set; }

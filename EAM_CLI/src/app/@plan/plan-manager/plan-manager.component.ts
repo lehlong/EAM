@@ -45,6 +45,7 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   lstEqGroup: any[] = [];
   lstEquip: any[] = [];
   lstEqCounter : any = [];
+  years: { value: string, name: string }[] = [];
 
   model: any = {
     iwerk: null,
@@ -218,6 +219,18 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.search();
     this.getMasterData();
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 5;
+    const endYear = currentYear + 5;
+
+    this.years = [];
+
+    for (let year = startYear; year <= endYear; year++) {
+      this.years.push({
+        value: year.toString(),
+        name: year.toString()
+      });
+    }
   }
 
   onSortChange(name: string, value: any): void {
@@ -260,6 +273,18 @@ export class PlanManagerComponent implements OnInit, OnDestroy {
   }
 
   exportReport(){
+    if(this.filter.schStart == '' || this.filter.schStart == null){
+      this.message.error('Vui lòng chọn năm!');
+      return;
+    } 
+    if(this.filter.eqart =='' || this.filter.eqart == null){
+      this.message.error('Vui lòng chọn nhóm thiết bị!');
+      return;
+    }
+    if(this.paginationResult.data.length == 0){
+      this.message.error('Không có dữ liệu! Vui lòng chọn lại tham số!')
+      return;
+    }
     this._service.exportReport(this.filter).subscribe({
       next: (data) => {
         var anchor = document.createElement('a');

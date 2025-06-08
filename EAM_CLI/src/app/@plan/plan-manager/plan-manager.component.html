@@ -29,7 +29,12 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Năm</label>
-           <nz-date-picker nzMode="year" [(ngModel)]="filter.schStart" (ngModelChange)="search()"></nz-date-picker>
+           <nz-select nzShowSearch nzAllowClear [(ngModel)]="filter.schStart"
+            (ngModelChange)="search()">
+            <nz-option option cdkScrollable *ngFor="let item of years" [nzLabel]="item.name"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
@@ -81,7 +86,7 @@
       </div>
     </div>
   </nz-page-header-content>
-  <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R6.2.1')">
+  <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R6.2.1')" style="height: calc(-332px + 100vh);">
     <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data" [nzFrontPagination]="false" >
       <thead>
         <tr>

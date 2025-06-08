@@ -88,10 +88,10 @@ namespace EAM.API.Controllers.PLAN
         }
 
         [HttpGet("ExportReport")]
-        public async Task<IActionResult> ExportReport()
+        public async Task<IActionResult> ExportReport([FromQuery] PlanFilter filter)
         {
             var transferObject = new TransferObject();
-            var result = await _service.ExportReport();
+            var result = await _service.ExportReport(filter);
             if (_service.Status)
             {
                 transferObject.Data = result;

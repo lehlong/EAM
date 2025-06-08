@@ -25,7 +25,7 @@ export class PlanHService {
   }
 
   exportReport(params: any): Observable<any> {
-    return this.commonService.get('PlanH/ExportReport', {});
+    return this.commonService.get('PlanH/ExportReport', params);
   }
 
   genarateCode(params: any): Observable<any> {

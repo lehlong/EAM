@@ -412,6 +412,18 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     const data = this.model;
     var lstItemOrderAll = [...this.lstItemOrderS, ...this.lstItemOrderM];
     this.model.lstVt = lstItemOrderAll;
+    var valid : boolean = true
+    this.model.lstOpe.forEach((i: any) => {
+      if (i.isConfirm == '01'&& i.isWork == true) {
+        if (i.dateCf == null || i.dateCf == '' || i.dateCt == null || i.dateCt == '') {
+          valid = false
+        }
+      }
+    })
+    if(!valid){
+      this.message.error('Vui lòng nhập Từ ngày, Đến ngày trong tab Tác vụ theo lệnh nếu trạng thái xác nhận là Đã thực hiện!')
+      return;
+    }
     this.subscriptions.push(
       this._sOrder.update(this.model).subscribe({
         next: () => {

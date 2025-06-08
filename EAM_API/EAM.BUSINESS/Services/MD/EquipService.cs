@@ -12,6 +12,7 @@ namespace EAM.BUSINESS.Services.MD
 {
     public interface IEquipService : IGenericService<TblMdEquip, EquipDto>
     {
+        Task<List<object>> GetVtByEqunr(string equnr);
         Task<PagedResponseDto> Search(EquipFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
         Task<List<EquipDto>> GetByEqunr(string equnr);
@@ -32,6 +33,41 @@ namespace EAM.BUSINESS.Services.MD
                 return null;
             }
 
+        }
+
+        public async Task<List<object>> GetVtByEqunr(string equnr)
+        {
+            try
+            {
+                var data = new List<object>();
+                var order = await _dbContext.TblTranOrder.Where(x => x.Equnr == equnr).ToArrayAsync();
+                foreach(var o in order)
+                {
+                    var lstVt = await _dbContext.TblTranOrderVt.Where(x => x.Aufnr == o.Aufnr && x.Category == "S").ToListAsync();
+                    foreach(var vt in lstVt)
+                    {
+                        data.Add(new
+                        {
+                            Aufnr = o.Aufnr,
+                            Budat = vt.Budat,
+                            Matnr = vt.Matnr,
+                            Maktx = vt.Maktx,
+                            Menge = vt.Menge,
+                            Price = vt.Price,
+                            Meins = vt.Meins,
+                            Lgort = vt.Lgort
+                        });
+                    }
+                }
+
+                return data;
+            }
+            catch(Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
         }
         public async Task<PagedResponseDto> Search(EquipFilter filter)
         {

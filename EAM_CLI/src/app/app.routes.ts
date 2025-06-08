@@ -12,6 +12,7 @@ import { incidentRoutes } from './@incident/incident.routes';
 import { warehouseRoutes } from './@warehouse/warehouse.route';
 import { planRoutes } from './@plan/plan.route';
 import { counterRoutes } from './@counter/counter.route';
+import { ChatBotComponent } from './chat-bot/chat-bot.component';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+       { path: 'chat-bot', component: ChatBotComponent, canActivate: [AuthGuard] },
       {
         path: 'system-manager',
         children: systemManagerRoutes,
