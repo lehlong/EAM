@@ -369,6 +369,16 @@
                 <app-input-clear label="Kinh độ" [control]="$any(validateForm).controls['long']"></app-input-clear>
               </div>
             </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear label="Nguyên Giá (Giá trị tài sản)" [control]="$any(validateForm).controls['price']"></app-input-clear>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="12">
+              <div class="inner-box">
+                <app-input-clear label="Giá trị còn lại" [control]="$any(validateForm).controls['priceRemai']"></app-input-clear>
+              </div>
+            </div>
 
           </div>
         </nz-tab>

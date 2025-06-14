@@ -4,6 +4,7 @@ using EAM.CORE.Entities.MD;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace EAM.BUSINESS.Dtos.MD
@@ -77,6 +78,8 @@ namespace EAM.BUSINESS.Dtos.MD
         public double? Long { get; set; }
 
         public double? Lat { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? PriceRemai { get; set; }
 
 
         [Description("Trạng thái")]

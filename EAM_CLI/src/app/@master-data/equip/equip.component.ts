@@ -119,6 +119,8 @@ export class EquipComponent {
       lat: [null],
       long: [null],
       inbdt: [null],
+      price: [0],
+      priceRemai: [0],
       isActive: [true, [Validators.required]],
     });
 

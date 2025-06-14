@@ -105,6 +105,12 @@ namespace EAM.CORE.Entities.MD
         [Column("LAT")]
         public double? Lat { get; set; }
 
+        [Column("PRICE")]
+        public decimal? Price { get; set; }
+
+        [Column("PRICE_REMAI")]
+        public decimal? PriceRemai { get; set; }
+
         // IS_ACTIVE, CREATE_BY, UPDATE_BY, etc. are inherited from SoftDeleteEntity
     }
 }
