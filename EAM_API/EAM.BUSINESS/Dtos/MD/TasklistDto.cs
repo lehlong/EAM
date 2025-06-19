@@ -14,7 +14,7 @@ namespace EAM.BUSINESS.Dtos.MD
         public int OrdinalNumber { get; set; }
         [Key]
        // [Description("Mã")]
-        public string Id { get; set; } = null!;
+        public string? Id { get; set; }
         [Description("Mã task list")]
         public string? Plnnr { get; set; }
       //  [Description("Mã nhà máy")]

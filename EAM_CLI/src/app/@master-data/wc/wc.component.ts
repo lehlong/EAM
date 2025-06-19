@@ -124,13 +124,6 @@ export class WcComponent {
           },
         });
       } else {
-        const formData = this.validateForm.getRawValue();
-        if (this.isCodeExist(formData.iwerk)) {
-          this.message.error(
-            `Mã ${formData.iwerk} đã tồn tại, vui lòng nhập lại`
-          );
-          return;
-        }
         this._service.create(this.validateForm.getRawValue()).subscribe({
           next: (data) => {
             this.search();
