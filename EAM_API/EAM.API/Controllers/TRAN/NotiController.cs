@@ -88,10 +88,10 @@ namespace EAM.API.Controllers.TRAN
         }
 
         [HttpGet("GetDataDashboard")]
-        public async Task<IActionResult> GetDataDashboard()
+        public async Task<IActionResult> GetDataDashboard([FromQuery] string tplnr)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GetDataDashboard();
+            var result = await _service.GetDataDashboard(tplnr);
             if (_service.Status)
             {
                 transferObject.Data = result;

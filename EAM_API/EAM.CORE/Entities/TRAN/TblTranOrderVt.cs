@@ -60,6 +60,8 @@ namespace EAM.CORE.Entities.TRAN
         [Column("UDAT")]
         public DateTime? Udat { get; set; }
 
-        // Các trường IS_ACTIVE, CREATE_BY, etc. được kế thừa từ SoftDeleteEntity
+        [Column("INVENTORY")]
+        public int? Inventory { get; set; }
+
     }
 }

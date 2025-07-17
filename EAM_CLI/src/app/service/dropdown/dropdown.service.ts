@@ -82,6 +82,13 @@ export class DropdownService {
     return this.commonService.get('Currency/GetAll', { ...params, IsActive })
   }
 
+  getAllWarehouse(
+    params: any = {},
+    IsActive: boolean = true,
+  ): Observable<any> {
+    return this.commonService.get('Warehouse/GetAll', { ...params, IsActive })
+  }
+
   // đơn hàng
   getAllOrder(params: any = {}, IsActive: boolean = true): Observable<any> {
     return this.commonService.get('Order/GetAll', { ...params, IsActive })

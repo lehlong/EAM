@@ -93,6 +93,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
   lstConfirm = confirm
 
   model: any = new OrderModel();
+  user : any;
 
   private subscriptions: Subscription[] = [];
 
@@ -131,12 +132,14 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
         this.loading = value;
       })
     );
+    this.user = this._global.getUserInfo();
   }
   ngOnDestroy() {
     this._global.setBreadcrumb([]);
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
+    this.user = this._global.getUserInfo();
     this.search();
     this.getMasterData();
     this.route.paramMap.subscribe({
@@ -163,12 +166,35 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     );
   }
 
+   pheDuyetVatTu() {
+      Swal.fire({
+        title: 'Phê duyệt vật tư?',
+        text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Xác nhận',
+        cancelButtonText: 'Huỷ',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.model.ttvt = '02'; 
+          this.updateOrder();
+        }
+      });
+    }
+
   fillDate: any = {
     startDate: null,
     toDate: null,
     isWork : false,
-    isConfirm : ''
+    isConfirm : '',
+    staffTh: null,
   };
+
+  onChangeStaff() {
+    this.model.lstOpe.forEach((i: any) => {
+      i.staffTh = this.fillDate.staffTh;
+    });
+  }
 
   onChangeTaskConfirm(){
     this.model.lstOpe.forEach((i: any) => {
@@ -446,6 +472,7 @@ export class IncidentCorrectComponent implements OnInit, OnDestroy {
     if (selectedItem) {
       itemData.meins = selectedItem.meins;
       itemData.maktx = selectedItem.maktx;
+      itemData.inventory = selectedItem.inventory;
     } else {
       itemData.meins = '';
     }

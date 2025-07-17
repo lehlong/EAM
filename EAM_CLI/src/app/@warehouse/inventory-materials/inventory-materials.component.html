@@ -1,1 +1,122 @@
-<p>inventory-materials works!</p>
+<nz-page-header nzBackIcon>
+    <nz-page-header-title>TỒN KHO VẬT TƯ</nz-page-header-title>
+    <nz-page-header-subtitle>Danh sách tồn kho vật tư</nz-page-header-subtitle>
+    <nz-page-header-extra>
+        <div class="flex-grow-2 flex">
+            <nz-space>
+                <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
+                    [(value)]="filter.keyWord"></app-input-clear>
+                <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                    nzType="default">
+                    <span nz-icon nzType="search"></span>
+                </button>
+                <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                    nzType="default">
+                    <span nz-icon nzType="redo"></span>
+                </button>
+            </nz-space>
+        </div>
+    </nz-page-header-extra>
+    <nz-page-header-content class="main-content" *ngIf="globalService.checkPermissions('R4.2.1')">
+        <nz-table nzBordered [nzSize]="'middle'" #headerTable [nzData]="paginationResult.data"
+            [nzFrontPagination]="false">
+            <thead>
+                <tr>
+                    <th nzWidth="60px">STT</th>
+                    <th>Mã vật tư</th>
+                    <th>Tên vật tư</th>
+                    <th>Kho</th>
+                    <th>Đơn vị tính</th>
+                    <th>Tồn kho</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
+                    <td> {{(paginationResult.currentPage - 1) * paginationResult.pageSize +i +1}}
+                    </td>
+                    <td> <a (click)="openEdit(data)">{{ data.matnr }}</a></td>
+                    <td>{{ data.maktx }}</td>
+                    <td>{{ data.warehouseCode }}</td>
+                    <td>{{ data.meins }}</td>
+
+                    <td>{{ data.inventory | number }}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-page-header-content>
+    <nz-page-header-content class="footer-content">
+        <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+            <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+                [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+                (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+        </div>
+    </nz-page-header-content>
+</nz-page-header>
+
+<!--Create Update-->
+<nz-drawer [nzClosable]="false" nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible"
+    nzPlacement="right" [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+        <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+            <div nz-row [nzGutter]="16">
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                    <app-input-clear placeholder="Mã vật tư" [required]="true" label="Mã vật tư"
+                        [control]="$any(validateForm).controls['matnr']" [required]="true"
+                        [disabled]="edit ? true : false"></app-input-clear>
+
+                    <app-input-clear placeholder="Tên vật tư" [required]="true" label="Tên vật tư"
+                        [control]="$any(validateForm).controls['maktx']"></app-input-clear>
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                    <nz-form-item>
+                        <nz-form-label>Đơn vị tính</nz-form-label>
+                        <nz-form-control nzErrorTip="Không được để trống">
+                            <nz-select formControlName="meins" nzShowSearch nzAllowClear placeholder="Đơn vị tính">
+                                <nz-option *ngFor="let item of lstUnit" [nzLabel]="item.code + ' - ' + item.name"
+                                    [nzValue]="item.code">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label>Kho</nz-form-label>
+                        <nz-form-control nzErrorTip="Không được để trống">
+                            <nz-select formControlName="warehouseCode" nzShowSearch nzAllowClear placeholder="Kho">
+                                <nz-option *ngFor="let item of lstWarehouse" [nzLabel]="item.werk + ' - ' + item.werkTxt"
+                                    [nzValue]="item.werk">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                    <app-input-clear placeholder="Tồn kho" [required]="true" label="Tồn kho"
+                        [control]="$any(validateForm).controls['inventory']"></app-input-clear>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</nz-drawer>
+<ng-template #extra>
+    <nz-space>
+        <ng-container *ngIf="edit && globalService.checkPermissions('R4.2.2')">
+            <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+                (click)="submitForm()">
+                <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+            </button>
+        </ng-container>
+        <ng-container *ngIf="!edit">
+            <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+                (click)="submitForm()">
+                <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+            </button>
+        </ng-container>
+        <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+            (click)="close()">
+            <span nz-icon nzType="close-circle" nzTheme="outline"></span>Đóng
+        </button>
+    </nz-space>
+</ng-template>

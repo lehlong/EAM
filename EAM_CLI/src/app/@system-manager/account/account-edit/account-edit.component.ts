@@ -73,6 +73,7 @@ export class AccountEditComponent {
       isActive: [true],
       accountType: [''],
       urlImage: [''],
+      tplnr: ['', [Validators.required]], 
     })
     this.widthDeault =
       window.innerWidth <= 767
@@ -252,8 +253,8 @@ export class AccountEditComponent {
             email: data.email,
             isActive: data.isActive,
             accountType: data.accountType,
-            urlImage : data.urlImage
-            //partnerId: data.partnerId || '',
+            urlImage : data.urlImage,
+            tplnr: data.tplnr,
           })
           this.avatarBase64 = environment.urlFiles + data.urlImage;
           //this.isShowSelectPartner = data.accountType === 'KH' ? true : false

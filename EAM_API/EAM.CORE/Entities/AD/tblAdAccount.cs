@@ -37,6 +37,8 @@ namespace EAM.CORE.Entities.AD
         [Column("URL_IMAGE")]
         public string? UrlImage { get; set; }
 
+        [Column("TPLNR")]
+        public string? Tplnr { get; set; }
 
         public virtual ICollection<TblAdAccount_AccountGroup>? Account_AccountGroups { get; set; }
 

@@ -45,6 +45,7 @@ export class AccountCreateComponent {
       email: ['', [Validators.email]],
       isActive: [true],
       accountType: ['', [Validators.required]],
+      tplnr: ['', [Validators.required]],
     })
   }
 

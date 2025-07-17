@@ -21,23 +21,23 @@ namespace EAM.BUSINESS.Dtos.WH
         public int OrdinalNumber { get; set; }
         [Key]
         [Description("Mã vật tư")]
-        public string Matnr { get; set; } = null!;
+        public string? Matnr { get; set; } 
 
         [Description("Tên vật tư")]
-        public string Maktx { get; set; }
+        public string? Maktx { get; set; }
 
         [Description("Loại vật tư")]
 
-        public string Mtart { get; set; }
+        public string? Mtart { get; set; }
         [Description("Nhóm vật tư")]
 
-        public string Matkl { get; set; }
+        public string? Matkl { get; set; }
         [Description("Mã vật tư cũ")]
 
-        public string Bismt { get; set; }
+        public string? Bismt { get; set; }
         [Description("Đơn vị tính")]
 
-        public string Meins { get; set; }
+        public string? Meins { get; set; }
         [Description("Nhà sản xuất")]
 
         public string? Mfrnr { get; set; }
@@ -46,7 +46,10 @@ namespace EAM.BUSINESS.Dtos.WH
         public DateTime Sledbbd { get; set; }
         [Description("Model")]
 
-        public string Model { get; set; }
+        public string? Model { get; set; }
+
+        public string? WarehouseCode { get; set; }
+        public int? Inventory { get; set; }
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TblMdItem, ItemDto>().ReverseMap();

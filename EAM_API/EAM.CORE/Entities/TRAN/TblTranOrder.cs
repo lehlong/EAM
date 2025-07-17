@@ -265,5 +265,11 @@ namespace EAM.CORE.Entities.TRAN
 
         [Column("GJAHR")]
         public int? Gjahr { get; set; }
+
+        [Column("NPDVT")]
+        public string? Npdvt { get; set; }
+
+        [Column("TTVT")]
+        public string? Ttvt { get; set; }
     }
 }

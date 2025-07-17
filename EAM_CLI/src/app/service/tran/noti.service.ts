@@ -24,8 +24,8 @@ export class NotiService {
     return this.commonService.get('Noti/GetAll');
   }
 
-  getDataDashboard(): Observable<any> {
-    return this.commonService.get('Noti/GetDataDashboard');
+  getDataDashboard(tplnr : string): Observable<any> {
+    return this.commonService.get('Noti/GetDataDashboard?tplnr=' + tplnr);
   }
 
   create(params: any): Observable<any> {

@@ -88,6 +88,8 @@ export class ListOrderComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
+  user : any;
+
   constructor(
     private _sOrder: OrderService,
     private _sOrderType: OrderTypeService,
@@ -121,22 +123,47 @@ export class ListOrderComponent implements OnInit, OnDestroy {
         this.loading = value;
       })
     );
+    this.user = this._global.getUserInfo();
   }
   ngOnDestroy() {
     this._global.setBreadcrumb([]);
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
+    this.user = this._global.getUserInfo();
     this.search();
     this.getMasterData();
+  }
+
+  pheDuyetVatTu() {
+    Swal.fire({
+      title: 'Phê duyệt vật tư?',
+      text: 'Anh chị có chắc chắn thực hiện hành động này?!',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.model.ttvt = '02'; 
+        this.updateOrder();
+      }
+    });
   }
 
   fillDate: any = {
     startDate: null,
     toDate: null,
     isWork: false,
-    isConfirm: null
+    isConfirm: null,
+    staffTh: null,
   };
+
+  onChangeStaffTh() {
+    this.model.lstOpe.forEach((i: any) => {
+      i.staffTh = this.fillDate.staffTh;
+    });
+  }
 
   onChangeTaskConfirm() {
     this.model.lstOpe.forEach((i: any) => {
@@ -435,6 +462,7 @@ export class ListOrderComponent implements OnInit, OnDestroy {
     if (selectedItem) {
       itemData.meins = selectedItem.meins;
       itemData.maktx = selectedItem.maktx;
+      itemData.inventory = selectedItem.inventory;
     } else {
       itemData.meins = '';
     }

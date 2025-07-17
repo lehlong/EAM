@@ -8,7 +8,17 @@
       <div><nz-icon nzType="file-done" nzTheme="outline" /></div>
       <div>PHÊ DUYỆT</div>
     </div>
-  </div>
+  
+    <div class="control-btn bg-gray">
+      <div><nz-icon nzType="box-plot" nzTheme="outline" /></div>
+      <nz-select nzShowSearch nzPlaceHolder="Khu vực chức năng" class="custom-select" [(ngModel)]="defaultTplnr"
+        (ngModelChange)="getDataDashboard()">
+        <nz-option cdkScrollable *ngFor="let item of lstFloc" [nzLabel]="item.tplnr + ' - ' + item.descript"
+          [nzValue]="item.tplnr">
+        </nz-option>
+      </nz-select>
+    </div>
+    </div>
   <div nz-row [nzGutter]="12">
     <div nz-col class="gutter-row" [nzSpan]="6" (click)="changeRoute('plan/list-order')">
       <div class="inner-box bg-orange">

@@ -34,6 +34,7 @@ namespace EAM.BUSINESS.Dtos.AD
         public string? AccountType { get; set; }
         public string? OrganizeCode { get; set; }
         public string? UrlImage { get; set; }
+        public string? Tplnr { get; set; }
 
         //  public int? DriverId { get; set; }
 
@@ -71,6 +72,7 @@ namespace EAM.BUSINESS.Dtos.AD
 
         public string? OrganizeCode { get; set; }
         public string? UrlImage { get; set; }
+        public string? Tplnr { get; set; }
 
 
 
@@ -107,6 +109,7 @@ namespace EAM.BUSINESS.Dtos.AD
         public string? OrganizeCode { get; set; }
         public string? ImageBase64 { get; set; }
         public string? UrlImage { get; set; }
+        public string? Tplnr { get; set; }
 
         public void Mapping(Profile profile)
         {
@@ -131,6 +134,7 @@ namespace EAM.BUSINESS.Dtos.AD
 
         public string? OrganizeCode { get; set; }
         public string? UrlImage { get; set; }
+        public string? Tplnr { get; set; }
 
         public virtual List<Account_AccountGroupDto> Account_AccountGroups { get; set; }
 
@@ -155,6 +159,7 @@ namespace EAM.BUSINESS.Dtos.AD
         public string? Address { get; set; }
         public string? OrganizeCode { get; set; }
         public string? UrlImage { get; set; }
+        public string? Tplnr { get; set; }
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TblAdAccount, AccountPortableDto>().ReverseMap();
@@ -180,6 +185,7 @@ namespace EAM.BUSINESS.Dtos.AD
         public string? OrganizeCode { get; set; }
         public string? ImageBase64 { get; set; }
         public string? UrlImage { get; set; }
+        public string? Tplnr { get; set; }
 
         public virtual List<TblAccount_AccountGroupUpdateGroupDto> Account_AccountGroups { get; set; }
 
@@ -209,6 +215,7 @@ namespace EAM.BUSINESS.Dtos.AD
         public string? OrganizeCode { get; set; }
 
         public string? UrlImage { get; set; }
+        public string? Tplnr { get; set; }
         public virtual List<TblAccount_AccountGroupLiteGroupDto> Account_AccountGroups { get; set; }
 
         public RightDto TreeRight { get; set; }

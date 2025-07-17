@@ -71,6 +71,13 @@
             [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
         </div>
       </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Tìm theo nội dung</label>
+         <input nz-input [(ngModel)]="filter.keyWord" (ngModelChange)="search()">
+        </div>
+      </div>
     </div>
   </nz-page-header-content>
   <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">

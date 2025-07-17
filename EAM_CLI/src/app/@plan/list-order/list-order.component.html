@@ -124,6 +124,7 @@
           <th>Người thực hiện</th>
           <th>Khu vực phát sinh</th>
           <th nzAlign="center">Trạng thái</th>
+          <th nzAlign="center">Trạng thái vật tư</th>
           <th nzAlign="center">Thao tác</th>
           <th nzAlign="center">In</th>
         </tr>
@@ -147,6 +148,10 @@
             <nz-tag *ngIf="data.status === '02'" nzColor="processing">Đã phân công</nz-tag>
             <nz-tag *ngIf="data.status === '04'" nzColor="success">Hoàn thành</nz-tag>
             <nz-tag *ngIf="data.status === '07'" nzColor="processing">Đang thực hiện</nz-tag>
+          </td>
+          <td>
+            <nz-tag *ngIf="data.ttvt !== '02'" nzColor="default">Chưa phê duyệt</nz-tag>
+            <nz-tag *ngIf="data.ttvt === '02'" nzColor="success">Đã phê duyệt</nz-tag>
           </td>
           <td nzAlign="center">
             <button *ngIf="data.status === '01' && _global.checkPermissions('R6.5.3')" nz-button nzType="default"
@@ -446,6 +451,14 @@
           </div>
           <div nz-col class="gutter-row" [nzSpan]="4">
             <div class="inner-box">
+              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Người thực hiện" [(ngModel)]="fillDate.staffTh"
+                (ngModelChange)="onChangeStaffTh()" [nzDisabled]="checkStatusOrder()">
+                <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName" [nzLabel]="item.fullName"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="4">
+            <div class="inner-box">
               <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Từ ngày'"
                 [(ngModel)]="fillDate.startDate" [nzShowTime]="true" (ngModelChange)="changeFillDate('1')"
                 [nzDisabled]="checkStatusOrder()"></nz-date-picker>
@@ -477,11 +490,12 @@
               <th>Chọn</th>
               <th>Mã tác vụ</th>
               <th>Tên tác vụ</th>
+              <th>Người thực hiện</th>
               <th>Từ ngày</th>
               <th>Tới ngày</th>
               <th style="width: 12%;">Xác nhận</th>
               <th>ND Xác nhận</th>
-              <th>Kết quả</th>
+              <th>Kết quả | Lý do</th>
             </tr>
           </thead>
           <tbody>
@@ -490,6 +504,12 @@
                   [nzDisabled]="checkStatusOrder()"></label></td>
               <td>{{data.vornr}}</td>
               <td>{{data.ltxa1}}</td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.staffTh" [nzDisabled]="checkStatusOrder()">
+                  <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
+                    [nzLabel]="item.fullName"></nz-option>
+                </nz-select>
+              </td>
               <td>
                 <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCf"
                   [nzShowTime]="true" (ngModelChange)="changeDate(data, '1')"
@@ -566,6 +586,24 @@
         </div>
       </nz-tab>
       <nz-tab nzTitle="Vật tư sử dụng">
+        <div nz-row [nzGutter]="16">
+          <div nz-col class="gutter-row" [nzSpan]="6">
+            <div class="inner-box">
+              <label>Người phê duyệt vật tư</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.npdvt">
+                <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
+                  [nzLabel]="item.userName + ' - ' + item.fullName"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="2">
+            <div class="inner-box">
+              <label>Trạng thái vật tư</label>
+             <nz-tag *ngIf="model.ttvt == '02'" class="tag-status" nzColor="success">Đã phê duyệt</nz-tag>
+             <nz-tag *ngIf="model.ttvt != '02'" class="tag-status" nzColor="default">Chưa phê duyệt</nz-tag>
+            </div>
+          </div>
+        </div>
         <nz-table #itemTableS [nzShowPagination]="false" nzSize="small" [nzData]="lstItemOrderS">
           <thead>
             <tr>
@@ -573,7 +611,7 @@
               <th style="width: 20%;">Tên vật tư</th>
               <th>Số lượng</th>
               <th style="width: 16%;">Đơn vị tính</th>
-              <th>Lô</th>
+              <th>Tồn kho</th>
               <th>Đơn giá</th>
               <th>Thành Tiền</th>
             </tr>
@@ -594,7 +632,7 @@
                   (ngModelChange)="calculateTotal(data)" />
               </td>
               <td><input type="text" nz-input [(ngModel)]="data.meins" [disabled]="true" /></td>
-              <td><input type="text" [disabled]="checkStatusOrder()" nz-input [(ngModel)]="data.lgort" /></td>
+              <td><input type="text" [disabled]="true" nz-input [(ngModel)]="data.inventory" /></td>
               <td><input type="text" [disabled]="checkStatusOrder()" nz-input [(ngModel)]="data.price"
                   (ngModelChange)="calculateTotal(data)" /></td>
               <td>
@@ -722,24 +760,35 @@
   <button class="button-template" nz-button nzType="default"
     *ngIf="model.status == '01' && _global.checkPermissions('R6.5.3')" (click)="updateUserOrder(model)"><nz-icon
       nzType="user-add" nzTheme="outline" /> Phân công</button>
+
   <button class="button-template" nz-button nzType="primary"
     *ngIf="model.status == '02' && _global.checkPermissions('R6.5.4')" class="btn-check"
     (click)="updateStatusOrder(model, '07')">
     <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
   </button>
+  
   <button class="button-template" nz-button nzType="dashed"
     *ngIf="model.status == '04' && _global.checkPermissions('R6.5.5')"
     (click)="updateStatusOrder(model, '07.1')">
     <nz-icon nzType="sync" nzTheme="outline" /> Thực hiện lại
   </button>
+
+  <button class="button-template" nz-button nzType="primary" style="background-color: green; border-color: green !important;"
+    *ngIf="model.npdvt == user.userName"
+    (click)="pheDuyetVatTu()">
+    <nz-icon nzType="check" nzTheme="outline" /> Phê duyệt vật tư
+  </button>
+
   <button class="button-template" nz-button nzType="primary"
     *ngIf="model.status == '07' && _global.checkPermissions('R6.5.5')" class="btn-check"
     (click)="updateStatusOrder(model, '04')">
     <nz-icon nzType="check" nzTheme="outline" /> Hoàn thành
   </button>
+
   <button *ngIf="_global.checkPermissions('R6.5.6')" class="button-template" nz-button nzType="default"
     (click)="exportOrder(model.aufnr)"><nz-icon nzType="printer" nzTheme="outline" />In
     lệnh</button>
+
   <button *ngIf="_global.checkPermissions('R6.5.2') && !checkStatusOrder()" class="button-template" nz-button
     nzType="primary" (click)="updateOrder()"><nz-icon nzType="save" nzTheme="outline" />Cập
     nhật</button>

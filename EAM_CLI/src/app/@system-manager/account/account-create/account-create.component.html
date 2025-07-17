@@ -75,7 +75,10 @@
           </nz-form-item>
         </div>
 
-
+<div nz-col [nzXs]="24" [nzMd]="12">
+  <app-input-clear placeholder="Khu vực chức năng" [required]="true" label="Khu vực chức năng"
+    [control]="$any(validateForm).controls['tplnr']"></app-input-clear>
+</div>
 
 
         <div nz-col [nzXs]="24">

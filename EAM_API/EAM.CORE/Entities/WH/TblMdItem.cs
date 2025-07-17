@@ -36,6 +36,12 @@ namespace EAM.CORE.Entities.WH
         [Column("MODEL")]
         public string Model { get; set; }
 
+        [Column("WAREHOUSE_CODE")]
+        public string? WarehouseCode { get; set; }
+
+        [Column("INVENTORY")]
+        public int? Inventory { get; set; }
+
 
     }
 }

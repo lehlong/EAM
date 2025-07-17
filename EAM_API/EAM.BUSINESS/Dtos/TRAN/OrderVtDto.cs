@@ -26,6 +26,7 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string? Waers { get; set; }
         public string? Uname { get; set; }
         public DateTime? Udat { get; set; }
+        public int? Inventory { get; set; }
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
         
         public void Mapping(Profile profile)

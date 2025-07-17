@@ -3,6 +3,7 @@ using Common;
 using EAM.CORE.Entities.TRAN;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EAM.BUSINESS.Dtos.TRAN
 {
@@ -95,6 +96,8 @@ namespace EAM.BUSINESS.Dtos.TRAN
         public string? Needup { get; set; }
         public string? Belnr { get; set; }
         public string? Gjahr { get; set; }
+        public string? Npdvt { get; set; }
+        public string? Ttvt { get; set; }
         public List<TblTranNotiCatalog>? lstCatalog { get; set; }
         public List<TblTranOrderVt>? lstVt { get; set; }
         public List<TblTranOrderEq>? lstEquip { get; set; }

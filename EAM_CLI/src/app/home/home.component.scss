@@ -88,3 +88,90 @@ h3 {
 .bg-green{
   background-color: green;
 }
+
+.bg-gray{
+  background-color: #6c757d!important;
+}
+
+.custom-select ::ng-deep .ant-select-selector {
+  background-color: transparent !important;
+  border: none !important; /* Tùy chọn: xóa viền */
+  box-shadow: none !important; /* Tùy chọn: xóa bóng */
+
+  /* Chỉnh sửa font chữ */
+  font-size: 14px !important;
+  color: white !important;
+  font-weight: 600 !important; /* Chữ đậm */
+  text-transform: uppercase !important;
+}
+
+/* Đảm bảo trạng thái hover/focus cũng trong suốt và giữ nguyên font */
+.custom-select ::ng-deep .ant-select-selector:hover,
+.custom-select ::ng-deep .ant-select-selector:focus {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  color: white !important;
+  text-transform: uppercase !important;
+}
+
+/* Đảm bảo chữ của mục đã chọn cũng theo định dạng mong muốn */
+.custom-select ::ng-deep .ant-select-selection-item {
+  font-size: 14px !important;
+  color: white !important;
+  text-transform: uppercase !important;
+}
+
+/* Tùy chọn: Nếu bạn muốn các mục trong dropdown cũng có cùng định dạng */
+.custom-select ::ng-deep .ant-select-dropdown {
+  background-color: transparent !important; /* Hoặc màu nền bạn muốn cho dropdown */
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-select ::ng-deep .ant-select-item {
+  font-size: 14px !important;
+  color: white !important; /* Màu chữ cho các tùy chọn trong dropdown */
+  text-transform: uppercase !important;
+  background-color: transparent !important; /* Đảm bảo nền của từng item cũng trong suốt */
+}
+
+/* Tùy chọn: Màu chữ và nền khi hover/selected trong dropdown */
+.custom-select ::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: rgba(255, 255, 255, 0.2) !important; /* Ví dụ: nền hơi trong suốt khi hover/active */
+  color: white !important;
+  font-weight: 600 !important; /* Đặt chữ đậm khi hover/active */
+}
+
+.custom-select ::ng-deep .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: rgba(255, 255, 255, 0.3) !important; /* Ví dụ: nền hơi trong suốt khi được chọn */
+  color: white !important;
+  font-weight: 600 !important; /* Đặt chữ đậm khi được chọn */
+}
+
+/* --- Chỉnh sửa Icon Dropdown và Tìm kiếm --- */
+
+/* Icon dropdown (mũi tên xuống) */
+.custom-select ::ng-deep .ant-select-arrow {
+  color: white !important; /* Đặt màu cho icon dropdown */
+  /* Bạn có thể thay đổi icon bằng cách sử dụng background-image hoặc font-awesome nếu muốn */
+}
+
+/* Icon tìm kiếm (kính lúp) khi có nzShowSearch */
+.custom-select ::ng-deep .ant-select-selection-search-input {
+  color: white !important; /* Màu chữ của input tìm kiếm */
+}
+
+.custom-select ::ng-deep .ant-select-selection-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important; /* Màu placeholder của input tìm kiếm */
+}
+
+.custom-select ::ng-deep .ant-select-suffix .anticon-search {
+  color: white !important; /* Màu của icon kính lúp */
+}
+
+/* Icon xóa (x) khi có giá trị và có thể xóa */
+.custom-select ::ng-deep .ant-select-clear {
+  color: white !important; /* Màu của icon xóa */
+}

@@ -75,14 +75,14 @@ export class HomeComponent implements OnInit {
   };
 
   getDataDashboard() {
-    this._sNoti.getDataDashboard().subscribe({
+    this._sNoti.getDataDashboard(this.defaultTplnr).subscribe({
       next: (data) => {
         this.dataDashboard = data;
         setTimeout(() => {
           google.charts.load('current', { packages: ['corechart'] });
           google.charts.setOnLoadCallback(() => this.drawChartDonut());
           google.charts.setOnLoadCallback(() => this.drawChartBar());
-        }, 500);
+        }, 200);
       },
       error: (err) => {
         console.log(err);
@@ -104,7 +104,7 @@ export class HomeComponent implements OnInit {
 
     var options = {
       chartArea: { width: '90%', height: '70%' },
-      title: 'TRẠNG THÁI TÀI SẢN',
+      title: 'TRẠNG THÁI HỆ THỐNG THIẾT BỊ',
       pieHole: 0.5,
     };
 
@@ -115,48 +115,48 @@ export class HomeComponent implements OnInit {
   }
 
   drawChartBar() {
-  const filter = this.dataDashboard.chartBar;
-  const temp: any[] = filter.map((i: any) => [i.name, i.value, i.value.toString()]);
+    const filter = this.dataDashboard.chartBar;
+    const temp: any[] = filter.map((i: any) => [i.name, i.value, i.value.toString()]);
 
-  const data = new google.visualization.DataTable();
-  data.addColumn('string', 'Nhóm tài sản');
-  data.addColumn('number', 'Số lượng');
-  data.addColumn({ type: 'string', role: 'annotation' }); // 👈 Thêm annotation
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Nhóm hệ thống thiết bị');
+    data.addColumn('number', 'Số lượng');
+    data.addColumn({ type: 'string', role: 'annotation' }); // 👈 Thêm annotation
 
-  data.addRows(temp);
+    data.addRows(temp);
 
-  const chartWidth = Math.max(400, temp.length * 72);
-  const chartHeight = 360;
+    const chartWidth = Math.max(400, temp.length * 72);
+    const chartHeight = 360;
 
-  const options = {
-    legend: 'none',
-    title: 'PHÂN LOẠI TÀI SẢN',
-    width: chartWidth,
-    height: chartHeight,
-    chartArea: {
-      width: '90%',
-      height: '70%',
-    },
-    hAxis: {
-      slantedText: false,
-      showTextEvery: 1,
-      textStyle: {
-        fontSize: 12,
+    const options = {
+      legend: 'none',
+      title: 'PHÂN LOẠI HỆ THỐNG THIẾT BỊ',
+      width: chartWidth,
+      height: chartHeight,
+      chartArea: {
+        width: '90%',
+        height: '70%',
       },
-    },
-    vAxis: {
-      minValue: 0,
-      textStyle: {
-        fontSize: 12,
+      hAxis: {
+        slantedText: false,
+        showTextEvery: 1,
+        textStyle: {
+          fontSize: 12,
+        },
       },
-    },
-  };
+      vAxis: {
+        minValue: 0,
+        textStyle: {
+          fontSize: 12,
+        },
+      },
+    };
 
-  const chart = new google.visualization.ColumnChart(
-    document.getElementById('chart_div')
-  );
-  chart.draw(data, options);
-}
+    const chart = new google.visualization.ColumnChart(
+      document.getElementById('chart_div')
+    );
+    chart.draw(data, options);
+  }
 
 
   constructor(
@@ -174,14 +174,17 @@ export class HomeComponent implements OnInit {
     private _sAccount: AccountService,
     private _sEqGroup: EqGroupService,
     private _sPlgrp: PlgrpService
-  ) {}
+  ) { }
   changeRoute(router: string) {
     this.router.navigate([`${router}`]);
   }
   ngOnDestroy() {
     this.globalService.setBreadcrumb([]);
   }
+
+  defaultTplnr: any;
   ngOnInit(): void {
+    this.defaultTplnr = this.globalService.getUserInfo()?.tplnr || '';
     this.search();
     this.searchOrder();
     this.getAllFloc();

@@ -22,7 +22,7 @@ namespace EAM.BUSINESS.Services.TRAN
         Task<byte[]> Export(BaseMdFilter filter);
         Task<NotiDto> Create(NotiDto dto);
         Task<PagedResponseDto> Search(NotiFilter filter);
-        Task<DashboardModel> GetDataDashboard();
+        Task<DashboardModel> GetDataDashboard(string tplnr);
     }
 
     public class NotiService(AppDbContext dbContext, IMapper mapper) : GenericService<TblTranNoti, NotiDto>(dbContext, mapper), INotiService
@@ -89,8 +89,12 @@ namespace EAM.BUSINESS.Services.TRAN
             }
         }
 
-        public async Task<DashboardModel> GetDataDashboard()
+        public async Task<DashboardModel> GetDataDashboard(string tplnr)
         {
+            if (string.IsNullOrEmpty(tplnr))
+            {
+                return new DashboardModel();
+            }
             try
             {
                 var data = new DashboardModel();
@@ -101,7 +105,7 @@ namespace EAM.BUSINESS.Services.TRAN
                     data.ChartBar.Add(new Dashboard
                     {
                         Name = i.EqtypTxt ?? "N/A",
-                        Value = _dbContext.TblMdEquip.Where(x => x.Eqtyp == i.Eqtyp).Count()
+                        Value = _dbContext.TblMdEquip.Where(x => x.Eqtyp == i.Eqtyp && x.Tplnr == tplnr).Count()
                     });
                 }
 
@@ -110,17 +114,17 @@ namespace EAM.BUSINESS.Services.TRAN
                     data.ChartDonut.Add(new Dashboard
                     {
                         Name = i.Name ?? "N/A",
-                        Value = _dbContext.TblMdEquip.Where(x => x.StatusTh == i.Code).Count()
+                        Value = _dbContext.TblMdEquip.Where(x => x.StatusTh == i.Code && x.Tplnr == tplnr).Count()
                     });
                 }
 
-                var order = _dbContext.TblTranOrder.AsQueryable();
+                var order = _dbContext.TblTranOrder.Where(x => x.Tplnr == tplnr).AsQueryable();
                 data.Order1 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "01").Count();
                 data.Order2 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "07" && x.Gltrs < DateTime.Now).Count();
                 data.Order3 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "07").Count();
                 data.Order4 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "04").Count();
 
-                var noti = _dbContext.TblTranNoti.AsQueryable();
+                var noti = _dbContext.TblTranNoti.Where(x => x.Tplnr == tplnr).AsQueryable();
                 data.Noti1 = noti.Count();
                 data.Noti2 = noti.Where(x => x.StatAct == "07" && x.Ltrmn < DateTime.Now).Count();
                 data.Noti3 = noti.Where(x => x.StatAct == "07").Count();
@@ -141,7 +145,7 @@ namespace EAM.BUSINESS.Services.TRAN
                 var query = _dbContext.TblTranNoti.AsQueryable();
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x => x.Qmnum.ToString().Contains(filter.KeyWord));
+                    query = query.Where(x => x.Qmtxt.ToLower().Contains(filter.KeyWord.ToLower()) || x.Qmdetail.ToLower().Contains(filter.KeyWord.ToLower()));
                 }
                 if (!string.IsNullOrWhiteSpace(filter.Ingrp))
                 {

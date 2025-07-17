@@ -105,6 +105,7 @@
           <th>Tên thiết bị</th>
           <th>Mức độ ưu tiên</th>
           <th nzAlign="center">Trạng thái</th>
+          <th nzAlign="center">Trạng thái vật tư</th>
           <th nzAlign="center">Thao tác</th>
           <th nzAlign="center">In</th>
         </tr>
@@ -133,6 +134,10 @@
             <nz-tag *ngIf="data.status == '02'" nzColor="processing">Đã phân công</nz-tag>
             <nz-tag *ngIf="data.status == '04'" nzColor="success">Hoàn thành</nz-tag>
             <nz-tag *ngIf="data.status == '07'" nzColor="processing">Đang thực hiện</nz-tag>
+          </td>
+          <td>
+            <nz-tag *ngIf="data.ttvt !== '02'" nzColor="default">Chưa phê duyệt</nz-tag>
+            <nz-tag *ngIf="data.ttvt === '02'" nzColor="success">Đã phê duyệt</nz-tag>
           </td>
           <td nzAlign="center">
             <button nzTooltipTitle="Phân công" nzTooltipPlacement="top" nz-button nz-tooltip nzType="default"
@@ -428,6 +433,16 @@
             <label nz-checkbox [(ngModel)]="fillDate.isWork" (ngModelChange)="onChangeWork()"
               [nzDisabled]="checkStatusOrder()"> Chọn tất cả</label>
           </div>
+
+          <div nz-col class="gutter-row" [nzSpan]="4">
+            <div class="inner-box">
+              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Người thực hiện" [(ngModel)]="fillDate.staffTh" (ngModelChange)="onChangeStaff()"
+                [nzDisabled]="checkStatusOrder()">
+                <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName" [nzLabel]="item.fullName"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+
           <div nz-col class="gutter-row" [nzSpan]="4">
             <div class="inner-box">
               <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Từ ngày'"
@@ -451,9 +466,6 @@
               </nz-select>
             </div>
           </div>
-
-
-
         </div>
         <nz-table #operationTable [nzShowPagination]="false" nzSize="small" [nzData]="model.lstOpe">
           <thead>
@@ -461,11 +473,12 @@
               <th>Chọn</th>
               <th>Mã tác vụ</th>
               <th>Tên tác vụ</th>
+              <th>Người thực hiện</th>
               <th>Từ ngày</th>
               <th>Tới ngày</th>
               <th style="width: 12%;">Xác nhận</th>
               <th>ND Xác nhận</th>
-              <th>Kết quả</th>
+              <th>Kết quả | Lý do</th>
             </tr>
           </thead>
           <tbody>
@@ -474,6 +487,12 @@
                   [nzDisabled]="checkStatusOrder()"></label></td>
               <td>{{data.vornr}}</td>
               <td>{{data.ltxa1}}</td>
+              <td>
+                <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.staffTh" [nzDisabled]="checkStatusOrder()">
+                  <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
+                    [nzLabel]="item.fullName"></nz-option>
+                </nz-select>
+              </td>
               <td>
                 <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCf"
                   [nzShowTime]="true" (ngModelChange)="changeDate(data, '1')"
@@ -550,6 +569,25 @@
         </div>
       </nz-tab>
       <nz-tab nzTitle="Vật tư sử dụng">
+        <div nz-row [nzGutter]="16">
+          <div nz-col class="gutter-row" [nzSpan]="6">
+            <div class="inner-box">
+              <label>Người phê duyệt vật tư</label>
+              <nz-select nzShowSearch nzAllowClear [(ngModel)]="model.npdvt">
+                <nz-option *ngFor="let item of lstUser" [nzValue]="item.userName"
+                  [nzLabel]="item.userName + ' - ' + item.fullName"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+           <div nz-col class="gutter-row" [nzSpan]="2">
+            <div class="inner-box">
+              <label>Trạng thái vật tư</label>
+             <nz-tag *ngIf="model.ttvt == '02'" class="tag-status" nzColor="success">Đã phê duyệt</nz-tag>
+             <nz-tag *ngIf="model.ttvt != '02'" class="tag-status" nzColor="default">Chưa phê duyệt</nz-tag>
+            </div>
+          </div>
+        </div>
+     
         <nz-table #itemTableS [nzShowPagination]="false" nzSize="small" [nzData]="lstItemOrderS">
           <thead>
             <tr>
@@ -557,7 +595,7 @@
               <th style="width: 20%;">Tên vật tư</th>
               <th>Số lượng</th>
               <th style="width: 16%;">Đơn vị tính</th>
-              <th>Lô</th>
+              <th>Tồn kho</th>
               <th>Đơn giá</th>
               <th>Thành Tiền</th>
             </tr>
@@ -578,7 +616,7 @@
                   (ngModelChange)="calculateTotal(data)" />
               </td>
               <td><input type="text" nz-input [(ngModel)]="data.meins" [disabled]="true" /></td>
-              <td><input type="text" [disabled]="checkStatusOrder()" nz-input [(ngModel)]="data.lgort" /></td>
+              <td><input type="text" [disabled]="true" nz-input [(ngModel)]="data.inventory" /></td>
               <td><input type="text" [disabled]="checkStatusOrder()" nz-input [(ngModel)]="data.price"
                   (ngModelChange)="calculateTotal(data)" /></td>
               <td>
@@ -710,6 +748,11 @@
     *ngIf="model.status == '02' && _global.checkPermissions('R6.5.4')" class="btn-check"
     (click)="updateStatusOrder(model, '07')">
     <nz-icon nzType="right-circle" nzTheme="outline" /> Đang thực hiện
+  </button>
+   <button class="button-template" nz-button nzType="primary" style="background-color: green; border-color: green !important;"
+    *ngIf="model.npdvt == user.userName"
+    (click)="pheDuyetVatTu()">
+    <nz-icon nzType="check" nzTheme="outline" /> Phê duyệt vật tư
   </button>
   <button class="button-template" nz-button nzType="primary"
     *ngIf="model.status == '07' && _global.checkPermissions('R6.5.5')" class="btn-check"
