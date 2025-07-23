@@ -105,7 +105,7 @@ namespace EAM.BUSINESS.Services.TRAN
                     data.ChartBar.Add(new Dashboard
                     {
                         Name = i.EqtypTxt ?? "N/A",
-                        Value = _dbContext.TblMdEquip.Where(x => x.Eqtyp == i.Eqtyp && x.Tplnr == tplnr).Count()
+                        Value = _dbContext.TblMdEquip.Where(x => x.Eqtyp == i.Eqtyp && x.Tplnr.Contains(tplnr)).Count()
                     });
                 }
 
@@ -114,17 +114,17 @@ namespace EAM.BUSINESS.Services.TRAN
                     data.ChartDonut.Add(new Dashboard
                     {
                         Name = i.Name ?? "N/A",
-                        Value = _dbContext.TblMdEquip.Where(x => x.StatusTh == i.Code && x.Tplnr == tplnr).Count()
+                        Value = _dbContext.TblMdEquip.Where(x => x.StatusTh == i.Code && x.Tplnr.Contains(tplnr)).Count()
                     });
                 }
 
-                var order = _dbContext.TblTranOrder.Where(x => x.Tplnr == tplnr).AsQueryable();
+                var order = _dbContext.TblTranOrder.Where(x => x.Tplnr.Contains(tplnr)).AsQueryable();
                 data.Order1 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "01").Count();
                 data.Order2 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "07" && x.Gltrs < DateTime.Now).Count();
                 data.Order3 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "07").Count();
                 data.Order4 = order.Where(x => string.IsNullOrEmpty(x.Qmnum) && x.Status == "04").Count();
 
-                var noti = _dbContext.TblTranNoti.Where(x => x.Tplnr == tplnr).AsQueryable();
+                var noti = _dbContext.TblTranNoti.Where(x => x.Tplnr.Contains(tplnr)).AsQueryable();
                 data.Noti1 = noti.Count();
                 data.Noti2 = noti.Where(x => x.StatAct == "07" && x.Ltrmn < DateTime.Now).Count();
                 data.Noti3 = noti.Where(x => x.StatAct == "07").Count();
