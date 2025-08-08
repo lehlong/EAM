@@ -34,7 +34,7 @@ namespace EAM.BUSINESS.Services.PLAN
             {
                 var sequence = m == "M1" ? 10000000 : m == "M2" ? 20000000 : 30000000;
                 var count = await _dbContext.TblPlanH.Where(x => x.Mpgrp == m).CountAsync();
-                return (sequence + count).ToString();
+                return (sequence + count + 1).ToString();
             }
             catch (Exception ex)
             {
