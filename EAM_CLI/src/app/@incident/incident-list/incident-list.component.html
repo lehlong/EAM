@@ -78,6 +78,16 @@
          <input nz-input [(ngModel)]="filter.keyWord" (ngModelChange)="search()">
         </div>
       </div>
+
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <label>Trạng thái</label>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="filter.statAct" (ngModelChange)="search()">
+            <nz-option *ngFor="let item of lstStatusNoti" [nzLabel]="item.value + ' - ' + item.name" [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
     </div>
   </nz-page-header-content>
   <nz-page-header-content class="main-content" style="height: calc(-332px + 100vh);">

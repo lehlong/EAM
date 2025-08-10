@@ -173,6 +173,11 @@ namespace EAM.BUSINESS.Services.TRAN
                     query = query.Where(x => x.Qmdat <= filter.ToDate);
                 }
 
+                if (!string.IsNullOrWhiteSpace(filter.StatAct))
+                {
+                    query = query.Where(x => x.StatAct == filter.StatAct);
+                }
+
                 if (filter.IsActive.HasValue)
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);

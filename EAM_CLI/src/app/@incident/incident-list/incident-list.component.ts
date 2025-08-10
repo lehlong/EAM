@@ -15,6 +15,7 @@ import {
   HTBTBD,
   LVTSD,
   PriorityLevel,
+  statusNoti,
 } from '../../shared/constants/select.constants';
 import { NotiTypeService } from '../../service/master-data/noti-type.service';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
@@ -70,6 +71,8 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   lstPriorityLevel = PriorityLevel;
   lstLvtsd = LVTSD;
   lstHtbtbd = HTBTBD;
+
+  lstStatusNoti = statusNoti
 
   pendingFileList: File[] = [];
   fileList: NzUploadFile[] = [];

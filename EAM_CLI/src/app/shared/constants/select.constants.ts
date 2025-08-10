@@ -77,3 +77,14 @@ export const confirm = [
   { name: 'Đã thực hiện', value: '01' },
   { name: 'Chưa thực hiện', value: '02' },
 ];
+
+export const statusNoti = [
+  { name: 'Chờ duyệt', value: '01' },
+  { name: 'Phê duyệt', value: '02' },
+  { name: 'Từ chối', value: '03' },
+  { name: 'Hoàn thành', value: '04' },
+  { name: 'Đóng', value: '05' },
+  { name: 'Từ chối đóng', value: '06' },
+  { name: 'Đang thực hiện', value: '07' },
+];
+

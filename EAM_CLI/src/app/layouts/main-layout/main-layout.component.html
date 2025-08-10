@@ -1,8 +1,7 @@
 <nz-layout>
     <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" [nzWidth]="'240px'">
         <div class="logo">
-          <!-- <span style="font-size: large;font-weight: bold;padding-left: 6px;">EAM</span> -->
-          <img src="img/logo.png" width="52">
+          <span style="font-size: large;font-weight: bold;padding-left: 6px;color: #075296;">CMMS</span>
         </div>
         <ul nz-menu nzTheme="light" nzMode="inline">
             <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: dataSidebarMenu }"></ng-container>

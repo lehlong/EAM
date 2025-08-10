@@ -6,4 +6,5 @@ export class NotiFilter extends BaseFilter {
   ingrp?: string;
 fromDate?: Date;
   toDate?: Date;
+  statAct?: string;
 }

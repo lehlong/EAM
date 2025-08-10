@@ -13,6 +13,7 @@ namespace EAM.BUSINESS.Filter.TRAN
         public string? Tplnr { get; set; }
         public string? Eqart { get; set; }
         public string? Ingrp { get; set; }
+        public string? StatAct { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
 
