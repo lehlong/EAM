@@ -31,6 +31,10 @@ var logger = LogManager.Setup()
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "frontend";
+});
 builder.Services.AddHttpClient();
 builder.Services.AddDIServices(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
@@ -143,4 +147,10 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapControllers();
+
+app.UseSpaStaticFiles();
+app.UseSpa(spa =>
+{
+    spa.Options.SourcePath = "frontend";
+});
 app.Run();
