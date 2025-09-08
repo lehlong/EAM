@@ -409,8 +409,8 @@
               <tr *ngFor="let data of paginationResultNoti.data; let i = index">
                 <td>{{ data.qmnum }}</td>
                 <td>{{ data.qmtxt }}</td>
-                <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
-                <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
+                <td>{{ data.qmdat | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ data.ltrmn | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td>{{ _global.getNameWc(lstEqWc, data.arbpl) }}</td>
                 <td>{{ _global.getFullNameUser(lstAccount, data.qmnam) }}</td>
                 <td>{{ _global.getFullNameUser(lstAccount, data.staffSc) }}</td>
@@ -464,8 +464,8 @@
                 <td>{{ data.aufnr }}</td>
                 <td>{{ data.ktext }}</td>
                 <td>{{ data.qmnum }}</td>
-                <td>{{ data.erdat | date:'dd/MM/yyyy hh:mm' }}</td>
-                <td>{{ data.gltri | date:'dd/MM/yyyy hh:mm' }}</td>
+                <td>{{ data.erdat | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ data.gltri | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td>{{ _global.getNameWc(lstEqWc, data.arbpl) }}</td>
                 <td>{{ _global.getFullNameUser(lstAccount, data.ernam) }}</td>
                 <td>{{ _global.getFullNameUser(lstAccount, data.staffSc) }}</td>

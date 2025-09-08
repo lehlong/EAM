@@ -70,13 +70,13 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Ngày yêu cầu hoàn thành</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'"></nz-date-picker>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>đến ngày</label>
-          <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+          <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'"></nz-date-picker>
         </div>
       </div>
     </div>
@@ -121,8 +121,8 @@
           <td (click)="openEditOrder(data.aufnr)"><a>{{ data.aufnr }}</a></td>
           <td>{{ data.ktext }}</td>
           <td>{{ data.qmnum }}</td>
-          <td>{{ data.erdat | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ data.gltri | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.erdat | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ data.gltri | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ _global.getNameWc(lstWc, data.arbpl) }}</td>
           <td>{{ _global.getFullNameUser(lstUser, data.ernam) }}</td>
           <td>{{ _global.getFullNameUser(lstUser, data.staffSc) }}</td>
@@ -383,12 +383,12 @@
               <td>{{data.equnr}}</td>
               <td>{{_global.getNameEquip(lstEquip, data.equnr)}}</td>
               <td>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab"
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datab"
                   [nzShowTime]="true" [nzDisabled]="checkStatusOrder()"></nz-date-picker>
               </td>
 
               <td>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datbi"
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.datbi"
                   [nzShowTime]="true" [nzDisabled]="checkStatusOrder()"></nz-date-picker>
               </td>
 
@@ -445,14 +445,14 @@
 
           <div nz-col class="gutter-row" [nzSpan]="4">
             <div class="inner-box">
-              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Từ ngày'"
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [nzPlaceHolder]="'Từ ngày'"
                 [(ngModel)]="fillDate.startDate" [nzShowTime]="true" (ngModelChange)="changeFillDate('1')"
                 [nzDisabled]="checkStatusOrder()"></nz-date-picker>
             </div>
           </div>
           <div nz-col class="gutter-row" [nzSpan]="4">
             <div class="inner-box">
-              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Đến ngày'" [(ngModel)]="fillDate.toDate"
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [nzPlaceHolder]="'Đến ngày'" [(ngModel)]="fillDate.toDate"
                 [nzShowTime]="true" (ngModelChange)="changeFillDate('2')"
                 [nzDisabled]="checkStatusOrder()"></nz-date-picker>
             </div>
@@ -494,12 +494,12 @@
                 </nz-select>
               </td>
               <td>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCf"
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCf"
                   [nzShowTime]="true" (ngModelChange)="changeDate(data, '1')"
                   [nzDisabled]="checkStatusOrder()"></nz-date-picker>
               </td>
               <td>
-                <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCt"
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.dateCt"
                   [nzShowTime]="true" (ngModelChange)="changeDate(data, '2')"
                   [nzDisabled]="checkStatusOrder()"></nz-date-picker>
               </td>
@@ -602,7 +602,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of itemTableS.data; let i = index">
-              <td><nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.budat"
+              <td><nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [nzPlaceHolder]="'Chọn ngày'" [(ngModel)]="data.budat"
                   [nzShowTime]="true" [nzDisabled]="checkStatusOrder()"></nz-date-picker></td>
               <td>
                 <nz-select nzShowSearch nzAllowClear [(ngModel)]="data.matnr" [nzDisabled]="checkStatusOrder()"

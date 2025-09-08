@@ -61,14 +61,14 @@
         <div class="inner-box">
           <label>Ngày ghi nhận</label>
           <nz-date-picker [(ngModel)]="filter.fromDate" (ngModelChange)="search()"
-            [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+            [nzFormat]="'dd/MM/yyyy HH:mm'"></nz-date-picker>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>đến ngày</label>
           <nz-date-picker [(ngModel)]="filter.toDate" (ngModelChange)="search()"
-            [nzFormat]="'dd/MM/yyyy hh:mm'"></nz-date-picker>
+            [nzFormat]="'dd/MM/yyyy HH:mm'"></nz-date-picker>
         </div>
       </div>
 
@@ -117,8 +117,8 @@
           <td [nzChecked]="false"></td>
           <td (click)="openDetail(data)"><a>{{ data.qmnum }}</a></td>
           <td>{{ data.qmtxt }}</td>
-          <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.qmdat | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ data.ltrmn | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ _global.getNameWc(lstWc, data.arbpl) }}</td>
           <td>{{ _global.getFullNameUser(lstUser, data.qmnam) }}</td>
           <td>{{ _global.getFullNameUser(lstUser, data.staffSc) }}</td>
@@ -238,7 +238,7 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Ngày phê duyệt | từ chối</label>
-              <nz-date-picker nz-input [disabled]="true" nzFormat="dd/MM/yyyy hh:mm" [(ngModel)]="model.datePd">
+              <nz-date-picker nz-input [disabled]="true" nzFormat="dd/MM/yyyy HH:mm" [(ngModel)]="model.datePd">
               </nz-date-picker>
             </div>
           </div>
@@ -295,7 +295,7 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Ngày thông báo sự cố</label>
-              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.qmdat"
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [(ngModel)]="model.qmdat"
                 [disabled]="true"></nz-date-picker>
             </div>
           </div>
@@ -336,7 +336,7 @@
           <div nz-col class="gutter-row" [nzSpan]="12">
             <div class="inner-box">
               <label>Ngày yêu cầu hoàn thành</label>
-              <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.ltrmn"></nz-date-picker>
+              <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [(ngModel)]="model.ltrmn"></nz-date-picker>
             </div>
           </div>
 
@@ -360,7 +360,7 @@
               <div class="inner-box ">
                 <label>Ngày biên bản</label>
                 <div class="form-control">
-                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.htNbb"
+                  <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [(ngModel)]="model.htNbb"
                     nzPlaceHolder="Chọn ngày"></nz-date-picker>
                 </div>
               </div>
@@ -463,7 +463,7 @@
               <div class="inner-box ">
                 <label>Ngày biên bản</label>
                 <div class="form-control">
-                  <nz-date-picker [nzFormat]="'dd/MM/yyyy hh:mm'" [(ngModel)]="model.ntNbb"
+                  <nz-date-picker [nzFormat]="'dd/MM/yyyy HH:mm'" [(ngModel)]="model.ntNbb"
                     nzPlaceHolder="14/05/2025"></nz-date-picker>
                 </div>
               </div>

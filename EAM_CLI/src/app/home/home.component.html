@@ -149,8 +149,8 @@
         <tr *ngFor="let data of paginationOrder.data; let i = index">
           <td>{{ data.aufnr }}</td>
           <td>{{ data.ktext }}</td>
-          <td>{{ data.gstrs | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ data.gltrs | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.gstrs | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ data.gltrs | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ globalService.getNameWc(lstWc, data.arbpl) }}</td>
           <td>{{ globalService.getFullNameUser(lstUser, data.staffSc) }}</td>
           <td>{{ globalService.getNameFloc(lstFloc,data.tplnr) }}</td>
@@ -195,8 +195,8 @@
         <tr *ngFor="let data of paginationResult.data; let i = index">
           <td>{{ data.qmnum }}</td>
           <td>{{ data.qmtxt }}</td>
-          <td>{{ data.qmdat | date:'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ data.ltrmn | date:'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.qmdat | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ data.ltrmn | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ getNameWc(data.arbpl) }}</td>
           <td>{{ getFullNameUser(data.qmnam) }}</td>
           <td>{{ getFullNameUser(data.staffSc) }}</td>

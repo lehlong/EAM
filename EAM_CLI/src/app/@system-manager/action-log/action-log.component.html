@@ -4,7 +4,7 @@
   <nz-page-header-extra>
     <div class="flex-grow-2 flex">
       <nz-space>
-        <nz-range-picker nzFormat="dd/MM/YYYY HH:mm:ss" [nzShowTime]="true" [(ngModel)]="filter.selectedRange"
+        <nz-range-picker nzFormat="dd/MM/yyyy HH:mm:ss" [nzShowTime]="true" [(ngModel)]="filter.selectedRange"
         (ngModelChange)="onChange($event)"></nz-range-picker>
       <nz-select style="width: 150px;" class="flex-grow" nzShowSearch nzAllowClear nzPlaceHolder="TT trả về"
         [(ngModel)]="filter.statusCode">
@@ -39,8 +39,8 @@
           <td>{{ (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1 }}</td>
           <td>{{ data.userName }}</td>
           <td><a (click)="openEdit(data)">{{ data.actionUrl }}</a></td>
-          <td>{{ data.requestTime | date: 'dd/MM/yyyy hh:mm:ss'}}</td>
-          <td>{{ data.responseTime | date: 'dd/MM/yyyy hh:mm:ss' }}</td>
+          <td>{{ data.requestTime | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>{{ data.responseTime | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
           <td nzAlign="center">
             {{ data.statusCode }}</td>
         </tr>
@@ -79,11 +79,11 @@
       </div>
       <div class="item_form">
         <label>Dữ liệu gửi yêu cầu -
-          {{dataDetail.requestTime | date: 'dd/MM/yyyy hh:mm:ss'}}</label>
+          {{dataDetail.requestTime | date: 'dd/MM/yyyy HH:mm:ss'}}</label>
         <pre [innerHTML]="dataDetail.requestData | prettyPrint: [true, 3]"></pre>
       </div>
       <div class="item_form">
-        <label>Dữ liệu trả về - {{dataDetail.responseTime | date: 'dd/MM/yyyy hh:mm:ss'}}</label>
+        <label>Dữ liệu trả về - {{dataDetail.responseTime | date: 'dd/MM/yyyy HH:mm:ss'}}</label>
         <pre [innerHTML]="dataDetail.responseData | prettyPrint: [true, 3]"></pre>
       </div>
     </form>
